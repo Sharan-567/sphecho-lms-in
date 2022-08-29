@@ -1,0 +1,9 @@
+// custom variants
+$theme-colors: (
+  "info": tomato,
+  "danger": teal,
+);
+// custom variables
+$danger: teal;
+
+@import "../node_modules/bootstrap/scss/bootstrap";

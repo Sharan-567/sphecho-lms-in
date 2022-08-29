@@ -1,0 +1,54 @@
+$transparent: rgba(163, 163, 163, 0.6);
+$transparent-dark: rgba(0, 0, 0, 0.3);
+.c {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  .t-menu {
+    background-color: white;
+  }
+}
+.link {
+  color: black;
+  font-weight: bold;
+}
+
+.c-drop-item {
+  background-color: $transparent;
+  margin-bottom: 0.3rem;
+  padding-top: 0.6em;
+  padding-bottom: 0.6em;
+  color: white;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  &:hover {
+    background-color: $transparent-dark;
+    color: white;
+  }
+}
+
+.dropdown-toggle.nav-link {
+  color: white;
+}
+
+.c-nav-drop {
+  margin-right: 2rem;
+  font-weight: bold;
+  background: none;
+  color: white;
+  &.show {
+    background: $transparent;
+  }
+  &:hover {
+    background: $transparent;
+  }
+  .dropdown-toggle::after {
+    content: none;
+  }
+  .dropdown-menu {
+    background: none;
+    outline: None;
+    border: None;
+  }
+}
