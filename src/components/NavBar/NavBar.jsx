@@ -1,10 +1,33 @@
-import React from "react";
+import { type } from "@testing-library/user-event/dist/type";
+import React, { useEffect, useRef, useState } from "react";
 import { Nav, Dropdown, Navbar, Container, NavDropdown } from "react-bootstrap";
 import "./NavBar.scss";
 
 const NavBar = () => {
+  const navElement = useRef();
+  const [showNav, setShowNav] = useState(false);
+
+  const controlNav = (e) => {
+    if (typeof window !== "undefined") {
+      const heightOfNav = navElement.current.getBoundingClientRect().height;
+      if (window.scrollY > heightOfNav) {
+        setShowNav(true);
+        console.log("show");
+      } else {
+        setShowNav(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", controlNav);
+    }
+    return () => window.removeEventListener("scroll", controlNav);
+  }, []);
+
   return (
-    <div className="c">
+    <div ref={navElement} className="c">
       <div className="t-menu">
         <Container className="d-flex fluid justify-content-between">
           <Dropdown>
@@ -35,7 +58,10 @@ const NavBar = () => {
         </Container>
       </div>
       <div>
-        <Navbar className="bottom-nav-bar" expand="lg">
+        <Navbar
+          className={`bottom-nav-bar ${showNav && "showNav"}`}
+          expand="lg"
+        >
           <Container>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">

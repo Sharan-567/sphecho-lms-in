@@ -1,5 +1,6 @@
 $transparent: rgba(163, 163, 163, 0.6);
 $transparent-dark: rgba(0, 0, 0, 0.3);
+$homePrimary: #ffb605;
 .c {
   position: fixed;
   top: 0;
@@ -50,5 +51,17 @@ $transparent-dark: rgba(0, 0, 0, 0.3);
     background: none;
     outline: None;
     border: None;
+  }
+}
+
+.bottom-nav-bar {
+  &.showNav {
+    background-color: white;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.518);
+  }
+  &.showNav {
+    .dropdown-toggle {
+      color: $homePrimary;
+    }
   }
 }
