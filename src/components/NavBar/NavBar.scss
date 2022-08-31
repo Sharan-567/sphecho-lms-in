@@ -9,6 +9,12 @@ $homePrimary: #ffb605;
   .t-menu {
     background-color: white;
   }
+  .logo {
+    position: absolute;
+    top: -450%;
+    left: 15%;
+    width: 9rem;
+  }
 }
 .link {
   color: black;
@@ -61,7 +67,7 @@ $homePrimary: #ffb605;
   }
   &.showNav {
     .dropdown-toggle {
-      color: $homePrimary;
+      color: black;
     }
   }
 }

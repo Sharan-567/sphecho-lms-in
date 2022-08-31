@@ -1,9 +1,10 @@
-import { type } from "@testing-library/user-event/dist/type";
 import React, { useEffect, useRef, useState } from "react";
 import { Nav, Dropdown, Navbar, Container, NavDropdown } from "react-bootstrap";
+import propTypes from "prop-types";
 import "./NavBar.scss";
+import logo from "../../assets/s-logo.png";
 
-const NavBar = () => {
+const NavBar = ({ showLogo }) => {
   const navElement = useRef();
   const [showNav, setShowNav] = useState(false);
 
@@ -12,7 +13,6 @@ const NavBar = () => {
       const heightOfNav = navElement.current.getBoundingClientRect().height;
       if (window.scrollY > heightOfNav) {
         setShowNav(true);
-        console.log("show");
       } else {
         setShowNav(false);
       }
@@ -63,6 +63,9 @@ const NavBar = () => {
           expand="lg"
         >
           <Container>
+            <Navbar.Brand href="/" className="position-relative">
+              {showLogo && <img src={logo} className="logo" />}
+            </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="ms-auto">
@@ -125,6 +128,10 @@ const NavBar = () => {
       </div>
     </div>
   );
+};
+
+NavBar.prototypes = {
+  showLogo: propTypes.bool,
 };
 
 export default NavBar;

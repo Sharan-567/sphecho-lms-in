@@ -1,7 +1,11 @@
 @import "customTheme";
-
+@import "react-alice-carousel/lib/scss/alice-carousel.scss";
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
 }

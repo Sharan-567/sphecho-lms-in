@@ -1,16 +1,10 @@
-import React from "react";
-import NavBar from "../../components/NavBar";
-import {
-  Col,
-  Row,
-  Form,
-  Carousel,
-  Button,
-  ListGroup,
-  Container,
-} from "react-bootstrap";
-import "./home.scss";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import NavBar from "../../components/NavBar";
+import Footer from "../../components/Footer";
+import LandingSection from "../../components/LandingSection";
+import { Col, Row, Form, Button, ListGroup, Container } from "react-bootstrap";
+import "./home.scss";
 
 // images import
 import bg1 from "../../assets/bg-1.jpg";
@@ -18,62 +12,51 @@ import bg2 from "../../assets/bg-2.jpg";
 import btnY from "../../assets/btn-y.png";
 import btnB from "../../assets/btn-b.png";
 import btnG from "../../assets/btn-g.png";
-import logo from "../../assets/logo.png";
-import sLogo from "../../assets/s-logo.png";
-import cBg from "../../assets/c-bg.png";
 import event from "../../assets/event.jpg";
 import event2 from "../../assets/event-2.jpg";
-import flr from "../../assets/flower.png";
+import vector from "../../assets/Vector1.png";
+
+import AliceCarousel from "react-alice-carousel";
+import "react-alice-carousel/lib/alice-carousel.css";
 
 // content data
-const images = [bg1, bg2];
+const carouselImages = [bg1, bg2];
 const bottomImages = [
-  { img: btnY, title: "SPHECHO Curriculum" },
-  { img: btnG, title: "Professional Certification" },
-  { img: btnB, title: "Resource Hub" },
+  { img: btnY, title: "SPHECHO Curriculum", href: "" },
+  { img: btnG, title: "Professional Certification", href: "/profession" },
+  { img: btnB, title: "Resource Hub", href: "" },
+];
+const newsImages = [bg1, bg2, event2, event, bg1, bg2, event2, event];
+const testmonialImages = [
+  { id: 0, name: "manuael", title: "design", img: bg1 },
+  { id: 1, name: "jaffar", title: "ux desinger", img: bg2 },
+  { id: 2, name: "alice", title: "ux desinger", img: event2 },
+  { id: 3, name: "coarsel", title: "programmer", img: event },
+  { id: 4, name: "lila", title: "software developer", img: btnY },
 ];
 
+const handleDragStart = (e) => e.preventDefault();
 const Home = () => {
-  return (
-    <>
-      <NavBar />
-      <div className="position-relative overflow-hidden carousel-container">
-        <Carousel indicators={false}>
-          {images.map((item, i) => (
-            <Carousel.Item key={i} className="c-carousel-item">
-              <img
-                className="d-block c-carsousel-img"
-                src={item}
-                alt="Third slide"
-              />
+  const [currentTestMoinal, setCurrentTestMoinal] = useState(
+    testmonialImages[2]
+  );
+  const handleItemTestemonial = (e) => {
+    setCurrentTestMoinal(
+      testmonialImages.filter((item) => item.id == e.item)[0]
+    );
+  };
 
-              <Carousel.Caption className="carousel-caption">
-                <h3>Education is Life Long Learning Adventure.</h3>
-              </Carousel.Caption>
-            </Carousel.Item>
-          ))}
-        </Carousel>
-        <div className="d-flex position-absolute end-0 me-5 bottom-btns">
-          {bottomImages.map(({ img, title }, id) => {
-            return (
-              <div className="position-relative" key={id}>
-                <Link to="">
-                  <img className="me-4 c-btn-bottom" src={img} />
-                </Link>
-                <p className="position-absolute">{title}</p>
-              </div>
-            );
-          })}
-        </div>
-        <img className="position-absolute c-logo" src={logo} />
-        <img className="position-absolute s-logo" src={sLogo} />
-        <img className="position-absolute c-bg" src={cBg} />
-      </div>
+  return (
+    <div>
+      <NavBar />
+      <LandingSection config={{ bottomImages, carouselImages }} />
+
       {/* event section */}
-      <section className="event pt-5">
+      <section className="event pt-5 w-100 position-relative">
+        <img src={vector} alt="" className="position-absolute vector-img" />
         <Row className="pt-5">
           <Col sm={6}>
-            <img src={event} className="e-img-left" />
+            <img src={event} className="e-img-left" alt="" />
           </Col>
           <Col sm={6} className="px-5 pt-3">
             <Row className="d-flex">
@@ -90,7 +73,7 @@ const Home = () => {
             <Row>
               <ListGroup variant="flush">
                 <ListGroup.Item></ListGroup.Item>
-                {images.map((item, idx) => {
+                {carouselImages.map((item, idx) => {
                   return (
                     <ListGroup.Item key={idx} className="pt-4">
                       <Row>
@@ -117,15 +100,56 @@ const Home = () => {
           </Col>
         </Row>
         <Row>
-          <Col
-            sm={3}
-            style={{ padding: 0, height: "15rem", position: "relative" }}
-          >
-            <img src={event2} className="e-img-tag" />
-            <h3 className="e-inner-text">We are here to listen to you</h3>
+          <Col sm={4} className="p-0">
+            <div className="position-relative">
+              <img src={event2} className="e-img-tag" alt="" />
+              <h3 className="e-inner-text">We are here to listen to you</h3>
+            </div>
           </Col>
-          <Col sm={9} style={{ background: "black", padding: "1em" }}>
-            <h6 style={{ textAlign: "center", color: "white" }}>Latest News</h6>
+          <Col sm={8} style={{ background: "black", padding: "2em" }}>
+            <h6
+              style={{
+                textAlign: "center",
+                color: "white",
+                paddingBottom: ".5em",
+              }}
+            >
+              Latest News
+            </h6>
+            <AliceCarousel
+              mouseTracking
+              autoHeight
+              infinite
+              items={newsImages.map((img) => {
+                return (
+                  <Link to="" style={{ width: "14rem", height: "9rem" }}>
+                    <div style={{ width: "14rem", height: "10rem" }}>
+                      <img
+                        alt=""
+                        src={img}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                  </Link>
+                );
+              })}
+              disableButtonsControls
+              responsive={{
+                0: {
+                  items: 0,
+                },
+                556: {
+                  items: 2,
+                },
+                1024: {
+                  items: 3,
+                },
+              }}
+            />
           </Col>
         </Row>
       </section>
@@ -183,16 +207,28 @@ const Home = () => {
               <p className="text-secondary">
                 What real people said Education WordPress theme.
               </p>
-
-              <div className="d-flex justify-content-center py-2">
-                <img className="t-img" src={bg1} />
-                <img className="t-img" src={bg2} />
-                <img className="t-img" src={bg2} />
-                <img className="t-img" src={event} />
-                <img className="t-img" src={event2} />
-              </div>
-              <p className="pt-1 mb-0">Manuel</p>
-              <p className="small ">Designer</p>
+              <Row>
+                <Col sm={6} className="m-auto">
+                  <AliceCarousel
+                    mouseTracking
+                    autoHeight
+                    infinite
+                    onSlideChange={handleItemTestemonial}
+                    items={testmonialImages.map((item) => {
+                      return <img className="t-img" src={item.img} alt="" />;
+                    })}
+                    disableButtonsControls
+                    disableDotsControls
+                    responsive={{
+                      0: {
+                        items: 5,
+                      },
+                    }}
+                  />
+                </Col>
+              </Row>
+              <p className="pt-1 mb-0">{currentTestMoinal.name}</p>
+              <p className="small ">{currentTestMoinal.title}</p>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit.
                 Deserunt laborum quae nostrum quaerat quas, et reiciendis non
@@ -203,34 +239,8 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-
-      <footer>
-        <Row>
-          <Col sm={2}></Col>
-          <Col sm={6} className="f-container-1 p-5">
-            <img src={flr} className="flr-img" />
-            <p className="p-sm-5">
-              Subscribe now and recive weekly newsletter with Educational
-              materials, new courses, interesting posts, popular books and much
-              more!
-            </p>
-          </Col>
-          <Col
-            sm={4}
-            className="d-flex align-items-center justify-content-center"
-          >
-            <Form className="d-flex align-items-center">
-              <Form.Group className="mb-3" controlId="formBasicEmail">
-                <Form.Control type="email" placeholder="Your Email Here" />
-              </Form.Group>
-              <Button className="mybtn" type="submit">
-                Subscribe
-              </Button>
-            </Form>
-          </Col>
-        </Row>
-      </footer>
-    </>
+      <Footer />
+    </div>
   );
 };
 
