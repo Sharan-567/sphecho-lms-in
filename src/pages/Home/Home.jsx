@@ -22,7 +22,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 // content data
 const carouselImages = [bg1, bg2];
 const bottomImages = [
-  { img: btnY, title: "SPHECHO Curriculum", href: "" },
+  { img: btnY, title: "SPHECHO Curriculum", href: "/curriculum" },
   { img: btnG, title: "Professional Certification", href: "/profession" },
   { img: btnB, title: "Resource Hub", href: "" },
 ];

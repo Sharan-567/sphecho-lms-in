@@ -1,0 +1,43 @@
+.curriculum {
+  margin-top: 12rem;
+  h2 {
+    text-align: center;
+  }
+}
+.c-item {
+  margin: 0.5em 0em;
+  text-align: left;
+  color: white;
+  background: linear-gradient(
+    90deg,
+    rgba(21, 71, 116, 1) 100%,
+    rgba(35, 115, 188, 1) 30%
+  );
+}
+
+.courses {
+  position: relative;
+}
+
+.alice-carousel__prev-btn,
+.alice-carousel__next-btn {
+  position: absolute;
+}
+
+.alice-carousel__prev-btn {
+  left: -3%;
+  text-align: left;
+  top: 40%;
+}
+.alice-carousel__next-btn {
+  right: -2.6%;
+  top: 40%;
+  text-align: right;
+}
+.alice-carousel__prev-btn-item,
+.alice-carousel__next-btn-item {
+  background-color: #edbd2d;
+  padding: 1em;
+  font-weight: 900;
+  color: black;
+}
