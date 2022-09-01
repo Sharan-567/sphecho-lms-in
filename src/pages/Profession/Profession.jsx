@@ -1,13 +1,15 @@
-import React from "react";
-import { Row, Col, ListGroup, ListGroupItem } from "react-bootstrap";
+import React, { useMemo } from "react";
+import { Row, Col, ListGroup, Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import NavBar from "../../components/NavBar";
 import LandingSectionTwo from "../../components/LandingSectionTwo";
+import Footer from "../../components/Footer";
 import "./Profession.scss";
-
+import countryList from "country-list";
 import btnG from "../../assets/btn-g.png";
 import cLogo from "../../assets/logo-g.png";
 import logo from "../../assets/s-logo.png";
+import p1 from "../../assets/p-1.jpg";
 import bgG from "../../assets/bg-p.jpg";
 import ibbce from "../../assets/ibcce-icon.png";
 import arrow from "../../assets/arrow.png";
@@ -64,6 +66,7 @@ const List = ({ list, title }) => {
 };
 
 const Profession = () => {
+  const countries = useMemo(() => countryList.getNames());
   return (
     <div>
       <NavBar />
@@ -156,7 +159,83 @@ const Profession = () => {
       </section>
 
       {/* Registration Form */}
-      <section className="registration position-relative"></section>
+      <section className="registration position-relative">
+        <Row>
+          <Col sm="8" className="p-5 registration__form">
+            <h2>Find Out More Earnings An Teletherapy Certification</h2>
+            <p className="pb-3">
+              Fill out the form below to connect with a Certification Advisor
+              for more information
+            </p>
+            <Form className="p-3">
+              <Row className="mb-3">
+                <Form.Group as={Col} sm={6} controlId="formGridEmail">
+                  <Form.Label>First Name*</Form.Label>
+                  <Form.Control type="text" placeholder="Enter First Name" />
+                </Form.Group>
+
+                <Form.Group as={Col} sm={6} controlId="formGridPassword">
+                  <Form.Label>Second Name*</Form.Label>
+                  <Form.Control type="text" placeholder="Enter Second Name" />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} sm={6} controlId="formGridEmail">
+                  <Form.Label>phone Number</Form.Label>
+                  <Form.Control
+                    type="tel"
+                    placeholder="Enter the Phone Number"
+                  />
+                </Form.Group>
+
+                <Form.Group as={Col} sm={6} controlId="formGridPassword">
+                  <Form.Label>Email*</Form.Label>
+                  <Form.Control type="text" placeholder="Email Address" />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} sm={6} controlId="formGridEmail">
+                  <Form.Label>Job title*</Form.Label>
+                  <Form.Control type="text" placeholder="Country" />
+                </Form.Group>
+
+                <Form.Group as={Col} sm={6} controlId="formGridPassword">
+                  <Form.Label>Organization</Form.Label>
+                  <Form.Control type="text" placeholder="" />
+                </Form.Group>
+              </Row>
+              <Row className="mb-3">
+                <Form.Group as={Col} sm={6} controlId="formGridEmail">
+                  <Form.Label>Country*</Form.Label>
+                  <Form.Select aria-label="select-country">
+                    <option>Open this select menu</option>
+                    {countries.map((country) => {
+                      return <option key={country}>{country}</option>;
+                    })}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group as={Col} sm={6} controlId="formGridPassword">
+                  <Form.Label>Question or commets to discuss</Form.Label>
+                  <Form.Control as="textarea" rows={3} />
+                </Form.Group>
+              </Row>
+              <Button variant="danger" type="submit" className="mb-2 px-5">
+                Submit
+              </Button>
+            </Form>
+          </Col>
+          <Col sm="4" className="p-0">
+            <img
+              src={p1}
+              alt=""
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
+          </Col>
+        </Row>
+        <img className="illustration" src={proffesionIllustration} alt="" />
+      </section>
+      <Footer color={"#cfd648"} />
     </div>
   );
 };

@@ -239,7 +239,7 @@ const Home = () => {
           </Row>
         </Container>
       </section>
-      <Footer />
+      <Footer color={"#ffb605"} />
     </div>
   );
 };

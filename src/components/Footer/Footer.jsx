@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Row, Form, Button } from "react-bootstrap";
 import flr from "../../assets/flower.png";
 import "./Footer.scss";
-const Footer = () => {
+const Footer = ({ color }) => {
   return (
     <footer>
       <Row>
@@ -23,7 +23,11 @@ const Footer = () => {
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Control type="email" placeholder="Your Email Here" />
             </Form.Group>
-            <Button className="mybtn" type="submit">
+            <Button
+              className="mybtn"
+              style={{ backgroundColor: color }}
+              type="submit"
+            >
               Subscribe
             </Button>
           </Form>
