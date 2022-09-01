@@ -99,7 +99,7 @@ const NavBar = ({ showLogo }) => {
 
                 <NavDropdown
                   className="mr-5 c-nav-drop"
-                  title="FEATUES"
+                  title="FEATURES"
                   id="features"
                 >
                   <NavDropdown.Item className="c-drop-item" href="#action/3.1">

@@ -11,7 +11,7 @@ import cBg from "../../assets/c-bg.png";
 const LandingSection = ({ config }) => {
   const { bottomImages, carouselImages } = config;
   return (
-    <div className="position-relative overflow-hidden carousel-container">
+    <div className="position-relative carousel-container">
       <Carousel indicators={false}>
         {carouselImages.map((item, i) => (
           <Carousel.Item key={i} className="c-carousel-item">
@@ -33,14 +33,13 @@ const LandingSection = ({ config }) => {
             <div className="position-relative" key={id}>
               <Link to={href}>
                 <img className="me-4 c-btn-bottom" src={img} />
-                <p className="position-absolute">{title}</p>
+                <p className="position-absolute c-btn-p">{title}</p>
               </Link>
             </div>
           );
         })}
       </div>
       <img className="position-absolute c-logo" src={logo} />
-      <img className="position-absolute s-logo" src={sLogo} />
       <img className="position-absolute c-bg" src={cBg} />
     </div>
   );

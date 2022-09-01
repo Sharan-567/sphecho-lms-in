@@ -1,59 +1,61 @@
-$homePrimary: #ffb605;
-
-.c-container {
-  .img-container {
-    overflow: hidden;
+.landing {
+  height: 100vh;
+  .landing__img-container {
     position: relative;
+    min-height: 100vh;
   }
-  .landing-image {
-    height: 100vh;
-    width: 100vw;
-    object-fit: cover;
-    object-position: center;
+  &__logo {
+    width: 15%;
   }
 }
 
-.bottom-btns {
-  bottom: -15%;
-  z-index: 1;
+.landing__logo {
+  position: absolute;
+  width: 16%;
+  left: 15%;
+  top: 27%;
+}
 
-  .c-btn-bottom {
+.landing__title {
+  position: absolute;
+  width: 16%;
+  left: 21%;
+  top: 47%;
+  color: white;
+  font-size: 3rem;
+}
+
+.landing__bottom-btns {
+  z-index: 12;
+  display: flex;
+  gap: 1.6rem;
+  position: absolute;
+  bottom: -20%;
+  right: 10%;
+  .landing__bottom-btn {
+    height: 14rem;
+    border-radius: 1.4rem;
     width: 13rem;
-    height: 13rem;
-    border-radius: 2rem;
     cursor: pointer;
   }
-
-  p {
-    font-weight: 500;
+  h5 {
+    position: absolute;
+    top: 26%;
+    font-weight: bold;
+    color: white;
+    padding: 1rem;
     text-align: center;
     cursor: pointer;
-    top: 30%;
-    left: 45%;
-    transform: translate(-50%, -50%);
-  }
-  a {
-    color: black;
   }
 }
 
-.c-logo {
-  top: 32%;
-  left: 23%;
-  width: 15%;
-  z-index: 0;
-  opacity: 0.5;
+.landing__illustrater {
+  position: absolute;
+  bottom: -60%;
+  width: 90%;
+  opacity: 0.7;
 }
 
-.c-title {
-  top: 46%;
-  left: 25%;
-  color: white;
-  width: 30%;
-}
-
-.c-brand-logo {
-  top: 5%;
-  left: 5%;
-  width: 12rem;
+.certification {
+  margin-top: 10rem;
 }

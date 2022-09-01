@@ -28,16 +28,15 @@ $homePrimary: #ffb605;
     cursor: pointer;
   }
 
-  p {
+  .c-btn-p {
     font-weight: 500;
     text-align: center;
     cursor: pointer;
-    top: 30%;
+    top: 50%;
     left: 45%;
     transform: translate(-50%, -50%);
-  }
-  a {
-    color: black;
+    font-size: 1.25rem;
+    color: white;
   }
 }
 
@@ -57,7 +56,7 @@ $homePrimary: #ffb605;
 }
 
 .c-bg {
-  bottom: -45%;
-  left: 5%;
-  width: 80%;
+  bottom: -30%;
+  left: 15%;
+  width: 62%;
 }
