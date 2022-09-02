@@ -12,6 +12,7 @@ const LandingSectionTwo = (props) => {
     backgroundImg,
     logo,
     bottomIllustration,
+    clickHandler,
   } = props;
   return (
     <div className="landing">
@@ -25,10 +26,20 @@ const LandingSectionTwo = (props) => {
         <div className="landing__bottom-btns">
           {bottomImages.map((item, i) => (
             <div key={i} className="position-relative">
-              <Link to={item.href}>
-                <img src={item.img} className="landing__bottom-btn" />
-                <h5>{item.title}</h5>
-              </Link>
+              {item.href ? (
+                <Link to={item.href}>
+                  <img src={item.img} className="landing__bottom-btn" />
+                  <h5 style={{ width: "100%" }}>{item.title}</h5>
+                </Link>
+              ) : (
+                <button
+                  onClick={item.clickHandler}
+                  style={{ border: "none", borderRadius: "1.4rem" }}
+                >
+                  <img src={item.img} className="landing__bottom-btn" />
+                  <h5 style={{ width: "100%" }}>{item.title}</h5>
+                </button>
+              )}
             </div>
           ))}
         </div>

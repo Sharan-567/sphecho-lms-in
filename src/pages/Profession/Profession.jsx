@@ -20,7 +20,7 @@ const bottomImages = [
   {
     img: btnG,
     title: "Certification Program Registration",
-    href: "/profession",
+    href: "/",
   },
 ];
 

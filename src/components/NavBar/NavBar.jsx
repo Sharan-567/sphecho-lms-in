@@ -40,11 +40,6 @@ const NavBar = ({ showLogo }) => {
           </Dropdown>
           <Nav className="justify-content-end">
             <Nav.Item>
-              <Nav.Link href="/home" className="link" eventKey="link-1" href="">
-                Contact Number
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
               <Nav.Link className="link" eventKey="link-2" href="">
                 My BlackBoard
               </Nav.Link>
@@ -71,10 +66,13 @@ const NavBar = ({ showLogo }) => {
               <Nav className="ms-auto">
                 <NavDropdown className="mr-5 c-nav-drop" title="HOME" id="home">
                   <NavDropdown.Item className="c-drop-item" href="#action/3.1">
-                    Action
+                    About us
                   </NavDropdown.Item>
                   <NavDropdown.Item className="c-drop-item" href="#action/3.2">
-                    Another action
+                    FAQs
+                  </NavDropdown.Item>
+                  <NavDropdown.Item className="c-drop-item" href="#action/3.2">
+                    The SPHECHO board
                   </NavDropdown.Item>
                 </NavDropdown>
 
@@ -103,10 +101,13 @@ const NavBar = ({ showLogo }) => {
                   id="features"
                 >
                   <NavDropdown.Item className="c-drop-item" href="#action/3.1">
-                    Action
+                    Research and publication
+                  </NavDropdown.Item>
+                  <NavDropdown.Item className="c-drop-item" href="/resourceHub">
+                    Library
                   </NavDropdown.Item>
                   <NavDropdown.Item className="c-drop-item" href="#action/3.2">
-                    Another action
+                    How can I contribute
                   </NavDropdown.Item>
                 </NavDropdown>
                 <NavDropdown

@@ -24,7 +24,7 @@ const carouselImages = [bg1, bg2];
 const bottomImages = [
   { img: btnY, title: "SPHECHO Curriculum", href: "/curriculum" },
   { img: btnG, title: "Professional Certification", href: "/profession" },
-  { img: btnB, title: "Resource Hub", href: "" },
+  { img: btnB, title: "Resource Hub", href: "/resourcehub" },
 ];
 const newsImages = [bg1, bg2, event2, event, bg1, bg2, event2, event];
 const testmonialImages = [
@@ -35,14 +35,13 @@ const testmonialImages = [
   { id: 4, name: "lila", title: "software developer", img: btnY },
 ];
 
-const handleDragStart = (e) => e.preventDefault();
 const Home = () => {
   const [currentTestMoinal, setCurrentTestMoinal] = useState(
     testmonialImages[2]
   );
   const handleItemTestemonial = (e) => {
     setCurrentTestMoinal(
-      testmonialImages.filter((item) => item.id == e.item)[0]
+      testmonialImages.filter((item) => item.id === e.item)[0]
     );
   };
 
@@ -167,7 +166,7 @@ const Home = () => {
             </Col>
             <Col sm={5} className="p-5">
               <Form>
-                <Form.Label>
+                <Form.Label style={{ color: "white" }}>
                   Create your free account now and get immediate access to many
                   courses.
                 </Form.Label>
