@@ -61,9 +61,16 @@ $homePrimary: #ffb605;
 }
 
 .bottom-nav-bar {
+  .nav-link.link {
+    color: white;
+  }
+
   &.showNav {
     background-color: white;
     border-bottom: 1px solid rgba(128, 128, 128, 0.518);
+    .nav-link.link {
+      color: black;
+    }
   }
   &.showNav {
     .dropdown-toggle {

@@ -1,9 +1,77 @@
 // custom variants
 $theme-colors: (
-  "info": tomato,
-  "danger": teal,
+  "danger": tomato,
+  "blue": rgb(30, 37, 79),
+  "skyBlue": rgb(14, 156, 240),
+  "green": rgb(12, 174, 0),
+  "gray": rgb(251, 251, 251),
+  "graydark": rgb(234, 234, 234),
 );
 // custom variables
-$danger: teal;
+$skyBlue: rgb(14, 156, 240);
 
+.b-200 {
+  font-weight: 200;
+}
+.b-300 {
+  font-weight: 300;
+}
+.b-400 {
+  font-weight: 400;
+}
+
+.b-500 {
+  font-weight: 500;
+}
+
+.b-600 {
+  font-weight: 600;
+}
+.b-700 {
+  font-weight: 700;
+}
+.b-800 {
+  font-weight: 800;
+}
+.b-900 {
+  font-weight: 900;
+}
+.round {
+  border-radius: 1rem;
+}
+.round-2 {
+  border-radius: 2rem;
+}
+.round-50 {
+  border-radius: 50%;
+}
+.lh-0 {
+  line-height: 0;
+}
+.ta-l {
+  text-align: left;
+}
+.ta-r {
+  text-align: right;
+}
+
+.br-1 {
+  border-radius: 1rem;
+}
+.br-2 {
+  border-radius: 2rem;
+}
+
+.br-3 {
+  border-radius: 3rem;
+}
+
+.br-4 {
+  border-radius: 4rem;
+}
+
+// image
+.obj-fit-cover {
+  object-fit: cover;
+}
 @import "../node_modules/bootstrap/scss/bootstrap";

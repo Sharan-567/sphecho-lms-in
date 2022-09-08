@@ -1,0 +1,35 @@
+$skyBlue: rgb(14, 156, 240);
+
+.side-nav {
+  .nav-icon {
+    color: white;
+  }
+  .nav-title {
+    color: white;
+  }
+  .active {
+    .nav-icon {
+      color: $skyBlue;
+    }
+    .nav-title {
+      color: $skyBlue !important;
+    }
+  }
+
+  .nav-link:hover,
+  .b-nav-link:hover {
+    .nav-icon {
+      color: $skyBlue;
+    }
+    .nav-title {
+      color: $skyBlue !important;
+    }
+  }
+}
+
+.brand {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  color: white;
+}
