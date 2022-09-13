@@ -7,8 +7,7 @@ import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
-import { Course } from "./sections";
-import DashBoard from "./pages/DashBoard/";
+import { Course, TopicsList, Main, Assessment } from "./sections";
 
 function App() {
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -16,17 +15,23 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/">
-            <Route index element={isLoggedIn ? <Dashboard /> : <Home />} />
-            <Route path="/profession" element={<Profession />} />
-            <Route path="/curriculum" element={<Curriculum />} />
-            <Route path="/resourcehub" element={<ResourceHub />} />c
-            {isLoggedIn && (
-              <>
-                <Route path="/courses" element={<Course />} />
-              </>
-            )}
-          </Route>
+          {!isLoggedIn ? (
+            <Route path="/">
+              <Route index element={<Home />} />
+              <Route path="profession" element={<Profession />} />
+              <Route path="curriculum" element={<Curriculum />} />
+              <Route path="resourcehub" element={<ResourceHub />} />
+            </Route>
+          ) : (
+            <Route path="/" element={<Dashboard />}>
+              <Route index element={<Main />} />
+              <Route path="courses">
+                <Route index element={<Course />} />
+                <Route path=":courseId" element={<TopicsList />} />
+              </Route>
+              <Route path="assessment/:id" element={<Assessment />} />
+            </Route>
+          )}
         </Routes>
       </Router>
     </div>

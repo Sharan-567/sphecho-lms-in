@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { Main, SideNav } from "../../sections";
+import { Outlet } from "react-router-dom";
+import { SideNav } from "../../sections";
 
 const Dashboard = () => {
   return (
     <div>
       <div className="d-flex">
         <SideNav />
-        <Main />
+        <Outlet />
       </div>
     </div>
   );

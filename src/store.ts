@@ -1,11 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import auth from "./features/auth";
-import courses from "./features/course";
+
+import { auth, courses, topics } from "./features";
 
 export const store = configureStore({
   reducer: {
     auth,
     courses,
+    topics,
   },
 });
 
