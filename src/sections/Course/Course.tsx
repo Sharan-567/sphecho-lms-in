@@ -42,7 +42,7 @@ const Course = () => {
   }
 
   return (
-    <div className=" mt-3 ms-5 w-75">
+    <div className="px-5 py-2 mt-3 w-100">
       {loading ? (
         <div className="w-100 d-flex justify-content-center mt-5">
           <Spinner animation="border" variant="green" />

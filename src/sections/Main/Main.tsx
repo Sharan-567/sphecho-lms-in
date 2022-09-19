@@ -1,42 +1,15 @@
 import React from "react";
 import { Row, Col, Form, Button, Badge } from "react-bootstrap";
 
-import { AiOutlineBell } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import Search from "../../components/Search";
 import bg1 from "../../assets/bg-1.jpg";
 const Main = () => {
   return (
-    <div className="p-3 w-75">
+    <div className="p-3 w-100 ">
       <Row className="px-2">
-        <Col sm={8}>
-          <h4
-            style={{ fontSize: "1.7rem", fontWeight: "700" }}
-            className="text-blue"
-          >
-            DashBoard
-          </h4>
-        </Col>
-        <Col sm={4} className="d-flex align-items-center">
-          <Form className="me-2 ms-auto">
-            <Form.Control
-              className="bg-gray b-0"
-              style={{ width: "15rem", borderRadius: 0, border: "none" }}
-              type="search"
-              placeholder="Search"
-            ></Form.Control>
-          </Form>
-          <span className="position-relative">
-            <Button className="bg-gray ">
-              <AiOutlineBell size={20} />
-            </Button>
-            <Badge
-              pill
-              bg="danger position-absolute"
-              style={{ top: "0", right: "-20%" }}
-            >
-              2
-            </Badge>
-          </span>
+        <Col sm={4} className="m-auto">
+          <Search />
         </Col>
       </Row>
       <Row>

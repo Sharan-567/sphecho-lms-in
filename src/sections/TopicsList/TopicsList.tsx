@@ -114,7 +114,15 @@ const TopicsList = () => {
               )}
               {currentTopic?.assement_required && (
                 <div className="d-flex align-items-center justify-content-between my-3 bg-graydark p-3 round">
-                  <Link to="/assessment/34">
+                  <Link
+                    to="/assessment"
+                    state={{
+                      id: currentTopic?.id,
+                      name: currentTopic?.name,
+                      min: currentTopic?.min_marks_to_qualify,
+                      max: currentTopic?.max_marks,
+                    }}
+                  >
                     <Button variant="green" className="text-white ">
                       Take Assessment
                     </Button>

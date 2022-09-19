@@ -46,12 +46,14 @@ const SideNav = () => {
   const sideBar = {
     open: {
       width: "15rem",
+      paddingRight: "14rem",
       transition: {
         staggerChildren: 0.01,
       },
     },
     close: {
       width: "4rem",
+      paddingRight: "0rem",
       transition: {
         staggerChildren: 0.01,
         staggerDirection: -1,

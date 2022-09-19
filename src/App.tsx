@@ -29,7 +29,7 @@ function App() {
                 <Route index element={<Course />} />
                 <Route path=":courseId" element={<TopicsList />} />
               </Route>
-              <Route path="assessment/:id" element={<Assessment />} />
+              <Route path="assessment" element={<Assessment />} />
             </Route>
           )}
         </Routes>
