@@ -7,7 +7,7 @@ import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
-import { Course, TopicsList, Main, Assessment } from "./sections";
+import { Course, TopicsList, Main, Assessment, CourseDetail } from "./sections";
 
 function App() {
   const { isLoggedIn } = useSelector((state) => state.auth);
@@ -28,6 +28,7 @@ function App() {
               <Route path="courses">
                 <Route index element={<Course />} />
                 <Route path=":courseId" element={<TopicsList />} />
+                <Route path="detail/:id" element={<CourseDetail />} />
               </Route>
               <Route path="assessment" element={<Assessment />} />
             </Route>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Form, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -7,8 +7,6 @@ const Search = () => {
   const [search, setSearch] = useState([]);
   const [textSearch, setTextSearch] = useState("");
   const { token } = useSelector((state) => state.auth.user);
-
-  useEffect(() => {}, []);
 
   const debounce = (func) => {
     let timer;
@@ -70,7 +68,8 @@ const Search = () => {
             <Link
               key={course.id}
               className="text-dn"
-              to={`/course/${course.id}`}
+              to={`/courses/detail/${course.id}`}
+              state={{ id: course.id }}
             >
               <p
                 className="bg-gray px-2 py-3 round"

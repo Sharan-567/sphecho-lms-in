@@ -6,9 +6,6 @@ $homePrimary: #ffb605;
   top: 0;
   width: 100%;
   z-index: 100;
-  .t-menu {
-    background-color: white;
-  }
   .logo {
     position: absolute;
     top: -450%;
@@ -36,19 +33,20 @@ $homePrimary: #ffb605;
 }
 
 .dropdown-toggle.nav-link {
-  color: white;
+  color: black;
 }
 
 .c-nav-drop {
-  margin-right: 2rem;
+  margin-right: 1rem;
   font-weight: bold;
   background: none;
   color: white;
+  border-radius: 0.4rem;
   &.show {
     background: $transparent;
   }
   &:hover {
-    background: $transparent;
+    background: rgb(234, 234, 234);
   }
   .dropdown-toggle::after {
     content: none;
@@ -61,8 +59,9 @@ $homePrimary: #ffb605;
 }
 
 .bottom-nav-bar {
+  background-color: white;
   .nav-link.link {
-    color: white;
+    color: black;
   }
 
   &.showNav {
@@ -77,4 +76,8 @@ $homePrimary: #ffb605;
       color: black;
     }
   }
+}
+
+.navbar-nav .nav-link {
+  font-size: 0.9rem;
 }

@@ -23,7 +23,7 @@ type navBarProps = {
   showLogo?: boolean;
 };
 
-const NavBar = ({ showLogo }: navBarProps) => {
+const NavBar = ({ showLogo = true }: navBarProps) => {
   const navElement = useRef<HTMLElement | null>();
   const [showNav, setShowNav] = useState(false);
   const [startSpin, setStartSpin] = useState(false);
@@ -77,37 +77,9 @@ const NavBar = ({ showLogo }: navBarProps) => {
   return (
     <>
       <div ref={navElement} className="c">
-        <div className="t-menu">
-          <Container className="d-flex fluid justify-content-between">
-            <Dropdown>
-              <Dropdown.Toggle id="lang-dropdown">English</Dropdown.Toggle>
-              <Dropdown.Menu>
-                <Dropdown.Item href="">Japanies</Dropdown.Item>
-                <Dropdown.Item href="">Spanish</Dropdown.Item>
-                <Dropdown.Item href="">italin</Dropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Nav className="justify-content-end">
-              <Nav.Item>
-                <Nav.Link className="link" eventKey="link-2" href="">
-                  My BlackBoard
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link
-                  className="link"
-                  eventKey="link-3"
-                  onClick={handleOpenModel}
-                >
-                  Login / Register
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-          </Container>
-        </div>
         <div>
           <Navbar
-            className={`bottom-nav-bar ${showNav && "showNav"}`}
+            className={`bottom-nav-bar py-3 ${showNav && "showNav"}`}
             expand="lg"
           >
             <Container>
@@ -190,6 +162,18 @@ const NavBar = ({ showLogo }: navBarProps) => {
                       Another action
                     </NavDropdown.Item>
                   </NavDropdown>
+                  <Button
+                    className="bg-graydark text-black px-3 me-3 border"
+                    onClick={handleOpenModel}
+                  >
+                    Login
+                  </Button>
+                  <Button
+                    className="bg-green text-white px-3 b-o-none "
+                    onClick={handleOpenModel}
+                  >
+                    Sign up
+                  </Button>
                 </Nav>
               </Navbar.Collapse>
             </Container>

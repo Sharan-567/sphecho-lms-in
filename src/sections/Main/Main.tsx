@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Form, Button, Badge } from "react-bootstrap";
-
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import Search from "../../components/Search";
 import bg1 from "../../assets/bg-1.jpg";
+import { fetchAllCourses } from "../../features/courses";
+import "react-calendar/dist/Calendar.css";
+import Calender from "../../components/CalenderWithEvents";
+import "./Main.scss";
+
 const Main = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAllCourses());
+  }, []);
+
   return (
     <div className="p-3 w-100 ">
       <Row className="px-2">
@@ -12,16 +23,16 @@ const Main = () => {
           <Search />
         </Col>
       </Row>
-      <Row>
-        <Col sm={6} className="px-4 py-1">
-          <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
-          <p
-            style={{ fontWeight: "500", lineHeight: ".8rem" }}
-            className="small text-blue"
-          >
-            You have tauth 6 hours yesterday
-          </p>
-          <Row className="br-2 bg-graydark p-3">
+      <Row className="p-2 py-3">
+        <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
+        <p
+          style={{ fontWeight: "500", lineHeight: ".8rem" }}
+          className="small text-blue"
+        >
+          You have tauth 6 hours yesterday
+        </p>
+        <Col sm={4} className="px-4 py-1">
+          <Row className="br-2 bg-graydark p-3 h-100">
             <Col sm={5}>
               <h5 className="b-700 mb-4">My Demo Rating</h5>
               <img
@@ -69,6 +80,9 @@ const Main = () => {
               </div>
             </Col>
           </Row>
+        </Col>
+        <Col sm={8}>
+          <Calender />
         </Col>
       </Row>
     </div>

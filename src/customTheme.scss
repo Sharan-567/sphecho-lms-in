@@ -11,31 +11,36 @@ $theme-colors: (
 // custom variables
 $skyBlue: rgb(14, 156, 240);
 
+// text size
+.tiny {
+  font-size: 0.5;
+}
+
 .b-200 {
   font-weight: 200;
 }
 .b-300 {
-  font-weight: 300;
+  font-weight: 300 !important;
 }
 .b-400 {
-  font-weight: 400;
+  font-weight: 400 !important;
 }
 
 .b-500 {
-  font-weight: 500;
+  font-weight: 500 !important;
 }
 
 .b-600 {
-  font-weight: 600;
+  font-weight: 600 !important;
 }
 .b-700 {
-  font-weight: 700;
+  font-weight: 700 !important;
 }
 .b-800 {
-  font-weight: 800;
+  font-weight: 800 !important;
 }
 .b-900 {
-  font-weight: 900;
+  font-weight: 900 !important;
 }
 .round {
   border-radius: 1rem;
@@ -79,4 +84,10 @@ $skyBlue: rgb(14, 156, 240);
 .text-dn {
   text-decoration: none !important;
 }
+
+.b-o-none {
+  border: none;
+  outline: none;
+}
+
 @import "../node_modules/bootstrap/scss/bootstrap";
