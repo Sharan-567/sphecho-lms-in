@@ -165,6 +165,7 @@ const SideNav = () => {
                         border: "none",
                         background: "none",
                         textDecoration: "none",
+                        margin: ".7rem 0rem",
                       }}
                       key={i}
                     >

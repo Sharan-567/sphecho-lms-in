@@ -1,0 +1,78 @@
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import { RootState } from "../store";
+import { BASE_URL } from "./settings";
+
+export interface Course {
+  id: number;
+  name: string;
+  tags: string;
+  info_image: string;
+  description: string;
+  trainer_name: string;
+  trainer_image: string;
+  full_amount?: string;
+  sample_ur?: string;
+  view_all: boolean;
+  enroll_all: boolean;
+  featured: boolean;
+}
+
+export interface LatestestCourse {
+  loading: boolean;
+  latestCourses: Course[];
+  err: string;
+}
+
+const initialState: LatestestCourse = {
+  loading: false,
+  latestCourses: [],
+  err: "",
+};
+
+export const fetchLatestCourses = createAsyncThunk(
+  "latestCourses",
+  async (_, ThunkAPI) => {
+    try {
+      const headers = {
+        Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
+      };
+      const res = await axios(
+        `${BASE_URL}student/course-serach/?search=latest`,
+        {
+          headers,
+        }
+      );
+      return res.data.courses;
+    } catch (err) {
+      return ThunkAPI.rejectWithValue("something went wrong");
+    }
+  }
+);
+
+const courses = createSlice({
+  name: "latestCourses",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchLatestCourses.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        fetchLatestCourses.fulfilled,
+        (state, action: PayloadAction<Course[]>) => {
+          state.loading = false;
+          state.latestCourses = action.payload;
+          state.err = "";
+        }
+      )
+      .addCase(fetchLatestCourses.rejected, (state, action) => {
+        state.loading = false;
+        state.latestCourses = [];
+        state.err = action.payload;
+      });
+  },
+});
+
+export default courses.reducer;

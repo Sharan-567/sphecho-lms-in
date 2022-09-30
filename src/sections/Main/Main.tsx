@@ -1,29 +1,39 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Form, Button, Badge } from "react-bootstrap";
-import { useDispatch } from "react-redux";
+import { Row, Col, Form, Badge, Container } from "react-bootstrap";
+import AliceCarousel from "react-alice-carousel";
 import { Link } from "react-router-dom";
 import Search from "../../components/Search";
 import bg1 from "../../assets/bg-1.jpg";
 import { fetchAllCourses } from "../../features/courses";
+import { fetchLatestCourses } from "../../features/latestCourses";
 import "react-calendar/dist/Calendar.css";
-import Calender from "../../components/CalenderWithEvents";
+import CalenderWithEvents from "../../components/CalenderWithEvents";
 import "./Main.scss";
+import { useAppDispatch, useAppSelector } from "../../store";
+import Card from "../../components/Card";
 
 const Main = () => {
-  const dispatch = useDispatch();
+  const {
+    loading: latestLoading,
+    err,
+    latestCourses,
+  } = useAppSelector((state) => state.latestCourses);
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchAllCourses());
+    dispatch(fetchLatestCourses());
   }, []);
 
   return (
-    <div className="p-3 w-100 ">
-      <Row className="px-2">
+    <div className="py-4 w-100 container">
+      <Row className="px-4 ">
         <Col sm={4} className="m-auto">
           <Search />
         </Col>
       </Row>
-      <Row className="p-2 py-3">
+      <Row className="p-5 py-3">
         <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
         <p
           style={{ fontWeight: "500", lineHeight: ".8rem" }}
@@ -82,9 +92,37 @@ const Main = () => {
           </Row>
         </Col>
         <Col sm={8}>
-          <Calender />
+          <CalenderWithEvents />
         </Col>
       </Row>
+      <Container>
+        <Row className="p-5" style={{ minHeight: "16rem" }}>
+          <Col className="p-4 br-2 bg-graydark position-relative">
+            <h4 className="b-700 text-blue">Latest Courses</h4>
+            <div className="p-2">
+              <AliceCarousel
+                disableDotsControls
+                autoWidth
+                renderPrevButton={() => (
+                  <span
+                    style={{ cursor: "pointer" }}
+                    className="bg-skyBlue text-white p-2 b-900"
+                  >{`<`}</span>
+                )}
+                renderNextButton={() => (
+                  <span
+                    style={{ cursor: "pointer" }}
+                    className="bg-skyBlue text-white p-2 b-900"
+                  >{`>`}</span>
+                )}
+                items={latestCourses.map((course) => (
+                  <Card course={course} />
+                ))}
+              />
+            </div>
+          </Col>
+        </Row>
+      </Container>
     </div>
   );
 };

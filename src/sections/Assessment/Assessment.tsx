@@ -22,7 +22,7 @@ const Assessment = () => {
 
   if (err) {
     return (
-      <div className="p-2 w-100 d-flex justify-content-center align-items-center">
+      <div className="container p-2 w-100 d-flex justify-content-center align-items-center">
         <BsExclamationTriangle className="me-4" size={40} />
         <div>
           <h5 className="m-auto text-danger">{err}</h5>
@@ -33,13 +33,13 @@ const Assessment = () => {
   }
 
   return (
-    <div className="p-3 w-75">
+    <div className="container p-3 w-75">
       {loading ? (
         <div className="w-100 d-flex justify-content-center mt-5">
           <Spinner animation="border" variant="green" />
         </div>
       ) : (
-        <Row className="p-3 ms-5">
+        <Row className="p-3">
           <Row>
             <Col sm={9}>
               <h2 className="b-700 text-blue">Assessment</h2>

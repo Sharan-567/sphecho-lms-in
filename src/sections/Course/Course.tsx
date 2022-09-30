@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import { fetchAllCourses, fetchUserCourses } from "../../features/courses";
 
 import { ListGroup, Row, Col, Button, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { HOST } from "../../features/settings";
 import { BsExclamationTriangle } from "react-icons/bs";
+import { useAppDispatch, useAppSelector } from "../../store";
 
 const Course = () => {
-  const { loading, courses, userCourses, err } = useSelector(
+  const { loading, courses, userCourses, err } = useAppSelector(
     (state) => state.courses
   );
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchAllCourses());
@@ -31,7 +31,7 @@ const Course = () => {
 
   if (err) {
     return (
-      <div className="p-2 w-100 d-flex justify-content-center align-items-center">
+      <div className="container p-3 w-100 d-flex justify-content-center align-items-center">
         <BsExclamationTriangle className="me-4" size={40} />
         <div>
           <h5 className="m-auto text-danger">{err}</h5>
@@ -42,7 +42,7 @@ const Course = () => {
   }
 
   return (
-    <div className="px-5 py-2 mt-3 w-100">
+    <div className="container px-5 py-2 mt-3 w-100">
       {loading ? (
         <div className="w-100 d-flex justify-content-center mt-5">
           <Spinner animation="border" variant="green" />
@@ -53,7 +53,7 @@ const Course = () => {
             width: "100%",
             height: "100%",
           }}
-          className="flex-direction-column align-items-center"
+          className="px-5 flex-direction-column align-items-center"
         >
           <div>
             <h2 className="b-700 text-blue">My Courses</h2>
