@@ -1,12 +1,13 @@
 import React, { useCallback, useState } from "react";
 import { Form, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Course } from "../../features/courses";
+import { useAppSelector } from "../../store";
 
 const Search = () => {
-  const [search, setSearch] = useState([]);
+  const [search, setSearch] = useState<Course[]>([]);
   const [textSearch, setTextSearch] = useState("");
-  const { token } = useSelector((state) => state.auth.user);
+  const { token } = useAppSelector((state) => state.auth.user);
 
   const debounce = (func) => {
     let timer;
@@ -72,7 +73,7 @@ const Search = () => {
               state={{ id: course.id }}
             >
               <p
-                className="bg-gray px-2 py-3 round"
+                className="bg-graydark px-2 py-3 round"
                 style={{ cursor: "pointer" }}
                 key={course.id}
               >

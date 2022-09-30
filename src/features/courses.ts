@@ -1,8 +1,30 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "./settings";
 
-const initialState = {
+export interface Course {
+  id: number;
+  name: string;
+  tags: string;
+  info_image: string;
+  description: string;
+  trainer_name: string;
+  trainer_image: string;
+  full_amount?: string;
+  sample_ur?: string;
+  view_all: boolean;
+  enroll_all: boolean;
+  featured: boolean;
+}
+
+type InitialState = {
+  loading: boolean;
+  courses: Course[];
+  userCourses: Course[];
+  err: string;
+};
+
+const initialState: InitialState = {
   loading: false,
   courses: [],
   userCourses: [],
@@ -50,11 +72,14 @@ const courses = createSlice({
       .addCase(fetchAllCourses.pending, (state, action) => {
         state.loading = true;
       })
-      .addCase(fetchAllCourses.fulfilled, (state, action) => {
-        state.loading = false;
-        state.courses = action.payload;
-        state.err = "";
-      })
+      .addCase(
+        fetchAllCourses.fulfilled,
+        (state, action: PayloadAction<Course[]>) => {
+          state.loading = false;
+          state.courses = action.payload;
+          state.err = "";
+        }
+      )
       .addCase(fetchAllCourses.rejected, (state, action) => {
         state.loading = false;
         state.courses = [];

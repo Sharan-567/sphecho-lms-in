@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Form, Badge, Container } from "react-bootstrap";
-import AliceCarousel from "react-alice-carousel";
 import { Link } from "react-router-dom";
-import Search from "../../components/Search";
-import bg1 from "../../assets/bg-1.jpg";
-import { fetchAllCourses } from "../../features/courses";
-import { fetchLatestCourses } from "../../features/latestCourses";
-import "react-calendar/dist/Calendar.css";
-import CalenderWithEvents from "../../components/CalenderWithEvents";
-import "./Main.scss";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { fetchLatestCourses } from "../../features/latestCourses";
+import { fetchAllCourses } from "../../features/courses";
+import { AiOutlineShopping } from "react-icons/ai";
+import AliceCarousel from "react-alice-carousel";
+import Search from "../../components/Search";
+import CalenderWithEvents from "../../components/CalenderWithEvents";
 import Card from "../../components/Card";
+import "react-calendar/dist/Calendar.css";
+import "./Main.scss";
+import bg1 from "../../assets/bg-1.jpg"; // its dummy imaage usally have to come from server
 
 const Main = () => {
   const {
@@ -18,6 +19,7 @@ const Main = () => {
     err,
     latestCourses,
   } = useAppSelector((state) => state.latestCourses);
+  const { items } = useAppSelector((state) => state.cart);
 
   const dispatch = useAppDispatch();
 
@@ -28,9 +30,26 @@ const Main = () => {
 
   return (
     <div className="py-4 w-100 container">
-      <Row className="px-4 ">
-        <Col sm={4} className="m-auto">
+      <Row className="px-5">
+        <Col
+          sm={4}
+          className="d-flex px-4 align-items-center justify-content-between w-100"
+        >
+          <div></div>
           <Search />
+          <div>
+            <Link to="/cart">
+              <AiOutlineShopping size={"2rem"} />
+              <Badge
+                bg="danger"
+                text="white"
+                pill
+                style={{ marginLeft: "-.7em", marginBottom: "-.2em" }}
+              >
+                {items.length}
+              </Badge>
+            </Link>
+          </div>
         </Col>
       </Row>
       <Row className="p-5 py-3">
@@ -116,7 +135,7 @@ const Main = () => {
                   >{`>`}</span>
                 )}
                 items={latestCourses.map((course) => (
-                  <Card course={course} />
+                  <Card key={course.id} course={course} />
                 ))}
               />
             </div>

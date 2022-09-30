@@ -80,7 +80,11 @@ $skyBlue: rgb(14, 156, 240);
   text-decoration: none !important;
 }
 
-.b-o-none {
+.b-o-no {
+  border: none;
+  outline: none;
+}
+.b-o-none:hover {
   border: none;
   outline: none;
 }

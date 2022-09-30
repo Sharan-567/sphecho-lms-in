@@ -1,6 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { auth, courses, topics, assessment, latestCourses } from "./features";
+import {
+  auth,
+  courses,
+  topics,
+  assessment,
+  latestCourses,
+  cart,
+} from "./features";
 
 export const store = configureStore({
   reducer: {
@@ -9,6 +16,7 @@ export const store = configureStore({
     topics,
     assessment,
     latestCourses,
+    cart,
   },
 });
 
