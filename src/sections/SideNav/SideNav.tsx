@@ -3,6 +3,7 @@ import "./SideNav.scss";
 import { Row, Col } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
+import { IconType } from "react-icons";
 import Bg1 from "../../assets/bg-1.jpg";
 
 import {
@@ -14,12 +15,17 @@ import {
   AiOutlineLogout,
 } from "react-icons/ai";
 
+interface MenuList {
+  Icon: IconType;
+  title: string;
+  comp: string;
+}
+
 const SideNav = () => {
   const [toggleNav, setToggleNav] = useState(false);
-  const [activeTab, setActiveTab] = useState("main");
   const containerRef = useRef(null);
 
-  const menuList = [
+  const menuList: MenuList[] = [
     {
       Icon: AiOutlineUser,
       title: "My Profile",

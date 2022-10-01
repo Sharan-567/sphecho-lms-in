@@ -1,20 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, Path } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../../store";
 import { HOST } from "../../features/settings";
+import type { Course } from "../../features/courses";
+
+interface Location extends Path {
+  state: {
+    id: number;
+  };
+}
 
 const CourseDetail = () => {
-  const { state } = useLocation();
-  const [course, setCourse] = useState({});
-  const { courses, err, loading } = useSelector((state) => state.courses);
+  const location: Location = useLocation() as Location;
+  const [course, setCourse] = useState<Course>();
+  const { courses, err, loading } = useAppSelector((state) => state.courses);
 
   useEffect(() => {
     if (courses) {
-      let selected = courses.filter((c) => c.id == state.id)[0];
+      let selected = courses.filter((c) => c.id == location.state.id)[0];
       setCourse(selected);
     }
   }, [loading]);
+
+  const getPrice = (price) => {
+    if (price) {
+      if (parseInt(price) == 0) return "Free";
+      else return `$${parseInt(price)}`;
+    }
+  };
 
   if (err) {
     return <h3>Something went wrong</h3>;
@@ -29,7 +43,7 @@ const CourseDetail = () => {
             <div className="bg-2 bg-graydark br-2 p-3">
               <img
                 alt=""
-                src={`https://${HOST}${course.info_image}`}
+                src={`https://${HOST}${course?.info_image}`}
                 style={{
                   width: "100%",
                   height: "17rem",
@@ -41,7 +55,7 @@ const CourseDetail = () => {
               <div className="d-flex align-items-center mb-3">
                 <img
                   alt="traniner"
-                  src={`https://${HOST}${course.trainer_image}`}
+                  src={`https://${HOST}${course?.trainer_image}`}
                   className="round-50 obj-fit-cover me-2"
                   style={{
                     width: "3rem",
@@ -61,9 +75,7 @@ const CourseDetail = () => {
 
               <div className="d-flex align-items-center justify-content-between mb-1">
                 <h3 className="text-skyBlue b-800">
-                  {Number(course?.full_amount).toFixed(0) == 0
-                    ? "Free"
-                    : Number(course?.full_amount).toFixed(0)}
+                  {getPrice(course?.full_amount)}
                 </h3>
                 <Link to={`/courses/${course?.id}`}>
                   <Button className="bg-green text-white px-5">

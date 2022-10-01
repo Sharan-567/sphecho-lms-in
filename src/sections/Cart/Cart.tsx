@@ -9,7 +9,7 @@ const Cart = () => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
-  const getPrice = (price) => {
+  const getPrice = (price?: string) => {
     if (price) {
       if (parseInt(price) == 0) return "Free";
       else return `$${parseInt(price)}`;

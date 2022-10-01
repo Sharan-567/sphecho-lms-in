@@ -2,7 +2,20 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "./settings";
 
-const initialState = {
+type InitialState = {
+  loading: boolean;
+  isLoggedIn: boolean;
+  user: {
+    token: string;
+  };
+  err?: string;
+};
+
+type ResponseData = {
+  token: string;
+};
+
+const initialState: InitialState = {
   loading: true,
   isLoggedIn: false,
   user: {
@@ -11,7 +24,11 @@ const initialState = {
   err: "",
 };
 
-export const login = createAsyncThunk("/login", async (data, thunkAPI) => {
+export const login = createAsyncThunk<
+  ResponseData,
+  FormData,
+  { rejectValue: string; serializedErrorType: string }
+>("/login", async (data, thunkAPI) => {
   return axios
     .post(`${BASE_URL}accounts/login/`, data)
     .then((res) => res.data)
@@ -37,7 +54,11 @@ const auth = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isLoggedIn = false;
-        state.err = action.payload;
+        if (action.payload) {
+          state.err = action.payload;
+        } else {
+          state.err = action.error;
+        }
       });
   },
 });

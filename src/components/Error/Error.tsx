@@ -1,7 +1,7 @@
 import React from "react";
 import { BsExclamationTriangle } from "react-icons/bs";
 
-const Error = (message) => {
+const Error = (message: string) => {
   return (
     <div className="p-2 w-100 d-flex justify-content-center align-items-center">
       <BsExclamationTriangle />

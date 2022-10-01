@@ -1,10 +1,17 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
+import { Question as question } from "../../features/assessment";
 
-const Question = ({ q, setCorrectAnswers, count }) => {
+type props = {
+  q: question;
+  setCorrectAnswers: React.Dispatch<React.SetStateAction<number>>;
+  count: number;
+};
+
+const Question: React.FC<props> = ({ q, setCorrectAnswers, count }) => {
   const [founCorrect, setFoundCorrect] = useState(false);
 
-  const handleOption = (e) => {
+  const handleOption = (e: React.ChangeEvent<HTMLInputElement>) => {
     let value = e.target.value;
     if (!founCorrect && q.correct_option === value) {
       setCorrectAnswers((p) => p + 1);

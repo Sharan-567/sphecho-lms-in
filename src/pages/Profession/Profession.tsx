@@ -24,7 +24,7 @@ const bottomImages = [
   },
 ];
 
-const list1 = [
+const list1: string[] = [
   "Introduction to Telepractice",
   "Environment",
   "Technolory",
@@ -37,7 +37,7 @@ const list1 = [
   "Overcoming Obstacles",
 ];
 
-const list2 = [
+const list2: string[] = [
   "Introduction to Telepractice",
   "Facilitation",
   "Technology",
@@ -66,7 +66,7 @@ const List = ({ list, title }) => {
 };
 
 const Profession = () => {
-  const countries = useMemo(() => countryList.getNames());
+  const countries = useMemo(() => countryList.getNames(), []);
   return (
     <div>
       <NavBar />

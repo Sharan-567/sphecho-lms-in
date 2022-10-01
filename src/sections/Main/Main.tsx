@@ -24,8 +24,8 @@ const Main = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchAllCourses());
-    dispatch(fetchLatestCourses());
+    dispatch(fetchAllCourses({}));
+    dispatch(fetchLatestCourses({}));
   }, []);
 
   return (

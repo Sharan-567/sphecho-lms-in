@@ -30,25 +30,26 @@ const initialState: LatestestCourse = {
   err: "",
 };
 
-export const fetchLatestCourses = createAsyncThunk(
-  "latestCourses",
-  async (_, ThunkAPI) => {
-    try {
-      const headers = {
-        Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
-      };
-      const res = await axios(
-        `${BASE_URL}student/course-serach/?search=latest`,
-        {
-          headers,
-        }
-      );
-      return res.data.courses;
-    } catch (err) {
-      return ThunkAPI.rejectWithValue("something went wrong");
-    }
+export const fetchLatestCourses = createAsyncThunk<
+  Course[],
+  {},
+  {
+    state: RootState;
+    rejectValue: string;
   }
-);
+>("latestCourses", async (_, ThunkAPI) => {
+  try {
+    const headers = {
+      Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
+    };
+    const res = await axios(`${BASE_URL}student/course-serach/?search=latest`, {
+      headers,
+    });
+    return res.data.courses;
+  } catch (err) {
+    return ThunkAPI.rejectWithValue("something went wrong");
+  }
+});
 
 const courses = createSlice({
   name: "latestCourses",
@@ -67,10 +68,10 @@ const courses = createSlice({
           state.err = "";
         }
       )
-      .addCase(fetchLatestCourses.rejected, (state, action) => {
+      .addCase(fetchLatestCourses.rejected, (state, { payload }) => {
         state.loading = false;
         state.latestCourses = [];
-        state.err = action.payload;
+        if (typeof payload == "string") state.err = payload;
       });
   },
 });

@@ -15,8 +15,8 @@ const Course = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchAllCourses());
-    dispatch(fetchUserCourses());
+    dispatch(fetchAllCourses({}));
+    dispatch(fetchUserCourses({}));
   }, []);
 
   const getUsersCourses = (userCourses) => {

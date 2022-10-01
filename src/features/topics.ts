@@ -1,8 +1,9 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { RootState } from "../store";
 import { BASE_URL } from "./settings";
 
-type Topic = {
+export type Topic = {
   id: number;
   name: string;
   info_image: string;
@@ -35,27 +36,28 @@ const initialState: InitialState = {
   err: "",
 };
 
-export const fetchTopics = createAsyncThunk(
-  "topics",
-  async (id: number, ThunkAPI) => {
-    try {
-      const headers = {
-        Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
-      };
-      const res = await axios(`${BASE_URL}student/get-course-details/${id}/`, {
-        headers,
-      });
+export const fetchTopics = createAsyncThunk<
+  Topic[],
+  string,
+  { state: RootState; rejectValue: string }
+>("topics", async (id, ThunkAPI) => {
+  try {
+    const headers = {
+      Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
+    };
+    const res = await axios(`${BASE_URL}student/get-course-details/${id}/`, {
+      headers,
+    });
 
-      if (res.data.message) {
-        return ThunkAPI.rejectWithValue("No Topics Found");
-      }
-
-      return res.data.topics.sort((t1, t2) => t1.order - t2.order);
-    } catch (err) {
-      return ThunkAPI.rejectWithValue("something went wrong");
+    if (res.data.message) {
+      return ThunkAPI.rejectWithValue("No Topics Found");
     }
+
+    return res.data.topics.sort((t1: Topic, t2: Topic) => t1.order - t2.order);
+  } catch (err) {
+    return ThunkAPI.rejectWithValue("something went wrong");
   }
-);
+});
 
 const topics = createSlice({
   name: "topics",
@@ -63,7 +65,7 @@ const topics = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTopics.pending, (state, action) => {
+      .addCase(fetchTopics.pending, (state) => {
         state.loading = true;
       })
       .addCase(
@@ -77,7 +79,7 @@ const topics = createSlice({
       .addCase(fetchTopics.rejected, (state, action) => {
         state.loading = false;
         state.topics = [];
-        state.err = action.payload;
+        state.err = action.payload as string;
       });
   },
 });

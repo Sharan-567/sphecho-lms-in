@@ -12,7 +12,14 @@ import cBg from "../../assets/curriculum-bg.jpg";
 import bg2 from "../../assets/bg-2.jpg";
 import btnY from "../../assets/btn-y.png";
 
-const bottomImages = [
+interface BottomImages {
+  title: string;
+  href: string;
+  img: string;
+  clickHandler?: () => void;
+}
+
+const bottomImages: BottomImages[] = [
   { title: "Operational Guide", href: "/", img: btnY },
   { title: "Clinical Expectation", href: "/", img: btnY },
   { title: "Technical Know-How", href: "/", img: btnY },
@@ -58,7 +65,6 @@ const Curriculum = () => {
                 textAlign: "center",
                 color: "white",
                 padding: "1em",
-                color: "white",
                 borderRadius: "1rem",
               }}
             >
@@ -83,7 +89,6 @@ const Curriculum = () => {
                 textAlign: "center",
                 color: "white",
                 padding: "1em",
-                color: "white",
                 borderRadius: "1rem",
               }}
             >
@@ -108,7 +113,6 @@ const Curriculum = () => {
                 textAlign: "center",
                 color: "white",
                 padding: "1em",
-                color: "white",
                 borderRadius: "1rem",
               }}
             >

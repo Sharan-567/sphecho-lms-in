@@ -25,7 +25,7 @@ type Props = {
   course: Course;
 };
 
-const Card = ({ course }: Props) => {
+const Card: React.FC<Props> = ({ course }) => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 

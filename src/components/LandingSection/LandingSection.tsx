@@ -8,8 +8,16 @@ import logo from "../../assets/logo.png";
 import sLogo from "../../assets/s-logo.png";
 import cBg from "../../assets/c-bg.png";
 
-const LandingSection = ({ config }) => {
-  const { bottomImages, carouselImages } = config;
+interface Props {
+  bottomImages: {
+    img: string;
+    title: string;
+    href: string;
+  }[];
+  carouselImages: string[];
+}
+
+const LandingSection: React.FC<Props> = ({ bottomImages, carouselImages }) => {
   return (
     <div className="position-relative carousel-container">
       <Carousel indicators={false}>

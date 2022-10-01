@@ -4,7 +4,21 @@ import PropTypes from "prop-types";
 
 import "./LandingSectionTwo.scss";
 
-const LandingSectionTwo = (props) => {
+type Props = {
+  bottomImages: {
+    title: string;
+    href?: string;
+    img?: string;
+    clickHandler?: () => void;
+  }[];
+  centerLogo?: string;
+  title: string;
+  backgroundImg: string;
+  logo?: string;
+  bottomIllustration: string;
+};
+
+const LandingSectionTwo: React.FC<Props> = (props) => {
   const {
     bottomImages,
     centerLogo,
@@ -12,7 +26,6 @@ const LandingSectionTwo = (props) => {
     backgroundImg,
     logo,
     bottomIllustration,
-    clickHandler,
   } = props;
   return (
     <div className="landing">
@@ -47,15 +60,6 @@ const LandingSectionTwo = (props) => {
       </div>
     </div>
   );
-};
-
-LandingSectionTwo.prototypes = {
-  bottomImages: PropTypes.arrayOf(PropTypes.object),
-  centerLogo: PropTypes.object,
-  title: PropTypes.string,
-  backgroundImg: PropTypes.object.isRequired,
-  logo: PropTypes.object,
-  bottomIllustration: PropTypes.object,
 };
 
 export default LandingSectionTwo;

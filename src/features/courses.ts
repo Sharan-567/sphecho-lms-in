@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "./settings";
+import { AppDispatch, RootState } from "../store";
 
 export interface Course {
   id: number;
@@ -31,37 +32,47 @@ const initialState: InitialState = {
   err: "",
 };
 
-export const fetchAllCourses = createAsyncThunk(
-  "courses",
-  async (_, ThunkAPI) => {
-    try {
-      const headers = {
-        Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
-      };
-      const res = await axios(`${BASE_URL}student/course/`, { headers });
-      return res.data;
-    } catch (err) {
-      return ThunkAPI.rejectWithValue("something went wrong");
-    }
+export const fetchAllCourses = createAsyncThunk<
+  Course[],
+  {},
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    rejectValue: string;
   }
-);
+>("courses", async (_, ThunkAPI) => {
+  try {
+    const headers = {
+      Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
+    };
+    const res = await axios(`${BASE_URL}student/course/`, { headers });
+    return res.data;
+  } catch (err) {
+    return ThunkAPI.rejectWithValue("Something Went Wrong");
+  }
+});
 
-export const fetchUserCourses = createAsyncThunk(
-  "userCourses",
-  async (_, ThunkAPI) => {
-    try {
-      const headers = {
-        Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
-      };
-      const res = await axios(`${BASE_URL}student/student-course/`, {
-        headers,
-      });
-      return res.data;
-    } catch (err) {
-      return ThunkAPI.rejectWithValue("something went wrong");
-    }
+export const fetchUserCourses = createAsyncThunk<
+  Course[],
+  {},
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    rejectValue: string;
   }
-);
+>("userCourses", async (_, ThunkAPI) => {
+  try {
+    const headers = {
+      Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
+    };
+    const res = await axios(`${BASE_URL}student/student-course/`, {
+      headers,
+    });
+    return res.data as Course[];
+  } catch (err) {
+    return ThunkAPI.rejectWithValue("something went wrong");
+  }
+});
 
 const courses = createSlice({
   name: "course",
@@ -69,7 +80,7 @@ const courses = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllCourses.pending, (state, action) => {
+      .addCase(fetchAllCourses.pending, (state) => {
         state.loading = true;
       })
       .addCase(
@@ -83,9 +94,9 @@ const courses = createSlice({
       .addCase(fetchAllCourses.rejected, (state, action) => {
         state.loading = false;
         state.courses = [];
-        state.err = action.payload;
+        if (action.payload) state.err = action.payload;
       })
-      .addCase(fetchUserCourses.pending, (state, action) => {
+      .addCase(fetchUserCourses.pending, (state) => {
         state.loading = true;
       })
       .addCase(fetchUserCourses.fulfilled, (state, action) => {
@@ -96,7 +107,7 @@ const courses = createSlice({
       .addCase(fetchUserCourses.rejected, (state, action) => {
         state.loading = false;
         state.courses = [];
-        state.err = action.payload;
+        if (action.payload) state.err = action.payload;
       });
   },
 });

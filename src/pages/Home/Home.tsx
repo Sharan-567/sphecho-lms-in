@@ -19,15 +19,28 @@ import vector from "../../assets/Vector1.png";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 
+type BottomImages = {
+  img: string;
+  title: string;
+  href: string;
+};
+
+type TestmonialImages = {
+  id: number;
+  name: string;
+  title: string;
+  img: string;
+};
+
 // content data
-const carouselImages = [bg1, bg2];
-const bottomImages = [
+const carouselImages: string[] = [bg1, bg2];
+const bottomImages: BottomImages[] = [
   { img: btnY, title: "SPHECHO Curriculum", href: "/curriculum" },
   { img: btnG, title: "Professional Certification", href: "/profession" },
   { img: btnB, title: "Resource Hub", href: "/resourcehub" },
 ];
-const newsImages = [bg1, bg2, event2, event, bg1, bg2, event2, event];
-const testmonialImages = [
+const newsImages: string[] = [bg1, bg2, event2, event, bg1, bg2, event2, event];
+const testmonialImages: TestmonialImages[] = [
   { id: 0, name: "manuael", title: "design", img: bg1 },
   { id: 1, name: "jaffar", title: "ux desinger", img: bg2 },
   { id: 2, name: "alice", title: "ux desinger", img: event2 },
@@ -48,7 +61,10 @@ const Home = () => {
   return (
     <div>
       <NavBar />
-      <LandingSection config={{ bottomImages, carouselImages }} />
+      <LandingSection
+        bottomImages={bottomImages}
+        carouselImages={carouselImages}
+      />
 
       {/* event section */}
       <section className="event pt-5 w-100 position-relative">
@@ -182,11 +198,7 @@ const Home = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                  <Form.Control
-                    placeholder="Phone"
-                    type="tel"
-                    label="Check me out"
-                  />
+                  <Form.Control placeholder="Phone" type="tel" />
                 </Form.Group>
                 <Button className="mybtn" type="submit">
                   Submit

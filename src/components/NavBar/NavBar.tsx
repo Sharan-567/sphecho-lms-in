@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Nav,
-  Dropdown,
   Navbar,
   Container,
   NavDropdown,
@@ -11,26 +10,26 @@ import {
   Spinner,
 } from "react-bootstrap";
 import { Formik } from "formik";
-import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import propTypes from "prop-types";
 
 import { login } from "../../features/auth";
 import "./NavBar.scss";
 import logo from "../../assets/s-logo.png";
+import { useAppDispatch, useAppSelector } from "../../store";
 
 type navBarProps = {
   showLogo?: boolean;
 };
 
 const NavBar = ({ showLogo = true }: navBarProps) => {
-  const navElement = useRef<HTMLElement | null>();
+  const navElement = useRef<HTMLDivElement>();
   const [showNav, setShowNav] = useState(false);
   const [startSpin, setStartSpin] = useState(false);
 
   const [showLoginModal, setShowLoginModal] = useState(false);
-  const dispatch = useDispatch();
-  const { err } = useSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
+  const { err } = useAppSelector((state) => state.auth);
 
   const handleCloseModal = () => setShowLoginModal(false);
   const handleOpenModel = () => setShowLoginModal(true);
@@ -50,13 +49,15 @@ const NavBar = ({ showLogo = true }: navBarProps) => {
     return () => window.removeEventListener("scroll", controlNav);
   }, []);
 
-  const controlNav = (e) => {
+  const controlNav = () => {
     if (typeof window !== "undefined") {
-      const heightOfNav = navElement.current.getBoundingClientRect().height;
-      if (window.scrollY > heightOfNav) {
-        setShowNav(true);
-      } else {
-        setShowNav(false);
+      const heightOfNav = navElement?.current?.getBoundingClientRect().height;
+      if (heightOfNav) {
+        if (window.scrollY > heightOfNav) {
+          setShowNav(true);
+        } else {
+          setShowNav(false);
+        }
       }
     }
   };

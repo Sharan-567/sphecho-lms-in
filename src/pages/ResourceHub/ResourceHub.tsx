@@ -9,13 +9,20 @@ import bg from "../../assets/bg-b.jpg";
 import illustration from "../../assets/profession-illustration.png";
 import { Button } from "react-bootstrap";
 
+type BottomImages = {
+  title: string;
+  href?: string;
+  img: string;
+  clickHandler?: () => void;
+};
+
 const ResourceHub = () => {
   const [showModal, setShowModal] = useState(false);
   const modalHandler = useCallback(() => {
     setShowModal(true);
   }, [showModal]);
 
-  const bottomImages = [
+  const bottomImages: BottomImages[] = [
     {
       title: "Research and Publication",
       href: "/",
@@ -91,13 +98,8 @@ const ResourceHub = () => {
         </Row>
       </section>
       <Footer color={"#2E75B5"} />
-      <Modal
-        centered
-        size="md"
-        show={showModal}
-        onHide={() => setShowModal(false)}
-      >
-        <Modal.Body sytle={{ color: "#708CBC" }}>
+      <Modal centered show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Body style={{ color: "#708CBC" }}>
           <Modal.Header closeButton style={{ border: "none" }} />
           <div style={{ textAlign: "center" }}>
             <h2>WOAH,</h2>

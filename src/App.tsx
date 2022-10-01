@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "./store";
 import Home from "./pages/Home";
 import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
@@ -17,7 +17,7 @@ import {
 } from "./sections";
 
 function App() {
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const { isLoggedIn } = useAppSelector((state) => state.auth);
   return (
     <div>
       <Router>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { fetchTopics } from "../../features/topics";
+import { fetchTopics, Topic } from "../../features/topics";
 import {
   ListGroup,
   Spinner,
@@ -20,12 +20,14 @@ import { useAppDispatch, useAppSelector } from "../../store";
 
 const TopicsList = () => {
   const { loading, topics, err } = useAppSelector((state) => state.topics);
-  const [currentTopic, setCurrentTopic] = useState(null);
+  const [currentTopic, setCurrentTopic] = useState<Topic>();
   const { courseId } = useParams();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchTopics(courseId));
+    if (typeof courseId === "string") {
+      dispatch(fetchTopics(courseId));
+    }
   }, [courseId]);
 
   useEffect(() => {

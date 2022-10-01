@@ -2,7 +2,12 @@ import React from "react";
 import { Col, Row, Form, Button } from "react-bootstrap";
 import flr from "../../assets/flower.png";
 import "./Footer.scss";
-const Footer = ({ color }) => {
+
+type Props = {
+  color: string;
+};
+
+const Footer = ({ color }: Props) => {
   return (
     <footer>
       <Row>

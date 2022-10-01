@@ -1,15 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { Spinner, Row, Col, Button } from "react-bootstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { Path, useLocation } from "react-router-dom";
 import { getAssessment } from "../../features/assessment";
 import Question from "../../components/Question";
+import { useAppDispatch, useAppSelector } from "../../store";
+
+interface Location extends Path {
+  state: {
+    name: string;
+    max: number;
+    min: number;
+  };
+}
 
 const Assessment = () => {
-  const { loading, questions, err } = useSelector((state) => state.assessment);
-  const location = useLocation();
-  const dispatch = useDispatch();
+  const { loading, questions, err } = useAppSelector(
+    (state) => state.assessment
+  );
+  const location = useLocation() as Location;
+  const dispatch = useAppDispatch();
   const [correctAnswers, setCorrectAnswers] = useState(0);
 
   useEffect(() => {
@@ -59,6 +69,7 @@ const Assessment = () => {
             {questions.map((q, id) => {
               return (
                 <Question
+                  key={q.id}
                   q={q}
                   count={id + 1}
                   setCorrectAnswers={setCorrectAnswers}
@@ -76,30 +87,3 @@ const Assessment = () => {
 };
 
 export default Assessment;
-
-// id(pin):1
-// marks(pin):1
-// question(pin):"what is version control?"
-// answer(pin):""
-// solution_url(pin):null
-// correct_option(pin):"1"
-// option_01(pin):"option 1"
-// option_02(pin):"option 2"
-// option_03(pin):"option 3"
-// option_04(pin):"option 4"
-// option_05(pin):""
-// match_a(pin):""
-// match_1(pin):""
-// match_b(pin):""
-// match_2(pin):""
-// match_c(pin):""
-// match_3(pin):""
-// match_d(pin):""
-// match_4(pin):""
-// match_e(pin):""
-// match_5(pin):""
-// match_f(pin):""
-// match_6(pin):""
-// cnt(pin):2
-// topic(pin):3
-// type(pin):1
