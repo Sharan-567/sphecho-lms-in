@@ -1,61 +1,55 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
 import { RootState } from "../store";
-import { BASE_URL } from "./settings";
-
-export type Topic = {
-  id: number;
-  name: string;
-  info_image: string;
-  video?: string;
-  caption_file_url?: string;
-  pdf?: string;
-  image?: string;
-  content?: string;
-  description?: string;
-  assement_required: boolean;
-  max_marks?: number;
-  min_marks_to_qualify?: number;
-  order: number;
-  overview?: string;
-  owner: number;
-  course: number;
-  parent?: number;
-  volume_parent: number;
-};
+import type { Topic } from "./../definations/course";
+import type { Assessment } from "../definations/assessment";
+import topicService from "./../services/topic.service";
+import { getOrderListFromTwoList, addUniqueIdsToList } from "../services/utils";
 
 type InitialState = {
   loading: boolean;
   topics: Topic[];
+  assesements: Assessment[];
+  orderTopics: (Topic | Assessment)[];
   err: string;
 };
 
 const initialState: InitialState = {
   loading: false,
   topics: [],
+  assesements: [],
+  orderTopics: [],
   err: "",
 };
 
+type ResponseType = {
+  topics: Topic[];
+  assesements: Assessment[];
+  orderTopics: (Topic | Assessment)[];
+};
+
 export const fetchTopics = createAsyncThunk<
-  Topic[],
+  ResponseType,
   string,
   { state: RootState; rejectValue: string }
 >("topics", async (id, ThunkAPI) => {
   try {
-    const headers = {
-      Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
+    const token = ThunkAPI.getState().auth.user.token;
+
+    const { topics, assesements } = await topicService.fetchTopics(token, id);
+    const orderTopics = getOrderListFromTwoList<Topic, Assessment>(
+      topics,
+      assesements
+    );
+    const orderTopicsWithCustomIds = addUniqueIdsToList<Topic | Assessment>(
+      orderTopics
+    );
+    return {
+      topics,
+      assesements,
+      orderTopics: orderTopicsWithCustomIds,
     };
-    const res = await axios(`${BASE_URL}student/get-course-details/${id}/`, {
-      headers,
-    });
-
-    if (res.data.message) {
-      return ThunkAPI.rejectWithValue("No Topics Found");
-    }
-
-    return res.data.topics.sort((t1: Topic, t2: Topic) => t1.order - t2.order);
-  } catch (err) {
-    return ThunkAPI.rejectWithValue("something went wrong");
+  } catch (error) {
+    return ThunkAPI.rejectWithValue(error);
   }
 });
 
@@ -70,15 +64,18 @@ const topics = createSlice({
       })
       .addCase(
         fetchTopics.fulfilled,
-        (state, action: PayloadAction<Topic[]>) => {
+        (state, action: PayloadAction<ResponseType>) => {
           state.loading = false;
-          state.topics = action.payload;
+          state.topics = action.payload.topics;
+          state.assesements = action.payload.assesements;
+          state.orderTopics = action.payload.orderTopics;
           state.err = "";
         }
       )
       .addCase(fetchTopics.rejected, (state, action) => {
         state.loading = false;
         state.topics = [];
+        state.orderTopics = [];
         state.err = action.payload as string;
       });
   },

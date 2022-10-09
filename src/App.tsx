@@ -14,6 +14,7 @@ import {
   Assessment,
   CourseDetail,
   Cart,
+  Webinars,
 } from "./sections";
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                 <Route path="detail/:id" element={<CourseDetail />} />
               </Route>
               <Route path="assessment" element={<Assessment />} />
+              <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
             </Route>
           )}

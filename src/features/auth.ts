@@ -32,7 +32,10 @@ export const login = createAsyncThunk<
   return axios
     .post(`${BASE_URL}accounts/login/`, data)
     .then((res) => res.data)
-    .catch((err) => thunkAPI.rejectWithValue("something went wrong"));
+    .catch((err) => {
+      console.log(err);
+      thunkAPI.rejectWithValue(err.message);
+    });
 });
 
 const auth = createSlice({

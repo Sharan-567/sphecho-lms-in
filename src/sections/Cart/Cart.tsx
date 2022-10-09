@@ -17,7 +17,7 @@ const Cart = () => {
   };
 
   return (
-    <Container className="p-5">
+    <Container className="p-5" style={{ minHeight: "100vh" }}>
       <div className="bg-gray br-2 p-5">
         <h3 className="b-700 text-blue">Cart</h3>
         {items.length === 0 ? (
@@ -25,7 +25,7 @@ const Cart = () => {
         ) : (
           <div className="p-3">
             {items.map((item) => (
-              <div>
+              <div key={item.id}>
                 <Row className="p-3 br-1 bg-graydark mb-3">
                   <Col sm={2}>
                     <div className="round">

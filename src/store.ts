@@ -6,6 +6,7 @@ import {
   topics,
   assessment,
   latestCourses,
+  progress,
   cart,
 } from "./features";
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     topics,
     assessment,
     latestCourses,
+    progress,
     cart,
   },
 });

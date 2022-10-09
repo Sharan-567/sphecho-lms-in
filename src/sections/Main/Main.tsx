@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchLatestCourses } from "../../features/latestCourses";
 import { fetchAllCourses } from "../../features/courses";
 import { AiOutlineShopping } from "react-icons/ai";
+import GaugeChart from "react-gauge-chart";
 import AliceCarousel from "react-alice-carousel";
 import Search from "../../components/Search";
 import CalenderWithEvents from "../../components/CalenderWithEvents";
@@ -60,63 +61,45 @@ const Main = () => {
         >
           You have tauth 6 hours yesterday
         </p>
-        <Col sm={4} className="px-4 py-1">
-          <Row className="br-2 bg-graydark p-3 h-100">
-            <Col sm={5}>
-              <h5 className="b-700 mb-4">My Demo Rating</h5>
-              <img
-                src={bg1}
-                alt=""
-                style={{
-                  width: "3rem",
-                  height: "3rem",
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  margin: "auto",
-                }}
-              />
-              <p className="text-blue mt-1" style={{ fontWeight: "700" }}>
-                Clara Kilen
-              </p>
-              <div className="d-flex align-items-center">
-                <h4 className="text-skyBlue me-2 b-900">4.5</h4>
-                <Badge
-                  bg="blue"
-                  style={{ fontSize: ".7rem", marginTop: "-.5em" }}
-                >
-                  Top 20%
-                </Badge>
-              </div>
-              <Link to="" className="text-skyBlue b-600">
-                Leadership Board
-              </Link>
-            </Col>
-            <Col xs={7} className="bg-gray round p-2">
-              <h5 className="b-700 p-1 mb-4">Impact Report</h5>
-              <h6>Demo Conversions %</h6>
-              <div className="d-flex">
-                <p>LifeTime Conversions</p>
-                <span className="ms-auto text-danger b-500">6%</span>
-              </div>
-              <div className="d-flex">
-                <p className="lh-0">Last 60 days</p>
-                <span className="ms-auto b-500 lh-0">80%</span>
-              </div>
-              <p>Monthly</p>
-              <div className="d-flex">
-                <p>Project Submission %</p>
-                <span className="ms-auto b-500">75%</span>
-              </div>
-            </Col>
-          </Row>
+        <Col sm={4} className="p-3">
+          <div className="p-3 bg-white br-2 h-100 ">
+            {/* <h5 className="b-700 mb-4">Rating</h5> */}
+            {/* <img
+              src={bg1}
+              alt=""
+              style={{
+                width: "3.5rem",
+                height: "3.5rem",
+                borderRadius: "50%",
+                objectFit: "cover",
+                margin: "auto",
+              }}
+            /> */}
+
+            <h5 className="b-700 p-1 text-center mt-2">Impact Report</h5>
+            <GaugeChart
+              id="gauge-chart5"
+              nrOfLevels={10}
+              arcWidth={0.5}
+              arcsLength={[0.2, 0.5, 0.3]}
+              colors={["#EA4228", "#F5CD19", "#0cae00"]}
+              percent={0.37}
+              arcPadding={0.02}
+              hideText
+            />
+            <h5 className="text-center text-green mt-4">43% performace</h5>
+            <p className="tiny text-center">
+              completed courses per no.of courses taken up
+            </p>
+          </div>
         </Col>
-        <Col sm={8}>
+        <Col sm={8} className="p-3 px-4">
           <CalenderWithEvents />
         </Col>
       </Row>
       <Container>
         <Row className="p-5" style={{ minHeight: "16rem" }}>
-          <Col className="p-4 br-2 bg-graydark position-relative">
+          <Col className="p-4 br-2 bg-white  position-relative">
             <h4 className="b-700 text-blue">Latest Courses</h4>
             <div className="p-2">
               <AliceCarousel

@@ -38,10 +38,10 @@ const Search = () => {
   const handleSearch = useCallback(debounce(handleChange), []);
 
   return (
-    <div className="position-relative">
+    <div className="position-relative ">
       <Form className="me-2 ms-auto">
         <Form.Control
-          className="bg-graydark py-3 px-5"
+          className="bg-white py-3 px-5"
           style={{
             width: "26rem",
             borderRadius: "3rem",

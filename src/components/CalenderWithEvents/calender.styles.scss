@@ -1,3 +1,7 @@
+.react-calendar {
+  border: none !important;
+}
+
 .react-calendar__year-view .react-calendar__tile,
 .react-calendar__decade-view .react-calendar__tile,
 .react-calendar__century-view .react-calendar__tile {
@@ -17,7 +21,7 @@
 .today-events {
   overflow-x: hidden;
   overflow-y: scroll;
-  height: 16rem;
+  max-height: 17rem;
 }
 
 ::-webkit-scrollbar {

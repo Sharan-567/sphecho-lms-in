@@ -36,7 +36,7 @@ const CourseDetail = () => {
 
   return (
     <div className="container p-5 w-100 br-3">
-      <div className="px-5 py-4 round bg-gray">
+      <div className="px-5 py-4 br-2 bg-gray">
         <h4 className="b-700 text-blue w-75 p-2 mb-3">{course?.name}</h4>
         <Row>
           <Col sm={6}>

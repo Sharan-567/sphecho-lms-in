@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { fetchAllCourses, fetchUserCourses } from "../../features/courses";
-
-import { ListGroup, Row, Col, Button, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { HOST } from "../../features/settings";
+import { Spinner } from "react-bootstrap";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
+import type { StudentCourse } from "../../definations/course";
+import { fetchAllProgress } from "../../features/progress";
+import CourseContainer from "./CourseContainer";
 
 const Course = () => {
   const { loading, courses, userCourses, err } = useAppSelector(
@@ -17,9 +17,10 @@ const Course = () => {
   useEffect(() => {
     dispatch(fetchAllCourses({}));
     dispatch(fetchUserCourses({}));
+    dispatch(fetchAllProgress({}));
   }, []);
 
-  const getUsersCourses = (userCourses) => {
+  const getUsersCourses = (userCourses: StudentCourse[]) => {
     const userCourseIds = {};
     for (const course of userCourses) {
       if (!userCourseIds[course.id]) {
@@ -27,6 +28,12 @@ const Course = () => {
       }
     }
     return courses.filter((course) => userCourseIds[course.id]);
+  };
+
+  const getNoOftopics = (id: number): number => {
+    const course = userCourses.find((course) => course.id === id);
+    if (course) return course.no_of_topics;
+    return 0;
   };
 
   if (err) {
@@ -42,7 +49,7 @@ const Course = () => {
   }
 
   return (
-    <div className="container px-5 py-2 mt-3 w-100">
+    <div className="container px-5 py-2 mt-4 w-100">
       {loading ? (
         <div className="w-100 d-flex justify-content-center mt-5">
           <Spinner animation="border" variant="green" />
@@ -57,136 +64,28 @@ const Course = () => {
         >
           <div>
             <h2 className="b-700 text-blue">My Courses</h2>
-            <ListGroup>
+            <div>
               {getUsersCourses(userCourses).map((course) => {
                 return (
-                  <ListGroup.Item
-                    className="my-2 bg-gray p-5 item"
-                    style={{
-                      borderRadius: "2rem !important",
-                      border: "none",
-                    }}
-                    key={course.id}
-                  >
-                    <Row>
-                      <Col>
-                        <div>
-                          <h4 className="b-700 text-blue">{course.name}</h4>
-                          <p>{course.description}</p>
-                        </div>
-                      </Col>
-                      <Col
-                        sm={5}
-                        className="bg-2 bg-graydark br-2 p-3"
-                        style={{ minHeight: "22rem", maxHeight: "22rem" }}
-                      >
-                        <img
-                          alt=""
-                          src={`https://${HOST}${course.info_image}`}
-                          style={{
-                            width: "100%",
-                            height: "11rem",
-                            objectFit: "cover",
-                            borderRadius: "1rem",
-                            marginBottom: "1em",
-                          }}
-                        />
-                        <div className="d-flex align-items-center mb-3">
-                          <img
-                            alt=""
-                            src={`https://${HOST}${course.trainer_image}`}
-                            className="round-50 obj-fit-cover me-2"
-                            style={{
-                              width: "3rem",
-                              height: "3rem",
-                              border: "5px solid white",
-                            }}
-                          />
-                          <h4>{course.trainer_name}</h4>
-                        </div>
-                        <div className="d-flex align-items-center justify-content-between mb-1">
-                          <Link to={`/courses/${course.id}`}>
-                            <Button className="bg-green text-white">
-                              Enter this Course
-                            </Button>
-                          </Link>
-                          <h3 className="text-skyBlue b-800">
-                            $ {Number(course.full_amount).toFixed(0)}
-                          </h3>
-                        </div>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
+                  <CourseContainer
+                    key={`course-${course.id}`}
+                    no_of_topics={getNoOftopics(course.id)}
+                    course={course}
+                  />
                 );
               })}
-            </ListGroup>
+            </div>
           </div>
           <h2 className="b-700 mt-5 text-blue">All Courses</h2>
-          <ListGroup>
+          <div>
             {courses.map((course) => {
               return (
                 course?.view_all && (
-                  <ListGroup.Item
-                    className="my-2 bg-gray p-5 item"
-                    style={{
-                      borderRadius: "2rem !important",
-                      border: "none",
-                    }}
-                    key={course.id}
-                  >
-                    <Row>
-                      <Col>
-                        <div>
-                          <h4 className="b-700 text-blue">{course.name}</h4>
-                          <p>{course.description}</p>
-                        </div>
-                      </Col>
-                      <Col
-                        sm={5}
-                        className="bg-2 bg-graydark br-2 p-3"
-                        style={{ minHeight: "22rem", maxHeight: "22rem" }}
-                      >
-                        <img
-                          alt=""
-                          src={`https://${HOST}${course.info_image}`}
-                          style={{
-                            width: "100%",
-                            height: "11rem",
-                            objectFit: "cover",
-                            borderRadius: "1rem",
-                            marginBottom: "1em",
-                          }}
-                        />
-                        <div className="d-flex align-items-center mb-3">
-                          <img
-                            alt="traniner"
-                            src={`https://${HOST}${course.trainer_image}`}
-                            className="round-50 obj-fit-cover me-2"
-                            style={{
-                              width: "3rem",
-                              height: "3rem",
-                              border: "5px solid white",
-                            }}
-                          />
-                          <h4>{course.trainer_name}</h4>
-                        </div>
-                        <div className="d-flex align-items-center justify-content-between mb-1">
-                          <Link to={`/courses/${course.id}`}>
-                            <Button className="bg-green text-white">
-                              Enroll
-                            </Button>
-                          </Link>
-                          <h3 className="text-skyBlue b-800">
-                            $ {Number(course.full_amount).toFixed(0)}
-                          </h3>
-                        </div>
-                      </Col>
-                    </Row>
-                  </ListGroup.Item>
+                  <CourseContainer key={course.id} course={course} />
                 )
               );
             })}
-          </ListGroup>
+          </div>
         </div>
       )}
     </div>

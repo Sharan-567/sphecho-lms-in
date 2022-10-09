@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
+import { useMotionValue, motion } from "framer-motion";
 import "./SideNav.scss";
 import { Row, Col } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import { motion } from "framer-motion";
+import { NavLink, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
 import Bg1 from "../../assets/bg-1.jpg";
 
@@ -18,220 +18,127 @@ import {
 interface MenuList {
   Icon: IconType;
   title: string;
-  comp: string;
+  to: string;
 }
 
 const SideNav = () => {
-  const [toggleNav, setToggleNav] = useState(false);
-  const containerRef = useRef(null);
+  const currentTab = useMotionValue<number>(0);
+  const navigate = useNavigate();
 
   const menuList: MenuList[] = [
     {
       Icon: AiOutlineUser,
       title: "My Profile",
-      comp: "/",
+      to: "/",
     },
     {
       Icon: AiOutlineFire,
       title: "Courses",
-      comp: "/courses",
+      to: "/courses",
     },
     {
       Icon: AiOutlineNotification,
-      title: "Announcements",
-      comp: "/Annoucements",
+      title: "Webinars",
+      to: "/webinars",
     },
 
     {
       Icon: AiOutlineComment,
       title: "Community",
-      comp: "/Forum",
+      to: "/Forum",
     },
   ];
 
-  const sideBar = {
-    open: {
-      width: "15rem",
-      paddingRight: "14rem",
-      transition: {
-        staggerChildren: 0.01,
-      },
-    },
-    close: {
-      width: "4rem",
-      paddingRight: "0rem",
-      transition: {
-        staggerChildren: 0.01,
-        staggerDirection: -1,
-      },
-    },
+  const getYpostion = () => {
+    return currentTab.get() * 68;
   };
 
-  const image = {
-    open: {
-      scale: 1,
-      x: 0,
-      transition: {
-        duration: 0.1,
-      },
-    },
-    close: {
-      x: -10,
-      scale: 0.8,
-      transition: {
-        duration: 0.1,
-      },
-    },
-  };
-
-  const brand = {
-    open: {
-      width: "9rem",
-      transition: {
-        damping: 100,
-        stiffness: 100,
-        duration: 0.1,
-      },
-    },
-    close: {
-      width: "1rem",
-      transition: {
-        damping: 100,
-        stiffness: 100,
-        duration: 0.1,
-      },
-    },
-  };
-
-  const item = {
-    open: {
-      x: 0,
-    },
-    close: {
-      x: 40,
-    },
+  const handleTab = (route: string, tabNo: number) => {
+    currentTab.set(tabNo);
+    navigate(route);
   };
 
   return (
-    <motion.div
-      className="bg-blue text-white side-nav"
-      variants={sideBar}
-      animate={toggleNav ? "close" : "open"}
-      ref={containerRef}
+    <div
+      className="py-5 ps-5"
       style={{
-        minHeight: "100vh",
-        maxHeight: "100vh",
-        width: "15rem",
-        borderRadius: "0 3rem 3rem 0rem",
-        overflow: "hidden",
         position: "sticky",
         top: 0,
+        minHeight: "100vh",
+        maxHeight: "100vh",
       }}
     >
-      <Row>
-        <Col>
-          <div className="p-3">
-            <div>
-              <motion.button
-                variants={brand}
-                style={{ width: "9rem" }}
-                onClick={() => setToggleNav(!toggleNav)}
-                className="mb-3 brand overflow-hidden"
-              >
-                Sphecho
-              </motion.button>
-              <div>
-                <div className="d-flex align-items-center mb-3">
-                  <motion.img
-                    variants={image}
-                    alt=""
-                    src={Bg1}
-                    style={{
-                      width: "3rem",
-                      height: "3rem",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                  <div className="pt-4 ms-2">
-                    <p style={{ lineHeight: "0" }}>Clare kellen</p>
-                    <p className="small" style={{ fontSize: ".75rem" }}>
-                      K.Clara@m16labs.com
-                    </p>
-                  </div>
-                </div>
-                {menuList.map(({ Icon, ...Item }, i) => {
-                  return (
-                    <NavLink
-                      to={Item.comp}
-                      className={({ isActive }) =>
-                        isActive ? "active" : "nav-link"
-                      }
-                      style={{
-                        border: "none",
-                        background: "none",
-                        textDecoration: "none",
-                        margin: ".7rem 0rem",
-                      }}
-                      key={i}
-                    >
-                      <div className="d-flex" style={{ width: "13rem" }}>
-                        <Icon
-                          style={{
-                            width: "1.3rem",
-                            height: "1.3rem",
-                          }}
-                          className="me-2 nav-icon"
-                        />
-                        <motion.p
-                          variants={item}
-                          className="nav-title link"
-                          style={{
-                            fontSize: "1.1rem",
-                            width: "9rem",
-                            textAlign: "left",
-                            color: "white",
-                            fontWeight: "400",
-                          }}
-                        >
-                          {Item.title}
-                        </motion.p>
-                      </div>
-                    </NavLink>
-                  );
-                })}
-                <button
-                  style={{ border: "none", background: "none" }}
-                  className="d-flex mt-5 b-nav-link"
-                >
-                  <AiOutlineTool size={20} className="me-2 nav-icon" />
-                  <motion.p
-                    variants={item}
-                    className="text-white ta-l nav-title"
-                    style={{ fontSize: ".9rem", width: "9rem" }}
-                  >
-                    Help And Support
-                  </motion.p>
-                </button>
-                <button
-                  style={{ border: "none", background: "none" }}
-                  className="d-flex b-nav-link "
-                >
-                  <AiOutlineLogout size={20} className="me-2 nav-icon" />
-                  <motion.p
-                    variants={item}
-                    className="text-white ta-l nav-title"
-                    style={{ fontSize: ".9rem", width: "9rem" }}
-                  >
-                    LogOut
-                  </motion.p>
-                </button>
-              </div>
-            </div>
+      <div
+        className="bg-blue br-2"
+        style={{
+          position: "sticky",
+          top: "3rem",
+          width: "16rem",
+          height: "100%",
+          paddingLeft: "2rem",
+        }}
+      >
+        <div>
+          <div className="p-4 text-white">
+            <h1>Specho</h1>
           </div>
-        </Col>
-      </Row>
-    </motion.div>
+        </div>
+        <div
+          style={
+            {
+              //  outline: "1px solid yellow"
+            }
+          }
+        >
+          <div style={{ height: 0, display: "hidden" }}>
+            <svg
+              viewBox="0 0 230 107"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <clipPath
+                  id="clip"
+                  clipPathUnits="objectBoundingBox"
+                  transform="scale(0.00434782608 0.00934579439)"
+                >
+                  <path
+                    d="M190.309 84.5471H27.9232C27.9232 84.5471 -1.30764 80.265 0.0455749 55.2432C1.39879 30.2215 27.9232 25.2565 27.9232 25.2565H190.309C215.773 25.2565 219.725 19.4545 230 0V107C222.071 94.1175 216.123 84.5471 190.309 84.5471Z"
+                    fill="#FF0000"
+                  />
+                </clipPath>
+              </defs>
+            </svg>
+          </div>
+
+          <motion.div
+            className="tab"
+            animate={{ transform: `translateY(${getYpostion()}px)` }}
+          ></motion.div>
+
+          {menuList.map((link, id) => {
+            return (
+              <div key={id}>
+                <div
+                  onClick={() => handleTab(link.to, id)}
+                  className={`${
+                    currentTab.get() == id ? "text-blue" : "text-white"
+                  } b-700 px-4 p-3 my-3`}
+                  style={{
+                    fontSize: "1.3rem",
+                    // outline: "1px solid red",
+                    cursor: "pointer",
+                  }}
+                >
+                  <link.Icon size={"1.5rem"} className="me-3" />
+                  {link.title}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 };
 

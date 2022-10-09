@@ -5,7 +5,7 @@ import { SideNav } from "../../sections";
 const Dashboard = () => {
   return (
     <div>
-      <div className="d-flex">
+      <div className="d-flex bg-graydark">
         <SideNav />
         <Outlet />
       </div>

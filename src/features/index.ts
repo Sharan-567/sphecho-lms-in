@@ -4,5 +4,6 @@ import topics from "./topics";
 import assessment from "./assessment";
 import latestCourses from "./latestCourses";
 import cart from "./cart";
+import progress from "./progress";
 
-export { auth, courses, topics, assessment, latestCourses, cart };
+export { auth, courses, topics, assessment, latestCourses, cart, progress };

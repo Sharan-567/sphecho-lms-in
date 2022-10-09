@@ -1,35 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { BASE_URL } from "./settings";
-
-export interface Question {
-  id: number;
-  marks: number;
-  question: string;
-  answer: string;
-  solution_url?: string;
-  correct_option: string;
-  option_01: string;
-  option_02: string;
-  option_03: string;
-  option_04: string;
-  option_05: string;
-  match_a: string;
-  match_1: string;
-  match_b: string;
-  match_2: string;
-  match_c: string;
-  match_3: string;
-  match_d: string;
-  match_4: string;
-  match_e: string;
-  match_5: string;
-  match_f: string;
-  match_6: string;
-  cnt: number;
-  topic: number;
-  type: number;
-}
+import type { Question } from "./../definations/assessment";
 
 type InitialState = {
   loading: boolean;

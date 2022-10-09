@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { fetchTopics, Topic } from "../../features/topics";
-import {
-  ListGroup,
-  Spinner,
-  Row,
-  Col,
-  Button,
-  Container,
-} from "react-bootstrap";
-import {
-  BsCheckCircleFill,
-  BsFillFileEarmarkPdfFill,
-  BsExclamationTriangle,
-} from "react-icons/bs";
-
-import ReactPlayer from "react-player";
+import { fetchTopics } from "../../features/topics";
+import { ListGroup, Spinner, Row, Col, Container } from "react-bootstrap";
+import { BsCheckCircleFill, BsExclamationTriangle } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
+import type { Topic } from "../../definations/course";
+import type { Assessment } from "../../definations/assessment";
+import TopicContainer from "./Topic";
 
 const TopicsList = () => {
-  const { loading, topics, err } = useAppSelector((state) => state.topics);
-  const [currentTopic, setCurrentTopic] = useState<Topic>();
+  const {
+    loading,
+    orderTopics: topics,
+    err,
+  } = useAppSelector((state) => state.topics);
+  const {
+    loading: progressLoading,
+    progress,
+    err: progressError,
+  } = useAppSelector((state) => state.progress);
+  const [currentTopic, setCurrentTopic] = useState<Topic | Assessment>();
   const { courseId } = useParams();
   const dispatch = useAppDispatch();
 
@@ -31,10 +30,21 @@ const TopicsList = () => {
   }, [courseId]);
 
   useEffect(() => {
-    if (topics.length > 0) {
+    if (topics && topics.length > 0) {
       setCurrentTopic(topics[0]);
     }
   }, [loading, topics]);
+
+  const isCompleted = (topic: Topic | Assessment): boolean => {
+    if (courseId && `${courseId}` in progress) {
+      if ("content" in topic && progress[courseId].topics.includes(topic.id)) {
+        return true;
+      } else if (progress[courseId].assesments.includes(topic.id)) {
+        return true;
+      }
+    }
+    return false;
+  };
 
   if (err) {
     return (
@@ -59,7 +69,7 @@ const TopicsList = () => {
           <Row>
             <Col sm={3}>
               <div
-                className="bg-graydark br-1"
+                className="bg-white br-2 p-1"
                 style={{ position: "sticky", top: "5%" }}
               >
                 <h4 className="text-align-center ms-4 pt-3 b-600 text-blue">
@@ -72,20 +82,23 @@ const TopicsList = () => {
                         key={id}
                         style={{ borderRadius: ".5rem" }}
                         className={`d-flex align-items-center p-2 mb-3 ${
-                          topic.id === currentTopic?.id && "bg-blue text-white"
+                          topic.customId === currentTopic?.customId &&
+                          "bg-blue text-white"
                         }`}
                       >
                         <div className="me-2">
                           <BsCheckCircleFill
                             size={20}
-                            className={` text-green ${
-                              topic.id === currentTopic?.id && "text-white"
+                            className={`${
+                              isCompleted(topic)
+                                ? "text-green"
+                                : "text-graydark"
                             }`}
                           />
                         </div>
                         <button
                           className={`small ${
-                            topic.id === currentTopic?.id &&
+                            topic.customId === currentTopic?.customId &&
                             "bg-blue text-white"
                           }`}
                           style={{
@@ -105,51 +118,8 @@ const TopicsList = () => {
                 </ListGroup>
               </div>
             </Col>
-            <Col sm={9} className="p-2 ms-3" style={{ width: "73%" }}>
-              <div className="p-3  br-1 bg-gray">
-                <h4 className="b-700">{currentTopic?.name}</h4>
-                <div className="p-4 margin-auto">
-                  <ReactPlayer controls url={currentTopic?.video} />
-                </div>
-                <p className="p-3 my-1">{currentTopic?.content}</p>
-                {currentTopic?.pdf && (
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    href={currentTopic?.pdf}
-                    className="d-flex align-items-center p-2 mb-2 bg-graydark round"
-                  >
-                    <BsFillFileEarmarkPdfFill color="red" size="24" />
-                    <p className="ms-3 mt-2">{currentTopic?.pdf}</p>
-                  </a>
-                )}
-                {currentTopic?.assement_required && (
-                  <div className="d-flex align-items-center justify-content-between my-3 bg-graydark p-3 round">
-                    <Link
-                      to="/assessment"
-                      state={{
-                        id: currentTopic?.id,
-                        name: currentTopic?.name,
-                        min: currentTopic?.min_marks_to_qualify,
-                        max: currentTopic?.max_marks,
-                      }}
-                    >
-                      <Button variant="green" className="text-white ">
-                        Take Assessment
-                      </Button>
-                    </Link>
-                    <div className="ms-3 d-flex pt-2">
-                      <p className="b-700 me-3">
-                        Total Points: {currentTopic?.max_marks}
-                      </p>
-                      <p className="b-700">
-                        Min points to qualify:{" "}
-                        {currentTopic?.min_marks_to_qualify}
-                      </p>
-                    </div>
-                  </div>
-                )}
-              </div>
+            <Col sm={9} className="px-5 py-2">
+              <TopicContainer topic={currentTopic} courseId={courseId} />
             </Col>
           </Row>
         </Container>
