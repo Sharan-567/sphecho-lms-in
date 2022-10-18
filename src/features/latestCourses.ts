@@ -39,13 +39,19 @@ export const fetchLatestCourses = createAsyncThunk<
   }
 >("latestCourses", async (_, ThunkAPI) => {
   try {
-    const headers = {
-      Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
-    };
-    const res = await axios(`${BASE_URL}student/course-serach/?search=latest`, {
-      headers,
-    });
-    return res.data.courses;
+    const token = localStorage.getItem("token");
+    if (token) {
+      const headers = {
+        Authorization: `token ${token}`,
+      };
+      const res = await axios(
+        `${BASE_URL}student/course-serach/?search=latest`,
+        {
+          headers,
+        }
+      );
+      return res.data.courses;
+    }
   } catch (err) {
     return ThunkAPI.rejectWithValue("something went wrong");
   }

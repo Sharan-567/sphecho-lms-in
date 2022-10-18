@@ -1,17 +1,3 @@
-export interface Assessment {
-  customId: number;
-  id: number;
-  name: string;
-  pre_assesment: boolean;
-  order: number;
-  max_marks: number;
-  min_marks_to_qualify: number;
-  course: number;
-  topic: number;
-  parent: number;
-  question: Question[];
-}
-
 export interface Question {
   id: number;
   marks: number;
@@ -40,3 +26,16 @@ export interface Question {
   topic: number;
   type: number;
 }
+export type Assessment = {
+  customId: number;
+  id: number;
+  name: string;
+  pre_assesment: boolean;
+  order: number;
+  max_marks: number;
+  min_marks_to_qualify: number;
+  course: number;
+  topic: number;
+  parent: number;
+  question: Question[];
+};

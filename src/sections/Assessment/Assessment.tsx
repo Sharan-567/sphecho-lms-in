@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { Spinner, Row, Col, Button } from "react-bootstrap";
 import { getAssessment } from "../../features/assessment";
-import Question from "../../components/Question";
+import Question from "./Question";
 import { useAppDispatch, useAppSelector } from "../../store";
+import type { Question as QuestionType } from "../../definations/assessment";
 
-const Assessment = () => {
+type Props = {
+  assessmentId: number;
+};
+
+const Assessment = ({ assessmentId }: Props) => {
   const { loading, questions, err } = useAppSelector(
     (state) => state.assessment
   );
@@ -13,7 +18,7 @@ const Assessment = () => {
   const [correctAnswers, setCorrectAnswers] = useState(0);
 
   useEffect(() => {
-    dispatch(getAssessment());
+    dispatch(getAssessment(assessmentId));
   }, []);
 
   useEffect(() => {

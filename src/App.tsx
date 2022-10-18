@@ -11,7 +11,6 @@ import {
   Course,
   TopicsList,
   Main,
-  Assessment,
   CourseDetail,
   Cart,
   Webinars,
@@ -19,6 +18,7 @@ import {
 
 function App() {
   const { isLoggedIn } = useAppSelector((state) => state.auth);
+
   return (
     <div>
       <Router>
@@ -38,7 +38,6 @@ function App() {
                 <Route path=":courseId" element={<TopicsList />} />
                 <Route path="detail/:id" element={<CourseDetail />} />
               </Route>
-              <Route path="assessment" element={<Assessment />} />
               <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
             </Route>

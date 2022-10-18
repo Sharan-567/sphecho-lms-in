@@ -23,6 +23,7 @@ interface MenuList {
 
 const SideNav = () => {
   const currentTab = useMotionValue<number>(0);
+  const [closeNav, setCloseNav] = useState(false);
   const navigate = useNavigate();
 
   const menuList: MenuList[] = [
@@ -50,7 +51,7 @@ const SideNav = () => {
   ];
 
   const getYpostion = () => {
-    return currentTab.get() * 68;
+    return currentTab.get() * 60;
   };
 
   const handleTab = (route: string, tabNo: number) => {
@@ -60,7 +61,7 @@ const SideNav = () => {
 
   return (
     <div
-      className="py-5 ps-5"
+      className="py-2 ps-3"
       style={{
         position: "sticky",
         top: 0,
@@ -68,19 +69,34 @@ const SideNav = () => {
         maxHeight: "100vh",
       }}
     >
-      <div
-        className="bg-blue br-2"
+      <motion.div
+        className="bg-blue br-3"
+        animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
         style={{
           position: "sticky",
           top: "3rem",
-          width: "16rem",
           height: "100%",
           paddingLeft: "2rem",
+          overflow: "hidden",
         }}
       >
         <div>
           <div className="p-4 text-white">
-            <h1>Specho</h1>
+            <motion.button
+              animate={
+                closeNav ? { width: "1.5rem", marginLeft: "-1.7rem" } : {}
+              }
+              onClick={() => setCloseNav((p) => !p)}
+              style={{
+                outline: "none",
+                border: "none",
+                background: "none",
+                color: "white",
+                overflow: "hidden",
+              }}
+            >
+              <h1>Specho</h1>
+            </motion.button>
           </div>
         </div>
         <div
@@ -119,25 +135,27 @@ const SideNav = () => {
           {menuList.map((link, id) => {
             return (
               <div key={id}>
-                <div
+                <motion.div
                   onClick={() => handleTab(link.to, id)}
                   className={`${
                     currentTab.get() == id ? "text-blue" : "text-white"
                   } b-700 px-4 p-3 my-3`}
+                  animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
                   style={{
-                    fontSize: "1.3rem",
+                    fontSize: "1.1rem",
                     // outline: "1px solid red",
                     cursor: "pointer",
+                    width: "14rem",
                   }}
                 >
                   <link.Icon size={"1.5rem"} className="me-3" />
                   {link.title}
-                </div>
+                </motion.div>
               </div>
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

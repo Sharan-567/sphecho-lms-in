@@ -1,41 +1,72 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "./settings";
+import authService from "../services/auth.service";
 
 type InitialState = {
   loading: boolean;
   isLoggedIn: boolean;
-  user: {
-    token: string;
-  };
   err?: string;
+  userType: string;
 };
 
 type ResponseData = {
   token: string;
+  userType: string;
 };
 
 const initialState: InitialState = {
   loading: true,
   isLoggedIn: false,
-  user: {
-    token: "",
-  },
+  userType: "",
   err: "",
 };
 
 export const login = createAsyncThunk<
   ResponseData,
-  FormData,
+  { username: string; password: string; type: string },
   { rejectValue: string; serializedErrorType: string }
 >("/login", async (data, thunkAPI) => {
-  return axios
-    .post(`${BASE_URL}accounts/login/`, data)
-    .then((res) => res.data)
-    .catch((err) => {
-      console.log(err);
-      thunkAPI.rejectWithValue(err.message);
-    });
+  try {
+    const res = await authService.login(data);
+    localStorage.setItem("token", res.token);
+    return { ...res, userType: "SuperUser" };
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+export const getOTP = createAsyncThunk<
+  { hash: string },
+  { phone: string; usertype: string },
+  { rejectValue: string; serializedErrorType: string }
+>("/getOtp", async (data, thunkAPI) => {
+  try {
+    const res = await authService.getOTP(data);
+    localStorage.setItem("token", res.token);
+    return { ...res, userType: "SuperUser" };
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+type VerifyOTPReqData = {
+  mobile: string;
+  hash: string;
+  name: string;
+  otp: string;
+};
+
+export const verifyOTP = createAsyncThunk<
+  ResponseData,
+  VerifyOTPReqData,
+  { rejectValue: string; serializedErrorType: string }
+>("/verifyOtp", async (data, thunkAPI) => {
+  try {
+    const res = await authService.verifyOTP(data);
+    localStorage.setItem("token", res.token);
+    return { ...res, userType: "patient" };
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
 });
 
 const auth = createSlice({
@@ -51,17 +82,23 @@ const auth = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.isLoggedIn = true;
-        state.user.token = action.payload.token;
         state.err = "";
+        state.userType = action.payload.userType;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isLoggedIn = false;
-        if (action.payload) {
-          state.err = action.payload;
-        } else {
-          state.err = action.error;
-        }
+        state.err = action.payload;
+      })
+      .addCase(verifyOTP.fulfilled, (state, action) => {
+        state.loading = false;
+        state.userType = action.payload.userType;
+        state.isLoggedIn = true;
+      })
+      .addCase(verifyOTP.rejected, (state, action) => {
+        state.loading = false;
+        state.isLoggedIn = false;
+        state.err = action.payload;
       });
   },
 });

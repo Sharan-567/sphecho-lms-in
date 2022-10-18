@@ -1,13 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { Form, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { Course } from "../../features/courses";
+import type { Course } from "../../definations/course";
 import { useAppSelector } from "../../store";
 
 const Search = () => {
   const [search, setSearch] = useState<Course[]>([]);
   const [textSearch, setTextSearch] = useState("");
-  const { token } = useAppSelector((state) => state.auth.user);
 
   const debounce = (func) => {
     let timer;
@@ -23,6 +22,7 @@ const Search = () => {
 
   const handleChange = async (value) => {
     setTextSearch(value);
+    const token = localStorage.getItem("token");
     const headers = {
       Authorization: `token ${token}`,
     };
@@ -53,7 +53,7 @@ const Search = () => {
           placeholder="What do you want to learn Today"
         ></Form.Control>
       </Form>
-      {search.length > 0 ? (
+      {search && search.length > 0 ? (
         <div
           className="bg-green position-absolute p-3 bg-white border"
           style={{

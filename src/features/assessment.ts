@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
-import { BASE_URL } from "./settings";
 import type { Question } from "./../definations/assessment";
+import assessmentService from "../services/assessment.service";
+import { AppDispatch, RootState } from "../store";
 
 type InitialState = {
   loading: boolean;
@@ -15,23 +15,26 @@ const initialState: InitialState = {
   err: "",
 };
 
-export const getAssessment = createAsyncThunk(
-  "getAssessment",
-  async (_, ThunkAPI) => {
-    try {
-      const headers = {
-        Authorization: `token ${ThunkAPI.getState().auth.user.token}`,
-      };
-      const res = await axios(
-        `${BASE_URL}student/get-by-assesment-question/2/`,
-        { headers }
-      );
-      return res.data.question;
-    } catch (err) {
-      return ThunkAPI.rejectWithValue("something went wrong");
-    }
+export const getAssessment = createAsyncThunk<
+  Question[],
+  number,
+  {
+    dispatch: AppDispatch;
+    state: RootState;
+    rejectValue: string;
   }
-);
+>("getAssessment", async (id, ThunkAPI) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const data = await assessmentService.getAssessmentQuestion(token, id);
+      return data;
+    }
+    return [];
+  } catch (err) {
+    return ThunkAPI.rejectWithValue("something went wrong");
+  }
+});
 
 const assessment = createSlice({
   name: "assessment",
@@ -53,7 +56,7 @@ const assessment = createSlice({
       .addCase(getAssessment.rejected, (state, action) => {
         state.loading = false;
         state.questions = [];
-        state.err = action.payload;
+        state.err = action.payload as string;
       });
   },
 });

@@ -7,7 +7,7 @@ import topicService from "./topic.service";
  * @returns string
  */
 export const getErrorMessageWithCode = (statusCode: number) => {
-  if (statusCode === 401) return "Invalid credentials";
+  if (statusCode === 401) return "Invalid credentials, Please check once again";
   else if (statusCode === 403) return "Forbidden";
   else if (statusCode === 500) return "Interal Server Error";
   else if (statusCode === 404) return "Resource Not Found";

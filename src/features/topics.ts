@@ -33,21 +33,23 @@ export const fetchTopics = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >("topics", async (id, ThunkAPI) => {
   try {
-    const token = ThunkAPI.getState().auth.user.token;
-
-    const { topics, assesements } = await topicService.fetchTopics(token, id);
-    const orderTopics = getOrderListFromTwoList<Topic, Assessment>(
-      topics,
-      assesements
-    );
-    const orderTopicsWithCustomIds = addUniqueIdsToList<Topic | Assessment>(
-      orderTopics
-    );
-    return {
-      topics,
-      assesements,
-      orderTopics: orderTopicsWithCustomIds,
-    };
+    const token = localStorage.getItem("token");
+    if (token) {
+      const { topics, assesements } = await topicService.fetchTopics(token, id);
+      const orderTopics = getOrderListFromTwoList<Topic, Assessment>(
+        topics,
+        assesements
+      );
+      const orderTopicsWithCustomIds = addUniqueIdsToList<Topic | Assessment>(
+        orderTopics
+      );
+      return {
+        topics,
+        assesements,
+        orderTopics: orderTopicsWithCustomIds,
+      };
+    }
+    return { topics: [], assesements: [], orderTopics: [] };
   } catch (error) {
     return ThunkAPI.rejectWithValue(error);
   }

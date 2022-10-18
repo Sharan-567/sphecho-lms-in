@@ -21,10 +21,12 @@ export const fetchAllProgress = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >("FetchAllprogress", async (_, ThunkAPI) => {
   try {
-    const token = ThunkAPI.getState().auth.user.token;
-
-    const data = await progressService.fetchAllProgress(token);
-    return data;
+    const token = localStorage.getItem("token");
+    if (token) {
+      const data = await progressService.fetchAllProgress(token);
+      return data;
+    }
+    return {};
   } catch (error) {
     return ThunkAPI.rejectWithValue(error);
   }
@@ -38,10 +40,11 @@ export const updateProgress = createAsyncThunk<
   { state: RootState; rejectValue: string }
 >("updateProgress", async (body, ThunkAPI) => {
   try {
-    const token = ThunkAPI.getState().auth.user.token;
-
-    let data = await progressService.updateProgress(token, body);
-    return data;
+    const token = localStorage.getItem("token");
+    if (token) {
+      let data = await progressService.updateProgress(token, body);
+      return data;
+    }
   } catch (error) {
     return ThunkAPI.rejectWithValue(error);
   }

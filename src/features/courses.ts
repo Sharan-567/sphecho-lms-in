@@ -27,10 +27,11 @@ export const fetchAllCourses = createAsyncThunk<
   }
 >("courses", async (_, ThunkAPI) => {
   try {
-    const token = ThunkAPI.getState().auth.user.token;
-
-    const data = await courseService.fetchAllCourse(token);
-    return data;
+    const token = localStorage.getItem("token");
+    if (token) {
+      const data = await courseService.fetchAllCourse(token);
+      return data;
+    }
   } catch (err) {
     return ThunkAPI.rejectWithValue(err);
   }
@@ -46,10 +47,12 @@ export const fetchUserCourses = createAsyncThunk<
   }
 >("userCourses", async (_, ThunkAPI) => {
   try {
-    const token = ThunkAPI.getState().auth.user.token;
-
-    const data = await courseService.fetchUserCourses(token);
-    return data;
+    const token = localStorage.getItem("token");
+    if (token) {
+      const data = await courseService.fetchUserCourses(token);
+      return data;
+    }
+    return [];
   } catch (err) {
     return ThunkAPI.rejectWithValue(err);
   }

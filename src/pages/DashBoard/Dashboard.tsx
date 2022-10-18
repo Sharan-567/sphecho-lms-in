@@ -7,7 +7,9 @@ const Dashboard = () => {
     <div>
       <div className="d-flex bg-graydark">
         <SideNav />
-        <Outlet />
+        <div className="container w-75">
+          <Outlet />
+        </div>
       </div>
     </div>
   );
