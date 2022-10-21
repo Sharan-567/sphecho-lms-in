@@ -69,8 +69,22 @@ const verifyOTP = async (data: VerifyOTP) => {
   }
 };
 
+const getLMSToken = async (token: string) => {
+  try {
+    const res = await customAxios.get(
+      `https://lmsv2.metahos.com/lms_api_v1/accounts/authorize/`,
+      { params: { token } }
+    );
+    console.log("ask faizal to solve cors");
+    return Promise.resolve(res.data);
+  } catch (error) {
+    return Promise.reject(getErrorMessageWithCode(error.response.status));
+  }
+};
+
 export default {
   login,
   getOTP,
   verifyOTP,
+  getLMSToken,
 };

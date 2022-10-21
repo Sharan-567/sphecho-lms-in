@@ -13,9 +13,15 @@ type ResponseData = {
   userType: string;
 };
 
+const isLoggedIn = () => {
+  let token = localStorage.getItem("token");
+  if (token) return true;
+  else return false;
+};
+
 const initialState: InitialState = {
   loading: true,
-  isLoggedIn: false,
+  isLoggedIn: isLoggedIn(),
   userType: "",
   err: "",
 };
@@ -26,7 +32,11 @@ export const login = createAsyncThunk<
   { rejectValue: string; serializedErrorType: string }
 >("/login", async (data, thunkAPI) => {
   try {
-    const res = await authService.login(data);
+    // const res = await authService.login(data);
+    // console.log(res);
+    let token =
+      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamoiLCJ0eXBlIjoiU3VwZXJVc2VyIiwiY29udGFjdCI6Ijg5MDQzODUxNjUiLCJwcm9maWxlVVJMIjpudWxsLCJzaWduIjoiaHR0cHM6Ly9teXRlbGVvcGQuczMuYXAtc291dGgtMS5hbWF6b25hd3MuY29tL3NpZ24tMTYzODE4NDU4MjIzMy5wbmciLCJpZCI6IjVmNGFkMTkwYWI0YzZjMWEyNDE5MzUwNyIsImFzc2lnbmluZ0F1dGhvcml0eSI6eyJfaWQiOiI2MDRiNjg5MjUwOGViOTFlOWI2OTA5NjMiLCJuYW1lIjoiRm9ydGlzLVZhc2hpIn0sImlhdCI6MTY2NjMxNDY3OCwiZXhwIjoxNjY2NDg3NDc4fQ.AizEAZqWU1h4S1lT_dIKEF_IAILpGZ8ASe-Rd11SVIc";
+    const res = await authService.getLMSToken(token);
     localStorage.setItem("token", res.token);
     return { ...res, userType: "SuperUser" };
   } catch (error) {
@@ -72,7 +82,12 @@ export const verifyOTP = createAsyncThunk<
 const auth = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.isLoggedIn = false;
+      localStorage.clear();
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -103,5 +118,5 @@ const auth = createSlice({
   },
 });
 
-export const {} = auth.actions;
+export const { logout } = auth.actions;
 export default auth.reducer;

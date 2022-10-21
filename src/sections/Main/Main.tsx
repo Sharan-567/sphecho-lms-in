@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, Form, Badge, Container } from "react-bootstrap";
+import { Row, Col, Badge, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchLatestCourses } from "../../features/latestCourses";
 import { fetchAllCourses } from "../../features/courses";
-import { AiOutlineShopping } from "react-icons/ai";
+import { AiOutlineShopping, AiOutlineLogout } from "react-icons/ai";
 import GaugeChart from "react-gauge-chart";
 import AliceCarousel from "react-alice-carousel";
 import Search from "../../components/Search";
@@ -13,6 +13,7 @@ import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
 import bg1 from "../../assets/bg-1.jpg"; // its dummy imaage usally have to come from server
+import { logout } from "../../features/auth";
 
 const Main = () => {
   const {
@@ -28,6 +29,10 @@ const Main = () => {
     dispatch(fetchAllCourses({}));
     dispatch(fetchLatestCourses({}));
   }, []);
+
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
 
   return (
     <div className="py-4 w-100 container">
@@ -50,6 +55,9 @@ const Main = () => {
                 {items.length}
               </Badge>
             </Link>
+            <Button onClick={logoutHandler}>
+              <AiOutlineLogout size={"1.8rem"} />
+            </Button>
           </div>
         </Col>
       </Row>

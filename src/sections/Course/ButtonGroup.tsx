@@ -20,7 +20,7 @@ const ButtonGroup = ({ course }: Props) => {
     return false;
   };
 
-  if (!course.enroll_all) {
+  if (course.enroll_all) {
     return (
       <Link to={`/courses/${course.id}`}>
         <Button className="bg-green text-white">Enter this Course</Button>
