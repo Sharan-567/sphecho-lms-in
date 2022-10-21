@@ -1,29 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { BsExclamationTriangle } from "react-icons/bs";
+import { useParams } from "react-router-dom";
 import { Spinner, Row, Col, Button } from "react-bootstrap";
 import { getAssessment } from "../../features/assessment";
 import Question from "./Question";
 import { useAppDispatch, useAppSelector } from "../../store";
-import type { Question as QuestionType } from "../../definations/assessment";
+import { updateProgress } from "../../features/progress";
 
 type Props = {
   assessmentId: number;
 };
-
 const Assessment = ({ assessmentId }: Props) => {
   const { loading, questions, err } = useAppSelector(
     (state) => state.assessment
   );
   const dispatch = useAppDispatch();
   const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [isFailed, setIsFailed] = useState(false);
+  const [isAttempted, setIsAttempted] = useState(false);
 
+  const { courseId } = useParams();
   useEffect(() => {
     dispatch(getAssessment(assessmentId));
   }, []);
 
-  useEffect(() => {
-    console.log(correctAnswers);
-  }, [correctAnswers]);
+  const submitAnswers = () => {
+    setIsAttempted(true);
+    if (correctAnswers === questions.length) {
+      if (courseId)
+        dispatch(
+          updateProgress({ course: courseId, assessment: assessmentId })
+        );
+      setIsFailed(false);
+    } else {
+      setIsFailed(true);
+    }
+  };
 
   if (err) {
     return (
@@ -48,11 +60,19 @@ const Assessment = ({ assessmentId }: Props) => {
           <Row>
             <Col sm={9}>
               <h2 className="b-700 text-blue">Assessment</h2>
+              {isFailed ? (
+                <h5 className="text-danger">
+                  Failed the Assessment Please re attempt later.
+                </h5>
+              ) : (
+                isAttempted && (
+                  <h5 className="text-green">You passed the assessment...</h5>
+                )
+              )}
             </Col>
             <Col sm={3}>
               <p className="small b-700">Total Questions: {questions.length}</p>
               <p className="small b-700 lh-0 text-green"></p>
-              <p className="small b-700 text-danger">Min marks to qualify:</p>
             </Col>
           </Row>
           <Col className="p-3 bg-graydark round">
@@ -66,7 +86,11 @@ const Assessment = ({ assessmentId }: Props) => {
                 />
               );
             })}
-            <Button variant="green" className="text-white">
+            <Button
+              variant="green"
+              className="text-white"
+              onClick={() => submitAnswers()}
+            >
               Submit Answers
             </Button>
           </Col>

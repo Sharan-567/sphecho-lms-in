@@ -24,7 +24,6 @@ const fetchTopics = async (
     const res = await customAxios.get(`student/get-course-details/${id}/`, {
       headers,
     });
-
     const { topics, assesements, groups }: FetchTopicReturnType = res.data;
     return Promise.resolve({ topics, assesements });
   } catch (error) {

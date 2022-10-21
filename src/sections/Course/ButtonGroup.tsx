@@ -7,9 +7,10 @@ import { useAppSelector, useAppDispatch } from "../../store";
 
 type Props = {
   course: Course;
+  type: string;
 };
 
-const ButtonGroup = ({ course }: Props) => {
+const ButtonGroup = ({ course, type }: Props) => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
 
@@ -20,7 +21,7 @@ const ButtonGroup = ({ course }: Props) => {
     return false;
   };
 
-  if (course.enroll_all) {
+  if (type === "userCourses") {
     return (
       <Link to={`/courses/${course.id}`}>
         <Button className="bg-green text-white">Enter this Course</Button>

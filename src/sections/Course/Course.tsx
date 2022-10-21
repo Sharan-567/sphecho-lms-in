@@ -21,17 +21,16 @@ const Course = () => {
   }, []);
 
   const getUsersCourses = (userCourses: StudentCourse[]) => {
-    const userCourseIds = {};
-    for (const course of userCourses) {
-      if (!userCourseIds[course.id]) {
-        userCourseIds[course.id] = true;
-      }
+    let courseIds = {};
+    for (let course of userCourses) {
+      courseIds[course.course] = course.course;
     }
-    return courses.filter((course) => userCourseIds[course.id]);
+    const result = courses.filter((course) => courseIds[course.id]);
+    return result;
   };
 
   const getNoOftopics = (id: number): number => {
-    const course = userCourses.find((course) => course.id === id);
+    const course = userCourses.find((course) => course.course === id);
     if (course) return course.no_of_topics;
     return 0;
   };
@@ -71,6 +70,7 @@ const Course = () => {
                     key={`course-${course.id}`}
                     no_of_topics={getNoOftopics(course.id)}
                     course={course}
+                    type="userCourses"
                   />
                 );
               })}
@@ -81,7 +81,11 @@ const Course = () => {
             {courses.map((course) => {
               return (
                 course?.view_all && (
-                  <CourseContainer key={course.id} course={course} />
+                  <CourseContainer
+                    key={course.id}
+                    course={course}
+                    type="allCourses"
+                  />
                 )
               );
             })}

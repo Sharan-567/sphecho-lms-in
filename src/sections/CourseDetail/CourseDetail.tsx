@@ -3,7 +3,7 @@ import { useLocation, Link, Path } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../store";
 import { HOST } from "../../features/settings";
-import type { Course } from "../../features/courses";
+import type { Course } from "../../definations/course";
 
 interface Location extends Path {
   state: {

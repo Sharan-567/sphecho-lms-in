@@ -65,7 +65,7 @@ const Topic = ({ topic, courseId }: TopicProp) => {
   } else if (topic && "max_marks" in topic) {
     return (
       <div className="p-3  br-1 bg-gray">
-        <AssesmentComp assessmentId={topic.id} />
+        {topic && <AssesmentComp assessmentId={topic.id} />}
       </div>
     );
   }

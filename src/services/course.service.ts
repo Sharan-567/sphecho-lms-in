@@ -27,7 +27,7 @@ const fetchUserCourses = async (token: string) => {
       { headers }
     );
     for (let course of data) {
-      let no_of_topics = await getTotalTopicsOfCourse(token, course.id);
+      let no_of_topics = await getTotalTopicsOfCourse(token, course.course);
       course.no_of_topics = no_of_topics;
     }
     return Promise.resolve(data);

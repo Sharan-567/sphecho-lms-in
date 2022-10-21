@@ -9,9 +9,10 @@ import ButtonGroup from "./ButtonGroup";
 type CourseContainer = {
   course: Course;
   no_of_topics?: number;
+  type: string;
 };
 
-const CourseContainer = ({ course, no_of_topics }: CourseContainer) => {
+const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
   const { progress } = useAppSelector((state) => state.progress);
 
   const getNoOfTopicsCompleted = (id: string): number => {
@@ -40,17 +41,18 @@ const CourseContainer = ({ course, no_of_topics }: CourseContainer) => {
       <Row>
         <Col>
           <div>
-            <h4 className="b-700 text-blue">{course.name}</h4>
+            <h4 className="b-700 text-blue pt-3">{course.name}</h4>
             <p
+              className="my-4 pe-3"
               style={{
                 overflow: "hidden",
               }}
             >
-              {course.description.slice(0, 563)}...
+              {course.description.slice(0, 573)}...
             </p>
           </div>
           {no_of_topics && (
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center p-2">
               <Progress
                 Value={getPercentageValue(`${course.id}`)}
                 isPercentage
@@ -94,10 +96,14 @@ const CourseContainer = ({ course, no_of_topics }: CourseContainer) => {
             <h4>{course.trainer_name}</h4>
           </div>
           <div className="d-flex align-items-center justify-content-between mb-1">
-            <ButtonGroup course={course} />
-            <h3 className="text-skyBlue b-800">
-              $ {Number(course.full_amount).toFixed(0)}
-            </h3>
+            <ButtonGroup {...{ course, type }} />
+            {type === "allCourses" && (
+              <h3 className="text-skyBlue b-800">
+                {Number(course.full_amount).toFixed(0) === "0"
+                  ? "Free"
+                  : `$${Number(course.full_amount).toFixed(0)}`}
+              </h3>
+            )}
           </div>
         </Col>
       </Row>

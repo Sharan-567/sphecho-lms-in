@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form } from "react-bootstrap";
-import { Question as question } from "../../features/assessment";
+import type { Question as question } from "../../definations/assessment";
 
 type props = {
   q: question;

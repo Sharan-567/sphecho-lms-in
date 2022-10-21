@@ -14,6 +14,7 @@ import {
   AiOutlineTool,
   AiOutlineLogout,
 } from "react-icons/ai";
+import TopNav from "./TopNav";
 
 interface MenuList {
   Icon: IconType;
@@ -51,7 +52,7 @@ const SideNav = () => {
   ];
 
   const getYpostion = () => {
-    return currentTab.get() * 60;
+    return currentTab.get() * 61;
   };
 
   const handleTab = (route: string, tabNo: number) => {
