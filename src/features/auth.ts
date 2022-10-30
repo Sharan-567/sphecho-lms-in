@@ -1,16 +1,21 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { Patient } from "../definations/patients";
 import authService from "../services/auth.service";
+import type { RootState } from "./../store";
+import { addPatients } from "./patient";
 
 type InitialState = {
   loading: boolean;
   isLoggedIn: boolean;
   err?: string;
   userType: string;
+  typeId: number;
 };
 
 type ResponseData = {
   token: string;
   userType: string;
+  typeId: number;
 };
 
 const isLoggedIn = () => {
@@ -24,6 +29,7 @@ const initialState: InitialState = {
   isLoggedIn: isLoggedIn(),
   userType: "",
   err: "",
+  typeId: 0,
 };
 
 export const login = createAsyncThunk<
@@ -32,13 +38,20 @@ export const login = createAsyncThunk<
   { rejectValue: string; serializedErrorType: string }
 >("/login", async (data, thunkAPI) => {
   try {
-    // const res = await authService.login(data);
-    // console.log(res);
-    let token =
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiamoiLCJ0eXBlIjoiU3VwZXJVc2VyIiwiY29udGFjdCI6Ijg5MDQzODUxNjUiLCJwcm9maWxlVVJMIjpudWxsLCJzaWduIjoiaHR0cHM6Ly9teXRlbGVvcGQuczMuYXAtc291dGgtMS5hbWF6b25hd3MuY29tL3NpZ24tMTYzODE4NDU4MjIzMy5wbmciLCJpZCI6IjVmNGFkMTkwYWI0YzZjMWEyNDE5MzUwNyIsImFzc2lnbmluZ0F1dGhvcml0eSI6eyJfaWQiOiI2MDRiNjg5MjUwOGViOTFlOWI2OTA5NjMiLCJuYW1lIjoiRm9ydGlzLVZhc2hpIn0sImlhdCI6MTY2NjMxNDY3OCwiZXhwIjoxNjY2NDg3NDc4fQ.AizEAZqWU1h4S1lT_dIKEF_IAILpGZ8ASe-Rd11SVIc";
-    const res = await authService.getLMSToken(token);
-    localStorage.setItem("token", res.token);
-    return { ...res, userType: "SuperUser" };
+    // get the login
+    const res = await authService.login(data);
+    let token = res.token;
+    if (res.userType !== "superadmin") {
+      // authorize with LMS Server
+      const data = await authService.AuthorizeLMS(token);
+      token = data.token;
+    }
+    if (token) {
+      localStorage.setItem("token", token);
+    } else {
+      return thunkAPI.rejectWithValue("Not authorized");
+    }
+    return { ...res };
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -51,7 +64,7 @@ export const getOTP = createAsyncThunk<
 >("/getOtp", async (data, thunkAPI) => {
   try {
     const res = await authService.getOTP(data);
-    localStorage.setItem("token", res.token);
+    localStorage.setItem("hash", res.hash);
     return { ...res, userType: "SuperUser" };
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
@@ -60,7 +73,6 @@ export const getOTP = createAsyncThunk<
 
 type VerifyOTPReqData = {
   mobile: string;
-  hash: string;
   name: string;
   otp: string;
 };
@@ -68,12 +80,37 @@ type VerifyOTPReqData = {
 export const verifyOTP = createAsyncThunk<
   ResponseData,
   VerifyOTPReqData,
-  { rejectValue: string; serializedErrorType: string }
->("/verifyOtp", async (data, thunkAPI) => {
+  { rejectValue: string; serializedErrorType: string; state: RootState }
+>("/verifyOtp", async (body, thunkAPI) => {
   try {
-    const res = await authService.verifyOTP(data);
-    localStorage.setItem("token", res.token);
-    return { ...res, userType: "patient" };
+    const res = await authService.verifyOTP(body);
+    if (res.error) {
+      // if otp is wrong
+      return thunkAPI.rejectWithValue(res.error);
+    }
+    const patientData = await authService.GetPatientList({
+      token: res.token,
+      contact: body.mobile,
+    });
+    // add the patients list to state
+    if (!patientData.patients) {
+      return thunkAPI.rejectWithValue("Somethng went wrong");
+    }
+    localStorage.setItem("patientToken", res.token);
+    thunkAPI.dispatch(addPatients(patientData.patients));
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error);
+  }
+});
+
+export const verifyPatientName = createAsyncThunk<
+  {},
+  Patient,
+  { rejectValue: string; serializedErrorType: string }
+>("/verifyPatient", async (data, thunkAPI) => {
+  try {
+    const res = await authService.verifyPatient(data);
+    console.log(res);
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -98,21 +135,17 @@ const auth = createSlice({
         state.loading = false;
         state.isLoggedIn = true;
         state.err = "";
+        state.typeId = action.payload.typeId;
         state.userType = action.payload.userType;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isLoggedIn = false;
+        state.typeId = 0;
         state.err = action.payload;
-      })
-      .addCase(verifyOTP.fulfilled, (state, action) => {
-        state.loading = false;
-        state.userType = action.payload.userType;
-        state.isLoggedIn = true;
       })
       .addCase(verifyOTP.rejected, (state, action) => {
         state.loading = false;
-        state.isLoggedIn = false;
         state.err = action.payload;
       });
   },

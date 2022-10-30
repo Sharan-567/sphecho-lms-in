@@ -1,15 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik } from "formik";
 import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import OtpInput from "react-otp-input";
-import { getOTP, verifyOTP } from "../features/auth";
-import { useAppDispatch } from "../store";
+import { getOTP, verifyOTP, verifyPatientName } from "../features/auth";
+import { useAppDispatch, useAppSelector } from "../store";
+import { Patient } from "../definations/patients";
 
 type Props = {
   handleOpenModel: () => void;
   handleCloseModal: () => void;
   showLoginModal: boolean;
   getUserType: React.Dispatch<React.SetStateAction<string>>;
+};
+
+type DataType = {
+  phone: string;
+  usertype: string;
 };
 
 const PatientLoginModal = ({
@@ -19,31 +25,46 @@ const PatientLoginModal = ({
 }: Props) => {
   const [startSpin, setStartSpin] = useState(false);
   const [showOtpPanel, setOtpPanel] = useState(false);
+  const { err } = useAppSelector((state) => state.auth);
+  const { patients } = useAppSelector((state) => state.patient);
 
   const [otpError, setOtpError] = useState("");
   const [otp, setOtp] = useState("");
+  const [data, setData] = useState({ usertype: "", phone: "" });
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    if (otp.length === 4) {
+      const body = {
+        name: data.usertype,
+        mobile: data.phone,
+        otp: otp,
+      };
+      dispatch(verifyOTP(body));
+    }
+  }, [otp]);
+
   const handleSubmit = async (data: { phone: string; usertype: string }) => {
-    const body = {
-      mobile: data.phone,
-      name: data.usertype,
-      otp,
-    };
+    setData(data as DataType);
     try {
-      const otpRes = await dispatch(getOTP(data)).unwrap();
+      dispatch(getOTP(data));
       setOtpPanel(true);
-      await dispatch(verifyOTP({ ...body, hash: otpRes.hash }));
     } catch (err) {
       setOtpError(err);
     }
   };
+
+  const handlePatientLogin = (patient: Patient) => {
+    dispatch(verifyPatientName(patient));
+  };
+
   return (
     <Modal
       centered
+      style={{ zoom: 1.1 }}
       show={showLoginModal}
       onHide={() => {
-        getUserType("SuperUser");
+        getUserType("");
         handleCloseModal();
       }}
     >
@@ -54,23 +75,43 @@ const PatientLoginModal = ({
         {otpError && <p className="text-danger">{otpError}</p>}
         {showOtpPanel ? (
           <div className=" p-4 text-center">
-            <div className="py-4 w-100 d-flex flex-column align-items-center">
-              <h4>Please Enter the Otp</h4>
-              <OtpInput
-                containerStyle={{ padding: "1rem" }}
-                inputStyle={{ padding: ".5rem", width: "3rem" }}
-                value={otp}
-                onChange={setOtp}
-                numInputs={4}
-                separator={<span>-</span>}
-              />
-              {otp.length === 4 && (
-                <div className="d-flex align-items-center mt-2">
-                  <Spinner animation="grow" variant="green" />{" "}
-                  <p className="ms-2 mt-2">Please wait a moment...</p>
-                </div>
-              )}
-            </div>
+            {patients.length <= 0 ? (
+              <div className="py-4 w-100 d-flex flex-column align-items-center">
+                <h4>Please Enter the Otp</h4>
+                <OtpInput
+                  containerStyle={{ padding: "1rem" }}
+                  inputStyle={{ padding: ".5rem", width: "3rem" }}
+                  value={otp}
+                  onChange={setOtp}
+                  numInputs={4}
+                  separator={<span>-</span>}
+                />
+                {otp.length === 4 && (
+                  <div className="d-flex align-items-center mt-2">
+                    {!err ? (
+                      <>
+                        <Spinner animation="grow" variant="green" />
+                        <p className="ms-2 mt-2">Please wait a moment...</p>
+                      </>
+                    ) : (
+                      <p className="ms-2 mt-2 text-danger">Otp is Wrong..</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div>
+                <p>Select the Profile</p>
+                {patients.map((p) => (
+                  <Button
+                    className="bg-graydark w-100 my-2"
+                    onClick={() => handlePatientLogin(p)}
+                  >
+                    {p.fName}
+                  </Button>
+                ))}
+              </div>
+            )}
           </div>
         ) : (
           <Formik
@@ -78,7 +119,7 @@ const PatientLoginModal = ({
             onSubmit={handleSubmit}
             initialValues={{
               phone: "",
-              usertype: "patient",
+              usertype: "Patient",
             }}
           >
             {({
@@ -107,21 +148,6 @@ const PatientLoginModal = ({
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>User type</Form.Label>
-                  <Form.Select
-                    value={values.usertype}
-                    name="usertype"
-                    onChange={(e) => {
-                      handleChange(e);
-                      getUserType(e.target.value);
-                    }}
-                    aria-label="Default select example"
-                  >
-                    <option value="SuperUser">SuperUser</option>
-                    <option value="patient">Patient</option>
-                  </Form.Select>
-                </Form.Group>
                 <div className="d-flex flex-row-reverse mt-5">
                   <Button type="submit" variant="green text-white">
                     {startSpin ? (
@@ -139,7 +165,13 @@ const PatientLoginModal = ({
                       "Login"
                     )}
                   </Button>
-                  <Button variant="secondary" onClick={handleCloseModal}>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      handleCloseModal();
+                      getUserType("");
+                    }}
+                  >
                     Close
                   </Button>
                 </div>

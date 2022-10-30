@@ -10,6 +10,7 @@ type Props = {
   handleCloseModal: () => void;
   showLoginModal: boolean;
   getUserType: React.Dispatch<React.SetStateAction<string>>;
+  userType: string;
 };
 
 const SimpleLoginModal = ({
@@ -17,6 +18,7 @@ const SimpleLoginModal = ({
   showLoginModal,
   handleOpenModel,
   getUserType,
+  userType,
 }: Props) => {
   const [startSpin, setStartSpin] = useState(false);
   const { err } = useAppSelector((state) => state.auth);
@@ -30,12 +32,8 @@ const SimpleLoginModal = ({
       .min(3, "Password is too short - should be 8 chars minimum."),
   });
 
-  const handleSubmit = (data: {
-    username: string;
-    password: string;
-    type: string;
-  }) => {
-    dispatch(login(data))
+  const handleSubmit = (data: { username: string; password: string }) => {
+    dispatch(login({ ...data, type: userType }))
       .unwrap()
       .then((res) => {
         setStartSpin(false);
@@ -43,9 +41,18 @@ const SimpleLoginModal = ({
       .catch((err) => setStartSpin(false));
   };
   return (
-    <Modal centered show={showLoginModal} onHide={handleCloseModal}>
+    <Modal
+      centered
+      show={showLoginModal}
+      onHide={() => {
+        handleCloseModal();
+        getUserType("");
+      }}
+    >
       <Modal.Header closeButton>
-        <Modal.Title>Login</Modal.Title>
+        <Modal.Title>
+          {userType.charAt(0).toUpperCase() + userType.slice(1)} Login
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {err && <p className="text-danger">{err}</p>}
@@ -55,7 +62,6 @@ const SimpleLoginModal = ({
           initialValues={{
             username: "",
             password: "",
-            type: "SuperUser",
           }}
         >
           {({
@@ -98,21 +104,6 @@ const SimpleLoginModal = ({
                   {errors.password}
                 </Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label>User type</Form.Label>
-                <Form.Select
-                  value={values.type}
-                  name="type"
-                  onChange={(e) => {
-                    handleChange(e);
-                    getUserType(e.target.value);
-                  }}
-                  aria-label="Default select example"
-                >
-                  <option value="SuperUser">SuperUser</option>
-                  <option value="patient">Patient</option>
-                </Form.Select>
-              </Form.Group>
               <div className="d-flex flex-row-reverse mt-5">
                 <Button type="submit" variant="green text-white">
                   {startSpin ? (
@@ -130,7 +121,13 @@ const SimpleLoginModal = ({
                     "Login"
                   )}
                 </Button>
-                <Button variant="secondary" onClick={handleCloseModal}>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    handleCloseModal();
+                    getUserType("");
+                  }}
+                >
                   Close
                 </Button>
               </div>
