@@ -45,7 +45,7 @@ export const fetchLatestCourses = createAsyncThunk<
         Authorization: `token ${token}`,
       };
       const res = await axios(
-        `${BASE_URL}student/course-serach/?search=latest`,
+        `${BASE_URL}/student/course-serach/?search=latest`,
         {
           headers,
         }

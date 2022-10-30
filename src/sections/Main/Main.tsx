@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, Badge, Container, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchLatestCourses } from "../../features/latestCourses";
 import { fetchAllCourses } from "../../features/courses";
@@ -22,7 +22,7 @@ const Main = () => {
     latestCourses,
   } = useAppSelector((state) => state.latestCourses);
   const { items } = useAppSelector((state) => state.cart);
-
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -32,6 +32,19 @@ const Main = () => {
 
   const logoutHandler = () => {
     dispatch(logout());
+  };
+
+  const isAdmin = () => {
+    const userType = localStorage.getItem("userType");
+    const typeId = localStorage.getItem("typeId");
+    if (userType && typeId) {
+      if (userType === "doctor" || typeId === "2") {
+        return true;
+      } else if (userType === "superadmin" || typeId === "4") {
+        return true;
+      }
+    }
+    return false;
   };
 
   return (
@@ -58,6 +71,15 @@ const Main = () => {
             <Button onClick={logoutHandler}>
               <AiOutlineLogout size={"1.8rem"} />
             </Button>
+            {isAdmin() && (
+              <Button
+                className="bg-green text-white"
+                style={{ borderRadius: "2rem" }}
+                onClick={() => navigate("/admin")}
+              >
+                Go to Admin
+              </Button>
+            )}
           </div>
         </Col>
       </Row>

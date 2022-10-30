@@ -3,4 +3,5 @@ export type Patient = {
   dob: string;
   _id: string;
   gender: string;
+  fullName: string;
 };

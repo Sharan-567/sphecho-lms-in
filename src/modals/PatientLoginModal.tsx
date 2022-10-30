@@ -5,6 +5,7 @@ import OtpInput from "react-otp-input";
 import { getOTP, verifyOTP, verifyPatientName } from "../features/auth";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Patient } from "../definations/patients";
+import { resetStage } from "../features/patient";
 
 type Props = {
   handleOpenModel: () => void;
@@ -25,8 +26,7 @@ const PatientLoginModal = ({
 }: Props) => {
   const [startSpin, setStartSpin] = useState(false);
   const [showOtpPanel, setOtpPanel] = useState(false);
-  const { err } = useAppSelector((state) => state.auth);
-  const { patients } = useAppSelector((state) => state.patient);
+  const { patients, error, stage } = useAppSelector((state) => state.patient);
 
   const [otpError, setOtpError] = useState("");
   const [otp, setOtp] = useState("");
@@ -41,6 +41,7 @@ const PatientLoginModal = ({
         otp: otp,
       };
       dispatch(verifyOTP(body));
+      setOtp("");
     }
   }, [otp]);
 
@@ -65,6 +66,7 @@ const PatientLoginModal = ({
       show={showLoginModal}
       onHide={() => {
         getUserType("");
+        dispatch(resetStage());
         handleCloseModal();
       }}
     >
@@ -72,48 +74,7 @@ const PatientLoginModal = ({
         <Modal.Title>Patient Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {otpError && <p className="text-danger">{otpError}</p>}
-        {showOtpPanel ? (
-          <div className=" p-4 text-center">
-            {patients.length <= 0 ? (
-              <div className="py-4 w-100 d-flex flex-column align-items-center">
-                <h4>Please Enter the Otp</h4>
-                <OtpInput
-                  containerStyle={{ padding: "1rem" }}
-                  inputStyle={{ padding: ".5rem", width: "3rem" }}
-                  value={otp}
-                  onChange={setOtp}
-                  numInputs={4}
-                  separator={<span>-</span>}
-                />
-                {otp.length === 4 && (
-                  <div className="d-flex align-items-center mt-2">
-                    {!err ? (
-                      <>
-                        <Spinner animation="grow" variant="green" />
-                        <p className="ms-2 mt-2">Please wait a moment...</p>
-                      </>
-                    ) : (
-                      <p className="ms-2 mt-2 text-danger">Otp is Wrong..</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div>
-                <p>Select the Profile</p>
-                {patients.map((p) => (
-                  <Button
-                    className="bg-graydark w-100 my-2"
-                    onClick={() => handlePatientLogin(p)}
-                  >
-                    {p.fName}
-                  </Button>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : (
+        {stage === 0 && (
           <Formik
             //   validationSchema={schema}
             onSubmit={handleSubmit}
@@ -168,6 +129,7 @@ const PatientLoginModal = ({
                   <Button
                     variant="secondary"
                     onClick={() => {
+                      dispatch(resetStage());
                       handleCloseModal();
                       getUserType("");
                     }}
@@ -178,6 +140,74 @@ const PatientLoginModal = ({
               </Form>
             )}
           </Formik>
+        )}
+        {stage === 1 && (
+          <div className="py-4 w-100 d-flex flex-column align-items-center">
+            <h4>Please Enter the Otp</h4>
+            <OtpInput
+              containerStyle={{ padding: "1rem" }}
+              inputStyle={{ padding: ".5rem", width: "3rem" }}
+              value={otp}
+              onChange={setOtp}
+              numInputs={4}
+              separator={<span>-</span>}
+            />
+            {error ? (
+              <div>
+                <p>{error}</p>
+                <Button
+                  className="bg-green text-white"
+                  onClick={() => dispatch(resetStage())}
+                >
+                  Try Again
+                </Button>
+              </div>
+            ) : (
+              otp.length === 4 && (
+                <div>
+                  <Spinner animation="grow" color="green"></Spinner>
+                  <p>please wait a moment</p>
+                </div>
+              )
+            )}
+          </div>
+        )}
+        {stage === 3 && (
+          <>
+            {error && (
+              <div>
+                <p className="text-danger">{error}</p>
+                <Button
+                  className="bg-green text-white"
+                  onClick={() => dispatch(resetStage())}
+                >
+                  Try Again
+                </Button>
+              </div>
+            )}
+            {patients.map((p) => (
+              <Button
+                onClick={() => handlePatientLogin(p)}
+                key={p._id}
+                className="p-2 bg-gray br-1 w-100"
+              >
+                {p.fName}
+              </Button>
+            ))}
+          </>
+        )}
+        {stage === 4 && error && (
+          <>
+            <div>
+              <p className="text-danger">{error}</p>
+              <Button
+                className="bg-green text-white"
+                onClick={() => dispatch(resetStage())}
+              >
+                Try Again
+              </Button>
+            </div>
+          </>
         )}
       </Modal.Body>
     </Modal>

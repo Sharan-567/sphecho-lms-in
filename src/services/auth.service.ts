@@ -23,6 +23,7 @@ const login = async ({
 
     // django amin login
     if (type === "superadmin") {
+      formData.append("type", "4");
       res = await customAxios.post("/accounts/login/", formData);
       return Promise.resolve({
         ...res.data,
@@ -115,9 +116,16 @@ const GetPatientList = async (data: PatientListType) => {
   }
 };
 
-const AuthorizeLMS = async (token: string) => {
+type Authroizetype = {
+  token: string;
+  typeId: number;
+};
+
+const AuthorizeLMS = async ({ token, typeId }: Authroizetype) => {
   try {
-    const res = await customAxios.post(`/accounts/authorize/?token=${token}`);
+    const res = await customAxios.get(
+      `/accounts/authorize/?token=${token}&type=${typeId}`
+    );
     if (res.data.error) {
       return Promise.reject(getErrorMessageWithCode(401));
     }
@@ -136,11 +144,11 @@ const verifyPatient = async (data: Patient) => {
     if (token) {
       formData.append("token", token);
     }
-    formData.append("name", data.fName);
+    formData.append("name", data.fullName);
     formData.append("id", data._id);
     formData.append("dob", data.dob);
     formData.append("gender", data.gender);
-    const res = await customAxios.post(`/accounts/authorize/`, formData);
+    const res = await customAxios.post(`/accounts/auth/`, formData);
     if (res.data.error) {
       return Promise.reject(getErrorMessageWithCode(401));
     }

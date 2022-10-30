@@ -7,6 +7,9 @@ import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
+
+// adminSection
+import { AdminMain, CousreMangement } from "./adminSections";
 import {
   Course,
   TopicsList,
@@ -15,10 +18,11 @@ import {
   Cart,
   Webinars,
 } from "./sections";
+import AdminDashboard from "./pages/AdminDashBoard/AdminDashBoard";
 
 function App() {
   const { isLoggedIn } = useAppSelector((state) => state.auth);
-
+  const userType = localStorage.getItem("userType");
   return (
     <div>
       <Router>
@@ -40,6 +44,10 @@ function App() {
               </Route>
               <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
+              <Route path="admin">
+                <Route index element={<AdminMain />} />
+                <Route path="coursesMangement" element={<CousreMangement />} />
+              </Route>
             </Route>
           )}
         </Routes>

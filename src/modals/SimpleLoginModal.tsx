@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { Modal, Form, Spinner, Button } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../store";
-import { login } from "../features/auth";
+import { login, clearError } from "../features/auth";
 
 type Props = {
   handleOpenModel: () => void;
@@ -47,6 +47,7 @@ const SimpleLoginModal = ({
       onHide={() => {
         handleCloseModal();
         getUserType("");
+        dispatch(clearError());
       }}
     >
       <Modal.Header closeButton>
@@ -126,6 +127,7 @@ const SimpleLoginModal = ({
                   onClick={() => {
                     handleCloseModal();
                     getUserType("");
+                    dispatch(clearError());
                   }}
                 >
                   Close
