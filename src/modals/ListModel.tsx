@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
-
+import { BASE_URL } from "../features/settings";
 type Props = {
   getUserType: React.Dispatch<React.SetStateAction<string>>;
   handleOpenModel: () => void;
@@ -24,11 +24,6 @@ const typeOfUsers: UserType[] = [
     id: 2,
     title: "Doctor",
     type: "doctor",
-  },
-  {
-    id: 4,
-    title: "Super Admin",
-    type: "superadmin",
   },
 ];
 
@@ -58,6 +53,14 @@ const ListModel = ({ getUserType, ...restProps }: Props) => {
               </h6>
             </Button>
           ))}
+          <Button
+            className="bg-green my-2 py-2 text-white"
+            href={
+              "https://lmsv2.metahos.com/lms_api_v1/super-admin/login/?next=/lms_api_v1/super-admin/"
+            }
+          >
+            <h6 style={{ fontSize: "1rem" }}>Login as Super Admin</h6>
+          </Button>
         </div>
       </Modal.Body>
     </Modal>
