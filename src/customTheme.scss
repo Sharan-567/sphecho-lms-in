@@ -1,6 +1,6 @@
 // custom variants
 $theme-colors: (
-  "danger": tomato,
+  "danger": #ff6347,
   "blue": #1e254f,
   "skyBlue": #0e9cf0,
   "sky": rgb(194, 233, 255),
@@ -9,6 +9,8 @@ $theme-colors: (
   "graydark": rgb(234, 234, 234),
   "lightblue": rgb(133, 210, 255),
   "admingreen": #3d5654,
+  "adminsecondary": #d6af14,
+  "adminteritory": #18b3a7,
 );
 // custom variables
 $skyBlue: rgb(14, 156, 240);

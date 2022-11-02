@@ -9,7 +9,7 @@ import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
 
 // adminSection
-import { AdminMain, CousreMangement } from "./adminSections";
+import { AdminMain, CousreMangement, TopicMangment } from "./adminSections";
 import {
   Course,
   TopicsList,
@@ -47,6 +47,7 @@ function App() {
               <Route path="admin">
                 <Route index element={<AdminMain />} />
                 <Route path="coursesMangement" element={<CousreMangement />} />
+                <Route path="topicsMangement" element={<TopicMangment />} />
               </Route>
             </Route>
           )}

@@ -44,7 +44,7 @@ const AdminSideNav = () => {
     {
       Icon: AiOutlineTool,
       title: "Assessment",
-      to: "/admin/AssessmentMangement",
+      to: "/admin/assessmentMangement",
     },
     {
       Icon: AiOutlineComment,

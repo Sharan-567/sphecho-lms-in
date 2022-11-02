@@ -70,7 +70,6 @@ export const getOTP = createAsyncThunk<
     localStorage.setItem("hash", res.hash);
     return { ...res, userType: "SuperUser" };
   } catch (error) {
-    thunkAPI.dispatch(patientError("Getting Otp is not working"));
     return thunkAPI.rejectWithValue(error);
   }
 });
