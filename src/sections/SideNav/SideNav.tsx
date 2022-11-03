@@ -62,7 +62,7 @@ const SideNav = () => {
 
   return (
     <div
-      className="py-2 ps-3"
+      // className="py-2 ps-3"
       style={{
         position: "sticky",
         top: 0,
@@ -71,7 +71,7 @@ const SideNav = () => {
       }}
     >
       <motion.div
-        className="bg-blue br-3"
+        className="bg-blue"
         animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
         style={{
           position: "sticky",

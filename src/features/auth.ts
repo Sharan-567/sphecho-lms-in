@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { date } from "yup";
 import { Patient } from "../definations/patients";
 import authService from "../services/auth.service";
 import type { RootState } from "./../store";
@@ -70,6 +69,7 @@ export const getOTP = createAsyncThunk<
     localStorage.setItem("hash", res.hash);
     return { ...res, userType: "SuperUser" };
   } catch (error) {
+    thunkAPI.dispatch(patientError(error));
     return thunkAPI.rejectWithValue(error);
   }
 });

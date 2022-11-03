@@ -32,7 +32,7 @@ const ListItem = <T extends {}>(props: ListItem<T>) => {
             className="bg-adminsecondary text-white me-1 br-2"
             onClick={() => props.openModel(props.item, "update")}
           >
-            Update
+            Edit
           </Button>
 
           <Button

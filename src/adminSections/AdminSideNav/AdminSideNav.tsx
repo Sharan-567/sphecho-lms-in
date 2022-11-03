@@ -64,7 +64,7 @@ const AdminSideNav = () => {
 
   return (
     <div
-      className="py-2 ps-3"
+      className=""
       style={{
         position: "sticky",
         top: 0,
@@ -73,9 +73,10 @@ const AdminSideNav = () => {
       }}
     >
       <motion.div
-        className="bg-admingreen br-3"
+        className="bg-admingreen "
         animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
         style={{
+          // borderRadius: "0rem 3rem 3rem 0rem",
           position: "sticky",
           top: "3rem",
           height: "100%",
