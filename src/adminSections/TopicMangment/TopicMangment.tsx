@@ -18,25 +18,22 @@ import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
 
-type CourseCreateType = Record<string, string>;
 
 //create validation
 const createSchema = Yup.object().shape({
   name: Yup.string()
-    .required("Course Name is required")
+    .required("Topic Name is required")
     .max(25, "max Length 25 chars"),
-  tags: Yup.string()
-    .required("tags are required")
-    .nullable()
-    .max(25, "max Length 25 chars"),
-  info_image: Yup.string().required("info images is required").nullable(),
-  description: Yup.string().required("description is required"),
-  trainer_name: Yup.string()
-    .required("trainer name is required")
-    .max(25, "max Length 25 chars"),
+ video: Yup.string().required("video url is needed"),
+ info_image: Yup.string().required("info image is required").nullable(),
+ pdf: Yup.string().required("pdf url is required"),
+ image: Yup.string().required("image url is required"),
+ content: Yup.string().required("content is required"),
+ description: Yup.string().required("description is required"),
+ order: Yup.number().required("order is required"),
 });
 
-const CourseMangement = () => {
+const TopicManagment = () => {
   const userType = localStorage.getItem("userType");
   const [courses, setCourses] = useState<Course[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
@@ -63,14 +60,15 @@ const CourseMangement = () => {
       info_image: "",
       pdf: "",
       image: "",
-      content: "False",
-      description: "False",
+      content: "",
+      description: "",
       assement_required: "False",
       course: "",
       order: "",
     },
+    enableReinitialize: true,
     validationSchema: createSchema,
-    onSubmit: (data, { resetForm }) => console.log(data),
+    onSubmit: (data, { resetForm }) => createTopic(data, resetForm),
   });
 
   const updateFormik = useFormik({
@@ -134,6 +132,7 @@ const CourseMangement = () => {
   // get list of topics
   useEffect(() => {
     getTopicsList();
+    getCourseList();
   }, []);
 
   const deleteCourse = () => {
@@ -241,8 +240,8 @@ const CourseMangement = () => {
         });
     }
   };
-  // create course
-  const createCourse = (data, resetForm) => {
+  // create topic
+  const createTopic = (data, resetForm) => {
     setShowSpinner("create");
     const formData = new FormData();
     const token = localStorage.getItem("token");
@@ -252,7 +251,7 @@ const CourseMangement = () => {
     });
     axios
       .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/course-create/",
+        "https://lmsv2.metahos.com/lms_api_v1/master/topic-create/",
         formData,
         {
           headers: {
@@ -263,8 +262,8 @@ const CourseMangement = () => {
       .then((res) => {
         setShowSpinner("none");
         resetForm();
-        setSuccess("Course is created successfully");
-        getCourseList();
+        setSuccess("Topic is created successfully");
+        getTopicsList();
         setErrorType("none");
       })
       .catch((error) => {
@@ -297,12 +296,12 @@ const CourseMangement = () => {
       )}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
-          <h3 className="b-700">Courses</h3>
+          <h3 className="b-700">Topics</h3>
           <Button
             className="bg-adminteritory text-white br-2"
             onClick={createCourseOpenModal}
           >
-            Create Course
+            Create Topic
           </Button>
         </div>
         {showSpinner === "list" ? (
@@ -311,6 +310,7 @@ const CourseMangement = () => {
           topics.map((item) => {
             return (
               <ListItem
+              //@ts-ignore
                 item={item}
                 title={item.name}
                 key={item.id}
@@ -332,20 +332,20 @@ const CourseMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Course</Modal.Title>
+              <Modal.Title>Create Topics</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Course Name</Form.Label>
+                    <Form.Label>Topic Name</Form.Label>
                     <Form.Control
                       name="name"
                       value={creatFormik.values.name}
                       onChange={creatFormik.handleChange}
                       type="text"
                       required
-                      placeholder="Enter Course Name"
+                      placeholder="Enter Topic Name"
                     />
                     {creatFormik.touched.name && creatFormik.errors.name ? (
                       <div className="text-danger">
@@ -355,18 +355,18 @@ const CourseMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Tags</Form.Label>
+                    <Form.Label>Video Url</Form.Label>
                     <Form.Control
-                      name="tags"
+                      name="video"
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.tags}
+                      value={creatFormik.values.video}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {creatFormik.touched.tags && creatFormik.errors.tags ? (
+                    {creatFormik.touched.video && creatFormik.errors.video ? (
                       <div className="text-danger">
-                        {creatFormik.errors.tags}
+                        {creatFormik.errors.video}
                       </div>
                     ) : null}
                   </Form.Group>
@@ -397,15 +397,65 @@ const CourseMangement = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
+                  <Form.Label>pdf Url</Form.Label>
+                  <Form.Control
+                    name="pdf"
+                    required
+                    onChange={creatFormik.handleChange}
+                    value={creatFormik.values.pdf}
+                    placeholder="Add the course pdf.."
+                  />
+                  {creatFormik.touched.pdf &&
+                  creatFormik.errors.pdf ? (
+                    <div className="text-danger">
+                      {creatFormik.errors.pdf}
+                    </div>
+                  ) : null}
+                </Form.Group>
+                <Form.Group as={Col}>
+                  <Form.Label>Image Url</Form.Label>
+                  <Form.Control
+                    name="image"
+                    required
+                    onChange={creatFormik.handleChange}
+                    value={creatFormik.values.image}
+                    type="text"
+                  />
+                  {creatFormik.touched.image &&
+                  creatFormik.errors.image ? (
+                    <div className="text-danger">
+                      {creatFormik.errors.image}
+                    </div>
+                  ) : null}
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Content</Form.Label>
+                  <Form.Control
+                    name="content"
+                    required
+                    onChange={creatFormik.handleChange}
+                    value={creatFormik.values.content}
+                    type="text"
+                    as={"textarea"}
+                    rows={3}
+                  />
+                  {creatFormik.touched.content &&
+                  creatFormik.errors.content ? (
+                    <div className="text-danger">
+                      {creatFormik.errors.content}
+                    </div>
+                  ) : null}
+                </Form.Group>
+                <Form.Group>
                   <Form.Label>Description</Form.Label>
                   <Form.Control
                     name="description"
-                    rows={5}
-                    as="textarea"
                     required
                     onChange={creatFormik.handleChange}
+                    as={"textarea"}
+                    rows={4}
                     value={creatFormik.values.description}
-                    placeholder="Add the course description.."
+                    type="text"
                   />
                   {creatFormik.touched.description &&
                   creatFormik.errors.description ? (
@@ -414,68 +464,49 @@ const CourseMangement = () => {
                     </div>
                   ) : null}
                 </Form.Group>
+                <Row className="mb-3">
                 <Form.Group as={Col}>
-                  <Form.Label>Trainer Name</Form.Label>
+                  <Form.Label>order</Form.Label>
                   <Form.Control
-                    name="trainer_name"
+                    name="order"
                     required
                     onChange={creatFormik.handleChange}
-                    value={creatFormik.values.trainer_name}
+                    value={creatFormik.values.order}
                     type="text"
                   />
-                  {creatFormik.touched.trainer_name &&
-                  creatFormik.errors.trainer_name ? (
+                  {creatFormik.touched.order &&
+                  creatFormik.errors.order ? (
                     <div className="text-danger">
-                      {creatFormik.errors.trainer_name}
+                      {creatFormik.errors.order}
                     </div>
                   ) : null}
                 </Form.Group>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>View All</Form.Label>
-                    <Form.Select
-                      required
-                      name="view_all"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.view_all}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {creatFormik.touched.view_all &&
-                    creatFormik.errors.view_all ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.view_all}
-                      </div>
-                    ) : null}
-                  </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Enroll All</Form.Label>
+                    <Form.Label>Assessment Required</Form.Label>
                     <Form.Select
-                      name="enroll_all"
+                      name="assement_required"
                       required
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.enroll_all}
+                      value={creatFormik.values.assement_required}
                     >
                       <option value={"True"}>Yes</option>
                       <option value={"False"}>No</option>
                     </Form.Select>
                   </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>Featured</Form.Label>
-                    <Form.Select
-                      required
-                      name="featured"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.featured}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
                 </Row>
+                <Form.Group>
+                    <Form.Label>Course</Form.Label>
+                    <Form.Select
+                      required
+                      name="course"
+                      onChange={creatFormik.handleChange}
+                    >
+                      <option>select the course</option>
+                      {courses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </Form.Select>
+                  </Form.Group>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Close
@@ -533,194 +564,10 @@ const CourseMangement = () => {
           </>
         )}
 
-        {currentModal === "update" && (
-          <>
-            {error && errorType === "update" && (
-              <ErrorMessage setError={setError}>{error}</ErrorMessage>
-            )}
-            {success && (
-              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
-            )}
-            <Modal.Header closeButton>
-              <Modal.Title>Update Course</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={updateFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Course Name</Form.Label>
-                    <Form.Control
-                      name="name"
-                      value={updateFormik.values.name}
-                      onChange={updateFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Course Name"
-                    />
-                    {updateFormik.touched.name && updateFormik.errors.name ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.name}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Tags</Form.Label>
-                    <Form.Control
-                      name="tags"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.tags}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.tags && updateFormik.errors.tags ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.tags}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Info Image</Form.Label>
-                  <Form.Control
-                    name="info_image"
-                    type="file"
-                    required
-                    placeholder="Upload info image"
-                    onChange={(e) =>
-                      updateFormik.setFieldValue(
-                        "info_image",
-                        //@ts-ignore
-                        e.currentTarget.files[0]
-                      )
-                    }
-                    // value={updateFormik.values.info_image}
-                  />
-                  {typeof updateFormik.values.info_image === "string" && (
-                    <img
-                      className="mt-3"
-                      style={{ width: "8rem" }}
-                      src={`https://${HOST}${updateFormik.values.info_image}`}
-                    />
-                  )}
-                  {/* @ts-ignore */}
-                  {updateFormik.values.info_image instanceof File && (
-                    <img
-                      className="mt-3"
-                      style={{ width: "8rem" }}
-                      src={URL.createObjectURL(updateFormik.values.info_image)}
-                    />
-                  )}
-                  {updateFormik.touched.info_image &&
-                  updateFormik.errors.info_image ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.info_image}
-                    </div>
-                  ) : null}
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    name="description"
-                    rows={5}
-                    as="textarea"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.description}
-                    placeholder="Add the course description.."
-                  />
-                  {updateFormik.touched.description &&
-                  updateFormik.errors.description ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.description}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Trainer Name</Form.Label>
-                  <Form.Control
-                    name="trainer_name"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.trainer_name}
-                    type="text"
-                  />
-                  {updateFormik.touched.trainer_name &&
-                  updateFormik.errors.trainer_name ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.trainer_name}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>View All</Form.Label>
-                    <Form.Select
-                      required
-                      name="view_all"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.view_all.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {updateFormik.touched.view_all &&
-                    updateFormik.errors.view_all ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.view_all.toString()}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Enroll All</Form.Label>
-                    <Form.Select
-                      name="enroll_all"
-                      required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.enroll_all.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Featured</Form.Label>
-                    <Form.Select
-                      required
-                      name="featured"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.featured.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Row>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "update" && <Spinner />}
-                    Update
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            </Modal.Body>
-          </>
-        )}
+        {/* ---update--- */}
       </Modal>
     </Container>
   );
 };
 
-export default CourseMangement;
+export default TopicManagment;
