@@ -18,8 +18,12 @@ const Dashboard = () => {
     <div>
       <div className={`${width && "d-flex"} bg-graydark`}>
         {!width ? <TopNav /> : getSideNav()}
-        <div className={`${width && "container w-75"}`}>
+        <div className={`${width && "container w-100 bg-blue m-0 p-0"}`}>
+          <div className="br-2 py-4 pe-4">
+          <div className="br-3 bg-white">
           <Outlet />
+          </div>
+          </div>
         </div>
       </div>
     </div>

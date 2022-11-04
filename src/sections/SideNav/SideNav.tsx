@@ -110,7 +110,7 @@ const SideNav = () => {
           <div style={{ height: 0, display: "hidden" }}>
             <svg
               viewBox="0 0 230 107"
-              fill="none"
+              fill="#FFFFF"
               xmlns="http://www.w3.org/2000/svg"
             >
               <defs>
@@ -121,7 +121,7 @@ const SideNav = () => {
                 >
                   <path
                     d="M190.309 84.5471H27.9232C27.9232 84.5471 -1.30764 80.265 0.0455749 55.2432C1.39879 30.2215 27.9232 25.2565 27.9232 25.2565H190.309C215.773 25.2565 219.725 19.4545 230 0V107C222.071 94.1175 216.123 84.5471 190.309 84.5471Z"
-                    fill="#FF0000"
+                    fill="#000"
                   />
                 </clipPath>
               </defs>
@@ -129,7 +129,7 @@ const SideNav = () => {
           </div>
 
           <motion.div
-            className="tab"
+            className="tab bg-white"
             animate={{ transform: `translateY(${getYpostion()}px)` }}
           ></motion.div>
 

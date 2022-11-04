@@ -39,3 +39,17 @@ export type Assessment = {
   parent: number;
   question: Question[];
 };
+
+export type Badge = {
+  "id": number,
+  "title": string,
+  "on_complition": boolean,
+  "on_attend": false,
+  "image": string,
+  "numbers": number,
+  "start_date":Date,
+  "end_date": Date,
+  "topic": number,
+  "course": number,
+  "assesment": number
+}

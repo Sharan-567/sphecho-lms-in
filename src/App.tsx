@@ -9,7 +9,8 @@ import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
 
 // adminSection
-import { AdminMain, CousreMangement, TopicMangment } from "./adminSections";
+import { AdminMain, AssessmentMangement, CousreMangement, TopicMangment,
+   QuestionMangement, BadgeMangement } from "./adminSections";
 import {
   Course,
   TopicsList,
@@ -18,7 +19,6 @@ import {
   Cart,
   Webinars,
 } from "./sections";
-import AdminDashboard from "./pages/AdminDashBoard/AdminDashBoard";
 
 function App() {
   const { isLoggedIn } = useAppSelector((state) => state.auth);
@@ -48,6 +48,9 @@ function App() {
                 <Route index element={<AdminMain />} />
                 <Route path="coursesMangement" element={<CousreMangement />} />
                 <Route path="topicsMangement" element={<TopicMangment />} />
+                <Route path="assessmentMangement" element={<AssessmentMangement />} />
+                <Route path="questionMangement" element={<QuestionMangement />} />
+                <Route path="badgeMangement" element={<BadgeMangement />} />
               </Route>
             </Route>
           )}

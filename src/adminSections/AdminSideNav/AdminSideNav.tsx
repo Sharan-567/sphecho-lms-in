@@ -48,6 +48,16 @@ const AdminSideNav = () => {
     },
     {
       Icon: AiOutlineComment,
+      title: "Questions",
+      to: "/admin/questionMangement",
+    },
+    {
+      Icon: AiOutlineComment,
+      title: "Badges",
+      to: "/admin/badgeMangement",
+    },
+    {
+      Icon: AiOutlineComment,
       title: "Certification",
       to: "/admin/certificationMangement",
     },
@@ -73,7 +83,7 @@ const AdminSideNav = () => {
       }}
     >
       <motion.div
-        className="bg-admingreen "
+        className="bg-blue "
         animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
         style={{
           // borderRadius: "0rem 3rem 3rem 0rem",
@@ -117,10 +127,10 @@ const AdminSideNav = () => {
             }
           }
         >
-          <div style={{ height: 0, display: "hidden" }}>
+          <div style={{ height: 0, display: "hidden"}}>
             <svg
               viewBox="0 0 230 107"
-              fill="none"
+              fill="white"
               xmlns="http://www.w3.org/2000/svg"
             >
               <defs>
@@ -131,7 +141,7 @@ const AdminSideNav = () => {
                 >
                   <path
                     d="M190.309 84.5471H27.9232C27.9232 84.5471 -1.30764 80.265 0.0455749 55.2432C1.39879 30.2215 27.9232 25.2565 27.9232 25.2565H190.309C215.773 25.2565 219.725 19.4545 230 0V107C222.071 94.1175 216.123 84.5471 190.309 84.5471Z"
-                    fill="#FF0000"
+                    fill="white"
                   />
                 </clipPath>
               </defs>
@@ -139,7 +149,7 @@ const AdminSideNav = () => {
           </div>
 
           <motion.div
-            className="tab"
+            className="tab bg-white"
             animate={{ transform: `translateY(${getYpostion()}px)` }}
           ></motion.div>
 

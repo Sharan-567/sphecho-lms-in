@@ -75,7 +75,7 @@ const TopicManagment = () => {
     initialValues: {
       name: currentSelectedItem?.name ? currentSelectedItem.name : "",
       video: currentSelectedItem?.video ? currentSelectedItem?.video  : "",
-      info_iamge: currentSelectedItem?.info_image ? currentSelectedItem?.info_image : "",
+      info_image: currentSelectedItem?.info_image ? currentSelectedItem?.info_image : "",
       pdf: currentSelectedItem?.pdf ?currentSelectedItem.pdf : "",
       image:  currentSelectedItem?.image ?currentSelectedItem.image : "",
       content:  currentSelectedItem?.content ?currentSelectedItem.content : "",
@@ -95,16 +95,16 @@ const TopicManagment = () => {
   const [show, setShow] = useState(false);
 
   // update
-  const [updatedItem, setUpdatedItem] = useState<Course>();
+  const [updatedItem, setUpdatedItem] = useState<Topic>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
 
   const openModel = (
-    course: Course,
+    topic: Topic,
     type: "create" | "delete" | "update" | "read"
   ) => {
-    setCurrentSelectedItem(course);
-    setUpdatedItem(course);
+    setCurrentSelectedItem(topic);
+    setUpdatedItem(topic);
     setShow(true);
     setCurrentModal(type);
   };
@@ -551,7 +551,7 @@ const TopicManagment = () => {
       )}
       {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
             <Modal.Header closeButton>
-              <Modal.Title>Delete Course</Modal.Title>
+              <Modal.Title>Delete Topic</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               Are you sure want to delete this topic
@@ -763,7 +763,7 @@ const TopicManagment = () => {
                       name="assement_required"
                       required
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.assement_required}
+                      value={updateFormik.values.assement_required.toString()}
                     >
                       <option value={"True"}>Yes</option>
                       <option value={"False"}>No</option>
