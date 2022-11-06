@@ -9,8 +9,15 @@ import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
 
 // adminSection
-import { AdminMain, AssessmentMangement, CousreMangement, TopicMangment,
-   QuestionMangement, BadgeMangement } from "./adminSections";
+import {
+  AdminMain,
+  AssessmentMangement,
+  CousreMangement,
+  TopicMangment,
+  QuestionMangement,
+  BadgeMangement,
+  CertificationMangement,
+} from "./adminSections";
 import {
   Course,
   TopicsList,
@@ -48,9 +55,19 @@ function App() {
                 <Route index element={<AdminMain />} />
                 <Route path="coursesMangement" element={<CousreMangement />} />
                 <Route path="topicsMangement" element={<TopicMangment />} />
-                <Route path="assessmentMangement" element={<AssessmentMangement />} />
-                <Route path="questionMangement" element={<QuestionMangement />} />
+                <Route
+                  path="assessmentMangement"
+                  element={<AssessmentMangement />}
+                />
+                <Route
+                  path="questionMangement"
+                  element={<QuestionMangement />}
+                />
                 <Route path="badgeMangement" element={<BadgeMangement />} />
+                <Route
+                  path="certificationMangement"
+                  element={<CertificationMangement />}
+                />
               </Route>
             </Route>
           )}

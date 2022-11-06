@@ -64,3 +64,15 @@ export type NormalizedProgress = Record<
   string,
   { topics: number[]; assesments: number[] }
 >;
+
+export type Certificate = {
+  id: number;
+  title: string;
+  on_complition: boolean;
+  on_attend: boolean;
+  background_image: string;
+  text: string;
+  topic: number;
+  course: number;
+  assesment: number;
+};

@@ -8,36 +8,58 @@ import {
   Row,
   Col,
   Alert,
+  FormControl,
 } from "react-bootstrap";
-import { useFormik } from "formik";
+import { Formik, useFormik } from "formik";
 import ListItem from "../ListItem";
 import type { Course, Topic } from "./../../definations/course";
-import type {Assessment, Question, Badge} from "./../../definations/assessment"
+import type {
+  Assessment,
+  Question,
+  Badge,
+} from "./../../definations/assessment";
 import { BASE_URL, HOST } from "../../features/settings";
 import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
+function getMinDate() {
+  return new Date(2000, 1, 1);
+}
+
+function getMaxDate() {
+  return new Date(2030, 1, 1);
+}
 
 //create validation
 const createSchema = Yup.object().shape({
- question: Yup.string().required("question is required"),
- option_1: Yup.string().required("option 1 is required"),
- option_2: Yup.string().required("option 2 is required"),
- answer: Yup.string().required("answer is required"),
- correct_option: Yup.number().required("correct Option is required"),
- cnt: Yup.number().required("count is required"),
- marks: Yup.number().required("marks is required"),
+  title: Yup.string().required("title is required"),
+  image: Yup.string().required("image is required"),
+  on_complition: Yup.string().required("On complition is required"),
+  on_attend: Yup.string().required("on attend is required"),
+  numbers: Yup.number()
+    .min(1, "min value is 1")
+    .required("numbers is required"),
+  start_date: Yup.date()
+    .min(getMinDate(), `StartDate start date is ${getMinDate()}`)
+    .max(Yup.ref("end_date"), "Start date must be earlier than the end date"),
+  end_date: Yup.lazy(() =>
+    Yup.date()
+      .min(Yup.ref("start_date"), "end date must be later than min date")
+      .max(getMaxDate(), `EndDate start date is ${getMaxDate()}`)
+  ),
 });
 
 const BadgeMangement = () => {
   const userType = localStorage.getItem("userType");
-  const [badges, setBadges] = useState<Badge[]>()
+  const [badges, setBadges] = useState<Badge[]>();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [courses, setCourses] = useState<Course[]>([]);
   const [assessments, setAssessments] = useState<Assessment[]>([]);
-  const [currentSelectedItem, setCurrentSelectedItem] = useState<Question>();
+  const [currentSelectedItem, setCurrentSelectedItem] = useState<Badge>();
   const [currentModal, setCurrentModal] = useState<
     "update" | "delete" | "read" | "create"
   >();
@@ -55,40 +77,41 @@ const BadgeMangement = () => {
 
   const creatFormik = useFormik({
     initialValues: {
-     title: "",
-     image: "",
-     on_complition: "True",
-     on_attend: "True",
-     numbers: "",
-     start_date: "",
-     end_date: "",
-     course: "",
-     assesment: "",
-     topic: "",
+      title: "",
+      image: "",
+      on_complition: "True",
+      on_attend: "True",
+      numbers: "",
+      start_date: "",
+      end_date: "",
+      course: "",
+      assesment: "",
+      topic: "",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
-    onSubmit: (data, { resetForm }) => createQuestion(data,resetForm),
+    onSubmit: (data, { resetForm }) => createBadge(data, resetForm),
   });
 
   const updateFormik = useFormik({
     initialValues: {
-      question: currentSelectedItem?.question ? currentSelectedItem.question : "",
-      option_1: currentSelectedItem?.option_01 ? currentSelectedItem?.option_01  : "",
-      option_2: currentSelectedItem?.option_02 ? currentSelectedItem?.option_02 : "",
-      option_3: currentSelectedItem?.option_03 ? currentSelectedItem?.option_03 : "",
-      option_4: currentSelectedItem?.option_04 ? currentSelectedItem?.option_04 : "",
-      answer: currentSelectedItem?.answer ?currentSelectedItem.answer : "",
-      correct_option:  currentSelectedItem?.correct_option ?  currentSelectedItem?.correct_option : "",
-      cnt:  currentSelectedItem?.cnt ?currentSelectedItem.cnt : "",
-      marks:  currentSelectedItem?.marks ?currentSelectedItem.marks : "",
-      topic: currentSelectedItem?.topic ? currentSelectedItem.topic : "",
-      type: "1"
+      title: currentSelectedItem?.title ? currentSelectedItem.title : "",
+      image: currentSelectedItem?.image ? currentSelectedItem?.image : "",
+      on_complition: currentSelectedItem?.on_complition ? "True" : "False",
+      on_attend: currentSelectedItem?.on_attend ? "True" : "False",
+      numbers: currentSelectedItem?.numbers ? currentSelectedItem?.numbers : "",
+      start_date: currentSelectedItem?.start_date
+        ? new Date(currentSelectedItem.start_date)
+        : "",
+      end_date: currentSelectedItem?.end_date
+        ? new Date(currentSelectedItem?.end_date)
+        : "",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
     onSubmit: (data) => {
-      updateQuestion(data);
+      updateBadge(data);
+      console.log(data);
     },
   });
 
@@ -96,16 +119,16 @@ const BadgeMangement = () => {
   const [show, setShow] = useState(false);
 
   // update
-  const [updatedItem, setUpdatedItem] = useState<Question>();
+  const [updatedItem, setUpdatedItem] = useState<Badge>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
 
   const openModel = (
-    question: Question,
+    badge: Badge,
     type: "create" | "delete" | "update" | "read"
   ) => {
-    setCurrentSelectedItem(question);
-    setUpdatedItem(question);
+    setCurrentSelectedItem(badge);
+    setUpdatedItem(badge);
     setShow(true);
     setCurrentModal(type);
   };
@@ -126,25 +149,39 @@ const BadgeMangement = () => {
     setSuccess("");
   };
 
+  //@ts-ignore
+  const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
+    <Form.Control
+      //@ts-ignore
+      ref={ref}
+      value={value}
+      onChange={onClick}
+      onClick={onClick}
+      type="text"
+      required
+      placeholder="pick date"
+    />
+  ));
+
   // get list of topics
   useEffect(() => {
     getBadgeList();
     getTopicsList();
+    getAssessmentList();
     getCourseList();
-    
   }, []);
 
   // delete question
-  const deleteQuestion = () => {
+  const deleteBadge = () => {
     let token = localStorage.getItem("token");
     setShowSpinner("delete");
     axios
-      .get(`${BASE_URL}/master/question-delete/${currentSelectedItem?.id}`, {
+      .get(`${BASE_URL}/master/badge-delete/${currentSelectedItem?.id}`, {
         headers: { Authorization: `token ${token}` },
       })
       .then((res) => {
         setShowSpinner("none");
-        setSuccess("Question deleted successfully")
+        setSuccess("Badge deleted successfully");
         setErrorType("none");
         getBadgeList();
       })
@@ -172,7 +209,7 @@ const BadgeMangement = () => {
       })
       .then((res) => {
         setTopics(res.data.topics);
-        console.log(res.data.topics)
+        console.log(res.data.topics);
       })
       .catch((err) => {
         if (err.response) {
@@ -187,56 +224,52 @@ const BadgeMangement = () => {
       });
   };
 
-    //get course list
-    const getCourseList = () => {
-        let token = localStorage.getItem("token");
-        axios
-          .get(`${BASE_URL}/master/course-list`, {
-            headers: { Authorization: `token ${token}` },
-          })
-          .then((res) => {
-            setCourses(res.data.courses);
-            console.log(res.data.topics)
-          })
-          .catch((err) => {
-            if (err.response) {
-              setError(err.response.statusText);
-              console.log(err.response.statusText);
-            } else if (err.request) {
-              setError(err.response.statusText);
-              console.log(err.request.statusText);
-            } else {
-              console.log(err);
-            }
-          });
-      };
+  //get course list
+  const getCourseList = () => {
+    let token = localStorage.getItem("token");
+    axios
+      .get(`${BASE_URL}/master/course-list`, {
+        headers: { Authorization: `token ${token}` },
+      })
+      .then((res) => {
+        setCourses(res.data.courses);
+        console.log(res.data.topics);
+      })
+      .catch((err) => {
+        if (err.response) {
+          setError(err.response.statusText);
+          console.log(err.response.statusText);
+        } else if (err.request) {
+          setError(err.response.statusText);
+          console.log(err.request.statusText);
+        } else {
+          console.log(err);
+        }
+      });
+  };
 
-
-       //get assessment list
-    const getAssessmentList = () => {
-        let token = localStorage.getItem("token");
-        axios
-          .get(`${BASE_URL}/master/assement-list`, {
-            headers: { Authorization: `token ${token}` },
-          })
-          .then((res) => {
-            setAssessments(res.data.courses);
-            console.log(res.data.topics)
-          })
-          .catch((err) => {
-            if (err.response) {
-              setError(err.response.statusText);
-              console.log(err.response.statusText);
-            } else if (err.request) {
-              setError(err.response.statusText);
-              console.log(err.request.statusText);
-            } else {
-              console.log(err);
-            }
-          });
-      };
-
-    
+  //get assessment list
+  const getAssessmentList = () => {
+    let token = localStorage.getItem("token");
+    axios
+      .get(`${BASE_URL}/master/assement-list`, {
+        headers: { Authorization: `token ${token}` },
+      })
+      .then((res) => {
+        setAssessments(res.data.Assements);
+      })
+      .catch((err) => {
+        if (err.response) {
+          setError(err.response.statusText);
+          console.log(err.response.statusText);
+        } else if (err.request) {
+          setError(err.response.statusText);
+          console.log(err.request.statusText);
+        } else {
+          console.log(err);
+        }
+      });
+  };
 
   //get questions list
   const getBadgeList = () => {
@@ -266,20 +299,26 @@ const BadgeMangement = () => {
       });
   };
 
-  // update
-  const updateQuestion = (data) => {
-    console.log(data);
+  // update badge
+  const updateBadge = (data) => {
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
-      // @ts-ignore
+      if (key === "start_date" || key === "end_date") {
+        // @ts-ignore
+        let date = new Date(val).toLocaleDateString().split("/");
+        let newdate = date[2] + "-" + date[0] + "-" + date[1];
+        formData.append(key, newdate);
+      } else {
+        // @ts-ignore
         formData.append(key, val);
+      }
     });
     setShowSpinner("update");
     if (currentSelectedItem) {
       axios
         .post(
-          `${BASE_URL}/master/question-update/${currentSelectedItem.id}/`,
+          `${BASE_URL}/master/badge-update/${currentSelectedItem.id}/`,
           formData,
           {
             headers: { Authorization: `token ${token}` },
@@ -288,7 +327,7 @@ const BadgeMangement = () => {
         .then((res) => {
           setErrorType("none");
           setShowSpinner("none");
-          setSuccess("Question updated successfully.");
+          setSuccess("Badge updated successfully.");
           getBadgeList();
           console.log(res.data);
         })
@@ -308,19 +347,26 @@ const BadgeMangement = () => {
         });
     }
   };
-  // create question
-  const createQuestion = (data, resetForm) => {
-    console.log(data)
+  // create badge
+  const createBadge = (data, resetForm) => {
+    console.log(data);
     setShowSpinner("create");
     const formData = new FormData();
     const token = localStorage.getItem("token");
     Object.entries(data).map(([key, val]) => {
-      // @ts-ignore
-      formData.append(key, val);
+      if (key === "start_date" || key === "end_date") {
+        // @ts-ignore
+        let date = new Date(val).toLocaleDateString();
+        let newdate = date.split("/").reverse().join("-");
+        formData.append(key, newdate);
+      } else {
+        // @ts-ignore
+        formData.append(key, val);
+      }
     });
     axios
       .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/question-create/",
+        "https://lmsv2.metahos.com/lms_api_v1/master/badge-create/",
         formData,
         {
           headers: {
@@ -331,7 +377,7 @@ const BadgeMangement = () => {
       .then((res) => {
         setShowSpinner("none");
         resetForm();
-        setSuccess("Question is created successfully");
+        setSuccess("Badge is created successfully");
         getBadgeList();
         setErrorType("none");
       })
@@ -350,20 +396,15 @@ const BadgeMangement = () => {
       });
   };
 
-  const updateOnChangeHandler = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    key: string
-  ) => {
-    // @ts-ignore
-    setUpdatedItem((p) => ({ ...p, [key]: e.target.value }));
-  };
-
   return (
     <Container className="p-4 w-75">
-      {error && errorType === "list" || errorType === "delete" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
+      {(error && errorType === "list") ||
+        (errorType === "delete" && (
+          <ErrorMessage setError={setError}>{error}</ErrorMessage>
+        ))}
+      {success && (
+        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
       )}
-      {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Badges</h3>
@@ -372,18 +413,22 @@ const BadgeMangement = () => {
             onClick={createCourseOpenModal}
           >
             Create Badge
-        </Button>
+          </Button>
         </div>
         {showSpinner === "list" ? (
           <Spinner />
-        ) : (badges || []).map(item =>  <ListItem
-          //@ts-ignore
-            item={item}
-            title={item.title}
-            key={item.id}
-            openModel={openModel}
-            sm={7}
-          ></ListItem>)}
+        ) : (
+          (badges || []).map((item) => (
+            <ListItem
+              //@ts-ignore
+              item={item}
+              title={item.title}
+              key={item.id}
+              openModel={openModel}
+              sm={7}
+            ></ListItem>
+          ))
+        )}
       </div>
 
       <Modal show={show} onHide={handleClose}>
@@ -400,51 +445,48 @@ const BadgeMangement = () => {
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
-              <Form.Group className="b-3">
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control
-                      name="title"
-                      value={creatFormik.values.title}
-                      onChange={creatFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Topic title"
-                    />
-                    {creatFormik.touched.title && creatFormik.errors.title ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.title}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-            
-                 <Row className="mb-3">
-                 
-                 <Form.Group className="mb-3">
-                  <Form.Label>Image</Form.Label>
+                <Form.Group className="b-3">
+                  <Form.Label>Title</Form.Label>
                   <Form.Control
-                    name="image"
-                    type="file"
+                    name="title"
+                    value={creatFormik.values.title}
+                    onChange={creatFormik.handleChange}
+                    type="text"
                     required
-                    placeholder="Upload badge image"
-                    onChange={(e) =>
-                      creatFormik.setFieldValue(
-                        "image",
-                        //@ts-ignore
-                        e.currentTarget.files[0]
-                      )
-                    }
-                    // value={creatFormik.values.image}
+                    placeholder="Enter Topic title"
                   />
-                  {creatFormik.touched.image &&
-                  creatFormik.errors.image ? (
+                  {creatFormik.touched.title && creatFormik.errors.title ? (
                     <div className="text-danger">
-                      {creatFormik.errors.image}
+                      {creatFormik.errors.title}
                     </div>
                   ) : null}
                 </Form.Group>
 
-                <Form.Group as={Col}>
+                <Row className="mb-3">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Image</Form.Label>
+                    <Form.Control
+                      name="image"
+                      type="file"
+                      required
+                      placeholder="Upload badge image"
+                      onChange={(e) =>
+                        creatFormik.setFieldValue(
+                          "image",
+                          //@ts-ignore
+                          e.currentTarget.files[0]
+                        )
+                      }
+                      // value={creatFormik.values.image}
+                    />
+                    {creatFormik.touched.image && creatFormik.errors.image ? (
+                      <div className="text-danger">
+                        {creatFormik.errors.image}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+
+                  <Form.Group as={Col}>
                     <Form.Label>On Complition</Form.Label>
                     <Form.Select
                       required
@@ -481,12 +523,10 @@ const BadgeMangement = () => {
                       </div>
                     ) : null}
                   </Form.Group>
+                </Row>
 
-                 </Row>
-                
- 
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
                     <Form.Label>Number of Badges</Form.Label>
                     <Form.Control
                       name="numbers"
@@ -494,120 +534,100 @@ const BadgeMangement = () => {
                       value={creatFormik.values.numbers}
                       type="text"
                       required
-                      placeholder="Enter play,example.."
+                      placeholder="1,2.."
                     />
-                    {creatFormik.touched.numbers && creatFormik.errors.numbers ? (
+                    {creatFormik.touched.numbers &&
+                    creatFormik.errors.numbers ? (
                       <div className="text-danger">
                         {creatFormik.errors.numbers}
                       </div>
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>option 4</Form.Label>
-                    <Form.Control
-                      name="option_4"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.option_4}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
+                    <Form.Label>Start Date</Form.Label>
+                    <DatePicker
+                      style={{ background: "red" }}
+                      name="start_date"
+                      dateFomart="DD/MM/YYYY"
+                      customInput={<CustomInput />}
+                      selected={creatFormik.values.start_date}
+                      onChange={(date: Date) =>
+                        creatFormik.setFieldValue("start_date", date)
+                      }
                     />
-                    {creatFormik.touched.option_4 && creatFormik.errors.option_4 ? (
+                    {creatFormik.touched.start_date &&
+                    creatFormik.errors.start_date ? (
                       <div className="text-danger">
-                        {creatFormik.errors.option_4}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                 </Row>
-
-
-                 <Form.Group className="mb-2">
-                    <Form.Label>Answer</Form.Label>
-                    <Form.Control
-                      name="answer"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.answer}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {creatFormik.touched.answer && creatFormik.errors.answer ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.answer}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-               <Row className="mb-2">
-               <Form.Group as={Col}>
-                    <Form.Label>Correct Option</Form.Label>
-                    <Form.Control
-                      name="correct_option"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.correct_option}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {creatFormik.touched.correct_option && creatFormik.errors.correct_option ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.correct_option}
+                        {creatFormik.errors.start_date}
                       </div>
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>Count</Form.Label>
-                    <Form.Control
-                      name="cnt"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.cnt}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
+                    <Form.Label>End Date</Form.Label>
+                    <DatePicker
+                      name="end_date"
+                      customInput={<CustomInput />}
+                      dateFomart="DD/MM/YYYY"
+                      selected={creatFormik.values.end_date}
+                      onChange={(date: Date) =>
+                        creatFormik.setFieldValue("end_date", date)
+                      }
                     />
-                    {creatFormik.touched.cnt && creatFormik.errors.cnt ? (
+                    {creatFormik.touched.end_date &&
+                    creatFormik.errors.end_date ? (
                       <div className="text-danger">
-                        {creatFormik.errors.cnt}
+                        {creatFormik.errors.end_date}
                       </div>
                     ) : null}
                   </Form.Group>
-               </Row>
-            
+                </Row>
 
-                  <Form.Group>
-                    <Form.Label>Course</Form.Label>
-                    <Form.Select
-                      required
-                      name="course"
-                      onChange={creatFormik.handleChange}
-                    >
-                      <option>select the Course</option>
-                      {(courses || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
                 <Form.Group>
-                    <Form.Label>Topic</Form.Label>
-                    <Form.Select
-                      required
-                      name="topic"
-                      onChange={creatFormik.handleChange}
-                    >
-                      <option>select the Topic</option>
-                      {(topics || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
+                  <Form.Label>Course</Form.Label>
+                  <Form.Select
+                    required
+                    name="course"
+                    onChange={creatFormik.handleChange}
+                  >
+                    <option>select the Course</option>
+                    {(courses || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Topic</Form.Label>
+                  <Form.Select
+                    required
+                    name="topic"
+                    onChange={creatFormik.handleChange}
+                  >
+                    <option>select the Topic</option>
+                    {(topics || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
-                  <Form.Group>
-                    <Form.Label>Assessment</Form.Label>
-                    <Form.Select
-                      required
-                      name="assesment"
-                      onChange={creatFormik.handleChange}
-                    >
-                      <option>select the assesment</option>
-                      {(assessments || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
+                <Form.Group>
+                  <Form.Label>Assessment</Form.Label>
+                  <Form.Select
+                    required
+                    name="assesment"
+                    onChange={creatFormik.handleChange}
+                  >
+                    <option>select the assesment</option>
+                    {(assessments || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
@@ -628,37 +648,40 @@ const BadgeMangement = () => {
         )}
         {currentModal === "delete" && (
           <>
-          {error && errorType === "delete" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
-      )}
-      {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
+            {error && errorType === "delete" && (
+              <ErrorMessage setError={setError}>{error}</ErrorMessage>
+            )}
+            {success && (
+              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
+            )}
             <Modal.Header closeButton>
-              <Modal.Title>Delete Question</Modal.Title>
+              <Modal.Title>Delete Badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Are you sure want to delete this question
-              <h5>{currentSelectedItem?.question}</h5>
+              Are you sure want to delete this Badge
+              <h5>{currentSelectedItem?.title}</h5>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-             {!success &&  <Button
-                    className="d-flex align-items-center"
-                    variant="danger text-white"
-                  
-                    onClick={() => deleteQuestion()}
-                  >
-                    {showSpinner === "delete" && <Spinner />}
-                    Delete
-                  </Button>}
+              {!success && (
+                <Button
+                  className="d-flex align-items-center"
+                  variant="danger text-white"
+                  onClick={() => deleteBadge()}
+                >
+                  {showSpinner === "delete" && <Spinner />}
+                  Delete
+                </Button>
+              )}
             </Modal.Footer>
           </>
         )}
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Course</Modal.Title>
+              <Modal.Title>Detail of Badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -688,179 +711,210 @@ const BadgeMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-             <Modal.Header closeButton>
-              <Modal.Title>Edit Question</Modal.Title>
+            <Modal.Header closeButton>
+              <Modal.Title>Edit Badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
-              <Form.Group className="b-3">
-                    <Form.Label>Question</Form.Label>
+                <Form.Group className="b-3">
+                  <Form.Label>Title</Form.Label>
+                  <Form.Control
+                    name="title"
+                    value={updateFormik.values.title}
+                    onChange={updateFormik.handleChange}
+                    type="text"
+                    required
+                    placeholder="Enter badge title"
+                  />
+                  {updateFormik.touched.title && updateFormik.errors.title ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.title}
+                    </div>
+                  ) : null}
+                </Form.Group>
+
+                <Row className="mb-3">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Image</Form.Label>
                     <Form.Control
-                      name="question"
-                      value={updateFormik.values.question}
-                      onChange={updateFormik.handleChange}
-                      type="text"
+                      name="image"
+                      type="file"
                       required
-                      placeholder="Enter Topic question"
+                      placeholder="Upload info image"
+                      onChange={(e) =>
+                        updateFormik.setFieldValue(
+                          "image",
+                          //@ts-ignore
+                          e.currentTarget.files[0]
+                        )
+                      }
+                      // value={updateFormik.values.image}
                     />
-                    {updateFormik.touched.question && updateFormik.errors.question ? (
+                    {typeof updateFormik.values.image === "string" && (
+                      <img
+                        className="mt-3"
+                        style={{ width: "8rem" }}
+                        src={`https://${HOST}${updateFormik.values.image}`}
+                      />
+                    )}
+                    {/* @ts-ignore */}
+                    {updateFormik.values.image instanceof File && (
+                      <img
+                        className="mt-3"
+                        style={{ width: "8rem" }}
+                        src={URL.createObjectURL(updateFormik.values.image)}
+                      />
+                    )}
+                    {updateFormik.touched.image && updateFormik.errors.image ? (
                       <div className="text-danger">
-                        {updateFormik.errors.question}
+                        {updateFormik.errors.image}
                       </div>
                     ) : null}
                   </Form.Group>
 
-            
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
-                    <Form.Label>option 1</Form.Label>
-                    <Form.Control
-                      name="option_1"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_1}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.option_1 && updateFormik.errors.option_1 ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.option_1}
-                      </div>
-                    ) : null}
-                  </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>option 2</Form.Label>
-                    <Form.Control
-                      name="option_2"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_2}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.option_2 && updateFormik.errors.option_2 ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.option_2}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                 </Row>
-                
- 
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
-                    <Form.Label>option 3</Form.Label>
-                    <Form.Control
-                      name="option_3"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_3}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.option_3 && updateFormik.errors.option_3 ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.option_3}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>option 4</Form.Label>
-                    <Form.Control
-                      name="option_4"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_4}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.option_4 && updateFormik.errors.option_4 ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.option_4}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                 </Row>
-
-
-                 <Form.Group className="mb-2">
-                    <Form.Label>Answer</Form.Label>
-                    <Form.Control
-                      name="answer"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.answer}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.answer && updateFormik.errors.answer ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.answer}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-               <Row className="mb-2">
-               <Form.Group as={Col}>
-                    <Form.Label>Correct Option</Form.Label>
-                    <Form.Control
-                      name="correct_option"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.correct_option}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.correct_option && updateFormik.errors.correct_option ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.correct_option}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>Count</Form.Label>
-                    <Form.Control
-                      name="cnt"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.cnt}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.cnt && updateFormik.errors.cnt ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.cnt}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-               </Row>
-               <Form.Group className="mb-2">
-                    <Form.Label>Marks</Form.Label>
-                    <Form.Control
-                      name="marks"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.marks}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.marks && updateFormik.errors.marks ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.marks}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                <Form.Group>
-                    <Form.Label>Topic</Form.Label>
+                    <Form.Label>On Complition</Form.Label>
                     <Form.Select
                       required
-                      name="topic"
+                      name="on_complition"
                       onChange={updateFormik.handleChange}
+                      value={updateFormik.values.on_complition}
                     >
-                      <option>select the Topic</option>
-                      {(topics || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      <option value={"True"}>Yes</option>
+                      <option value={"False"}>No</option>
                     </Form.Select>
+                    {updateFormik.touched.on_complition &&
+                    updateFormik.errors.on_complition ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.on_complition}
+                      </div>
+                    ) : null}
                   </Form.Group>
+
+                  <Form.Group as={Col}>
+                    <Form.Label>On Attend</Form.Label>
+                    <Form.Select
+                      required
+                      name="on_attend"
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.on_attend}
+                    >
+                      <option value={"True"}>Yes</option>
+                      <option value={"False"}>No</option>
+                    </Form.Select>
+                    {updateFormik.touched.on_attend &&
+                    updateFormik.errors.on_attend ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.on_attend}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                </Row>
+
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
+                    <Form.Label>Number of Badges</Form.Label>
+                    <Form.Control
+                      name="numbers"
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.numbers}
+                      type="text"
+                      required
+                      placeholder="1,2.."
+                    />
+                    {updateFormik.touched.numbers &&
+                    updateFormik.errors.numbers ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.numbers}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                  <Form.Group as={Col}>
+                    <Form.Label>Start Date</Form.Label>
+                    <DatePicker
+                      style={{ background: "red" }}
+                      name="start_date"
+                      dateFomart="DD/MM/YYYY"
+                      customInput={<CustomInput />}
+                      selected={updateFormik.values.start_date}
+                      onChange={(date: Date) =>
+                        updateFormik.setFieldValue("start_date", date)
+                      }
+                    />
+                    {updateFormik.touched.start_date &&
+                    updateFormik.errors.start_date ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.start_date}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                  <Form.Group as={Col}>
+                    <Form.Label>End Date</Form.Label>
+                    <DatePicker
+                      name="end_date"
+                      customInput={<CustomInput />}
+                      dateFomart="DD/MM/YYYY"
+                      selected={updateFormik.values.end_date}
+                      onChange={(date: Date) =>
+                        updateFormik.setFieldValue("end_date", date)
+                      }
+                    />
+                    {updateFormik.touched.end_date &&
+                    updateFormik.errors.end_date ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.end_date}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                </Row>
+
+                <Form.Group>
+                  <Form.Label>Course</Form.Label>
+                  <Form.Select
+                    required
+                    name="course"
+                    onChange={updateFormik.handleChange}
+                  >
+                    <option>select the Course</option>
+                    {(courses || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Topic</Form.Label>
+                  <Form.Select
+                    required
+                    name="topic"
+                    onChange={updateFormik.handleChange}
+                  >
+                    <option>select the Topic</option>
+                    {(topics || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Assessment</Form.Label>
+                  <Form.Select
+                    required
+                    name="assesment"
+                    onChange={updateFormik.handleChange}
+                  >
+                    <option>select the assesment</option>
+                    {(assessments || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Close
@@ -871,7 +925,7 @@ const BadgeMangement = () => {
                     type="submit"
                   >
                     {showSpinner === "update" && <Spinner />}
-                    Update
+                    update
                   </Button>
                 </Modal.Footer>
               </Form>

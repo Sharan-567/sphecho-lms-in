@@ -80,8 +80,8 @@ const CourseMangement = () => {
       description: currentSelectedItem?.description
         ? currentSelectedItem?.description
         : "",
-      trainer_name: currentSelectedItem?.trainer_image
-        ? currentSelectedItem.trainer_image
+      trainer_name: currentSelectedItem?.trainer_name
+        ? currentSelectedItem.trainer_name
         : "",
       view_all: currentSelectedItem?.view_all ? "True" : "False",
       enroll_all: currentSelectedItem?.enroll_all ? "True" : "False",
@@ -172,11 +172,8 @@ const CourseMangement = () => {
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
-      if (key === "info_image") {
-        //some work
-      } else {
+        //@ts-ignore
         formData.append(key, val);
-      }
     });
     setShowSpinner("update");
     if (currentSelectedItem) {
@@ -191,6 +188,7 @@ const CourseMangement = () => {
         .then((res) => {
           setErrorType("none");
           setShowSpinner("none");
+          getCourseList()
           setSuccess("Course updated successfully.");
           console.log(res.data);
         })

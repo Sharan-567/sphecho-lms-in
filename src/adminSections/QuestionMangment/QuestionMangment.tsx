@@ -563,7 +563,7 @@ const QuestionMangement = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Course</Modal.Title>
+              <Modal.Title>Detail of Question</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (

@@ -3,7 +3,6 @@ import { useMotionValue, motion } from "framer-motion";
 import { Row, Col } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
-import Bg1 from "../../assets/bg-1.jpg";
 
 import {
   AiOutlineUser,
@@ -127,7 +126,7 @@ const AdminSideNav = () => {
             }
           }
         >
-          <div style={{ height: 0, display: "hidden"}}>
+          <div style={{ height: 0, display: "hidden" }}>
             <svg
               viewBox="0 0 230 107"
               fill="white"

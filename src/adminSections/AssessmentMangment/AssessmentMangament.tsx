@@ -12,22 +12,21 @@ import {
 import { useFormik } from "formik";
 import ListItem from "../ListItem";
 import type { Course, Topic } from "./../../definations/course";
-import type {Assessment} from './../../definations/assessment'
+import type { Assessment } from "./../../definations/assessment";
 import { BASE_URL, HOST } from "../../features/settings";
 import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
 
-
 //create validation
 const createSchema = Yup.object().shape({
   name: Yup.string()
     .required("Topic Name is required")
     .max(25, "max Length 25 chars"),
- order: Yup.number().required("Order is required"),
- max_marks: Yup.number().required("max marks is required"),
- min_marks_to_qualify: Yup.number().required("min marks to qualify required")
+  order: Yup.number().required("Order is required"),
+  max_marks: Yup.number().required("max marks is required"),
+  min_marks_to_qualify: Yup.number().required("min marks to qualify required"),
 });
 
 const AssessmentMangement = () => {
@@ -53,13 +52,13 @@ const AssessmentMangement = () => {
 
   const creatFormik = useFormik({
     initialValues: {
-    name: "",
-     pre_assesment: "False",
-     order: "",
-     max_marks: "",
-     min_marks_to_qualify: "",
-     course: "",
-     topic: ""
+      name: "",
+      pre_assesment: "False",
+      order: "",
+      max_marks: "",
+      min_marks_to_qualify: "",
+      course: "",
+      topic: "",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
@@ -70,12 +69,20 @@ const AssessmentMangement = () => {
     initialValues: {
       name: currentSelectedItem?.name ? currentSelectedItem.name : "",
       //@ts-ignore
-      pre_assesment: currentSelectedItem?.pre_assesment ?( currentSelectedItem.pre_assesment ? "True" : "False") : "False",
-      order: currentSelectedItem?.order ?currentSelectedItem.order : "",
-      max_marks:  currentSelectedItem?.max_marks ?currentSelectedItem.max_marks : "",
-      min_marks_to_qualify:  currentSelectedItem?.min_marks_to_qualify ?currentSelectedItem.min_marks_to_qualify : "",
-      course:  currentSelectedItem?.course ?currentSelectedItem.course : "",
-      topic:  currentSelectedItem?.topic ?currentSelectedItem.topic : "",  
+      pre_assesment: currentSelectedItem?.pre_assesment
+        ? currentSelectedItem.pre_assesment
+          ? "True"
+          : "False"
+        : "False",
+      order: currentSelectedItem?.order ? currentSelectedItem.order : "",
+      max_marks: currentSelectedItem?.max_marks
+        ? currentSelectedItem.max_marks
+        : "",
+      min_marks_to_qualify: currentSelectedItem?.min_marks_to_qualify
+        ? currentSelectedItem.min_marks_to_qualify
+        : "",
+      course: currentSelectedItem?.course ? currentSelectedItem.course : "",
+      topic: currentSelectedItem?.topic ? currentSelectedItem.topic : "",
     },
     enableReinitialize: true,
     // validationSchema: createSchema,
@@ -134,7 +141,7 @@ const AssessmentMangement = () => {
       })
       .then((res) => {
         setShowSpinner("none");
-        setSuccess("Assessment deleted successfully")
+        setSuccess("Assessment deleted successfully");
         setErrorType("none");
         getAssessmentList();
       })
@@ -181,10 +188,10 @@ const AssessmentMangement = () => {
       });
   };
 
- //get course list
+  //get course list
   const getCourseList = () => {
     let token = localStorage.getItem("token");
-   
+
     axios
       .get(`${BASE_URL}/master/course-list`, {
         headers: { Authorization: `token ${token}` },
@@ -237,7 +244,7 @@ const AssessmentMangement = () => {
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
       //@ts-ignore
-      formData.append(key, val)
+      formData.append(key, val);
     });
     setShowSpinner("update");
     if (currentSelectedItem) {
@@ -323,10 +330,13 @@ const AssessmentMangement = () => {
 
   return (
     <Container className="p-4 w-75">
-      {error && errorType === "list" || errorType === "delete" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
+      {(error && errorType === "list") ||
+        (errorType === "delete" && (
+          <ErrorMessage setError={setError}>{error}</ErrorMessage>
+        ))}
+      {success && (
+        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
       )}
-      {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Assessments</h3>
@@ -343,7 +353,7 @@ const AssessmentMangement = () => {
           assements.map((item) => {
             return (
               <ListItem
-              //@ts-ignore
+                //@ts-ignore
                 item={item}
                 title={item.name}
                 key={item.id}
@@ -388,7 +398,7 @@ const AssessmentMangement = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
-                <Form.Group as={Col}>
+                  <Form.Group as={Col}>
                     <Form.Label>Pre Assessment Required</Form.Label>
                     <Form.Select
                       name="pre_assesment"
@@ -401,22 +411,21 @@ const AssessmentMangement = () => {
                     </Form.Select>
                   </Form.Group>
                   <Form.Group as={Col}>
-                  <Form.Label>order</Form.Label>
-                  <Form.Control
-                    name="order"
-                    required
-                    onChange={creatFormik.handleChange}
-                    value={creatFormik.values.order}
-                    type="text"
-                  />
-                  {creatFormik.touched.order &&
-                  creatFormik.errors.order ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.order}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                  </Row>
+                    <Form.Label>order</Form.Label>
+                    <Form.Control
+                      name="order"
+                      required
+                      onChange={creatFormik.handleChange}
+                      value={creatFormik.values.order}
+                      type="text"
+                    />
+                    {creatFormik.touched.order && creatFormik.errors.order ? (
+                      <div className="text-danger">
+                        {creatFormik.errors.order}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                </Row>
 
                 <Form.Group as={Col}>
                   <Form.Label>Max marks</Form.Label>
@@ -433,8 +442,8 @@ const AssessmentMangement = () => {
                       {creatFormik.errors.max_marks}
                     </div>
                   ) : null}
-                </Form.Group >
-                <Form.Group  as={Col}>
+                </Form.Group>
+                <Form.Group as={Col}>
                   <Form.Label>Min Marks to Qualify</Form.Label>
                   <Form.Control
                     name="min_marks_to_qualify"
@@ -450,31 +459,38 @@ const AssessmentMangement = () => {
                     </div>
                   ) : null}
                 </Form.Group>
-      
-                
-                <Form.Group>
-                    <Form.Label>Course</Form.Label>
-                    <Form.Select
-                      required
-                      name="course"
-                      onChange={creatFormik.handleChange}
-                    >
-                      <option>select the course</option>
-                      {(courses || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
 
-                  <Form.Group>
-                    <Form.Label>Topics</Form.Label>
-                    <Form.Select
-                      required
-                      name="topic"
-                      onChange={creatFormik.handleChange}
-                    >
-                      <option>select the Topic</option>
-                      {(topics || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
+                <Form.Group>
+                  <Form.Label>Course</Form.Label>
+                  <Form.Select
+                    required
+                    name="course"
+                    onChange={creatFormik.handleChange}
+                  >
+                    <option>select the course</option>
+                    {(courses || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Topics</Form.Label>
+                  <Form.Select
+                    required
+                    name="topic"
+                    onChange={creatFormik.handleChange}
+                  >
+                    <option>select the Topic</option>
+                    {(topics || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
@@ -495,10 +511,12 @@ const AssessmentMangement = () => {
         )}
         {currentModal === "delete" && (
           <>
-          {error && errorType === "delete" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
-      )}
-      {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
+            {error && errorType === "delete" && (
+              <ErrorMessage setError={setError}>{error}</ErrorMessage>
+            )}
+            {success && (
+              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
+            )}
             <Modal.Header closeButton>
               <Modal.Title>Delete Assessment</Modal.Title>
             </Modal.Header>
@@ -510,22 +528,23 @@ const AssessmentMangement = () => {
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-             {!success &&  <Button
-                    className="d-flex align-items-center"
-                    variant="danger text-white"
-                  
-                    onClick={() => deleteAssessment()}
-                  >
-                    {showSpinner === "delete" && <Spinner />}
-                    Delete
-                  </Button>}
+              {!success && (
+                <Button
+                  className="d-flex align-items-center"
+                  variant="danger text-white"
+                  onClick={() => deleteAssessment()}
+                >
+                  {showSpinner === "delete" && <Spinner />}
+                  Delete
+                </Button>
+              )}
             </Modal.Footer>
           </>
         )}
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Course</Modal.Title>
+              <Modal.Title>Detail of Assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -555,7 +574,7 @@ const AssessmentMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-                        <Modal.Header closeButton>
+            <Modal.Header closeButton>
               <Modal.Title>Update Assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -579,7 +598,7 @@ const AssessmentMangement = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mb-3">
-                <Form.Group as={Col}>
+                  <Form.Group as={Col}>
                     <Form.Label>Pre Assessment Required</Form.Label>
                     <Form.Select
                       name="pre_assesment"
@@ -592,22 +611,21 @@ const AssessmentMangement = () => {
                     </Form.Select>
                   </Form.Group>
                   <Form.Group as={Col}>
-                  <Form.Label>order</Form.Label>
-                  <Form.Control
-                    name="order"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.order}
-                    type="text"
-                  />
-                  {updateFormik.touched.order &&
-                  updateFormik.errors.order ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.order}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                  </Row>
+                    <Form.Label>order</Form.Label>
+                    <Form.Control
+                      name="order"
+                      required
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.order}
+                      type="text"
+                    />
+                    {updateFormik.touched.order && updateFormik.errors.order ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.order}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                </Row>
 
                 <Form.Group as={Col}>
                   <Form.Label>Max marks</Form.Label>
@@ -624,8 +642,8 @@ const AssessmentMangement = () => {
                       {updateFormik.errors.max_marks}
                     </div>
                   ) : null}
-                </Form.Group >
-                <Form.Group  as={Col}>
+                </Form.Group>
+                <Form.Group as={Col}>
                   <Form.Label>Min Marks to Qualify</Form.Label>
                   <Form.Control
                     name="min_marks_to_qualify"
@@ -641,31 +659,38 @@ const AssessmentMangement = () => {
                     </div>
                   ) : null}
                 </Form.Group>
-      
-                
-                <Form.Group>
-                    <Form.Label>Course</Form.Label>
-                    <Form.Select
-                      required
-                      name="course"
-                      onChange={updateFormik.handleChange}
-                    >
-                      <option>select the course</option>
-                      {(courses || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
 
-                  <Form.Group>
-                    <Form.Label>Topics</Form.Label>
-                    <Form.Select
-                      required
-                      name="topic"
-                      onChange={updateFormik.handleChange}
-                    >
-                      <option>select the Topic</option>
-                      {(topics || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
+                <Form.Group>
+                  <Form.Label>Course</Form.Label>
+                  <Form.Select
+                    required
+                    name="course"
+                    onChange={updateFormik.handleChange}
+                  >
+                    <option>select the course</option>
+                    {(courses || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+
+                <Form.Group>
+                  <Form.Label>Topics</Form.Label>
+                  <Form.Select
+                    required
+                    name="topic"
+                    onChange={updateFormik.handleChange}
+                  >
+                    <option>select the Topic</option>
+                    {(topics || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
 
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
