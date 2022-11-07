@@ -17,12 +17,12 @@ type UserType = {
 const typeOfUsers: UserType[] = [
   {
     id: 1,
-    title: "Patient",
+    title: "Independent user",
     type: "patient",
   },
   {
     id: 2,
-    title: "Doctor",
+    title: "Health Care Provider",
     type: "doctor",
   },
 ];
@@ -49,7 +49,7 @@ const ListModel = ({ getUserType, ...restProps }: Props) => {
               onClick={() => getUserType(user.type)}
             >
               <h6 style={{ fontSize: "1rem" }}>
-                Login as {user.title.toUpperCase()}
+                {user.title.toUpperCase()}
               </h6>
             </Button>
           ))}
@@ -59,7 +59,7 @@ const ListModel = ({ getUserType, ...restProps }: Props) => {
               "https://lmsv2.metahos.com/lms_api_v1/super-admin/login/?next=/lms_api_v1/super-admin/"
             }
           >
-            <h6 style={{ fontSize: "1rem" }}>Login as Super Admin</h6>
+            <h6 style={{ fontSize: "1rem" }}>SUPER ADMIN</h6>
           </Button>
         </div>
       </Modal.Body>

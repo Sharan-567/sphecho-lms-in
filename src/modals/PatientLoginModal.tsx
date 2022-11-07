@@ -71,7 +71,7 @@ const PatientLoginModal = ({
       }}
     >
       <Modal.Header closeButton>
-        <Modal.Title>Patient Login</Modal.Title>
+        <Modal.Title>Independent user Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {stage === 0 && (

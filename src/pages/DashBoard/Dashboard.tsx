@@ -20,7 +20,7 @@ const Dashboard = () => {
         {!width ? <TopNav /> : getSideNav()}
         <div className={`${width && "w-100 bg-blue m-0 p-0"}`}>
           <div className="br-2 py-4 pe-4">
-          <div className="br-3 bg-white">
+          <div className="br-3 bg-white" style={{minHeight: "95vh"}}>
           <Outlet />
           </div>
           </div>
