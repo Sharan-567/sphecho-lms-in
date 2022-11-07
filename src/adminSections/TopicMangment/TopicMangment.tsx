@@ -84,8 +84,8 @@ const TopicManagment = () => {
         ? currentSelectedItem.description
         : "",
       assement_required: currentSelectedItem?.assement_required
-        ? currentSelectedItem.assement_required
-        : "",
+        ? "True"
+        : "False",
       order: currentSelectedItem?.order ? currentSelectedItem.order : "",
       course: currentSelectedItem?.course ? currentSelectedItem.course : "",
     },
@@ -226,11 +226,7 @@ const TopicManagment = () => {
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
-      if (key === "info_image") {
-        //some work
-      } else {
-        formData.append(key, val);
-      }
+      formData.append(key, val);
     });
     setShowSpinner("update");
     if (currentSelectedItem) {
@@ -416,6 +412,14 @@ const TopicManagment = () => {
                     }
                     // value={creatFormik.values.info_image}
                   />
+                  {/* @ts-ignore */}
+                  {updateFormik.values.info_image instanceof File && (
+                    <img
+                      className="mt-3"
+                      style={{ width: "8rem" }}
+                      src={URL.createObjectURL(creatFormik.values.info_image)}
+                    />
+                  )}
                   {creatFormik.touched.info_image &&
                   creatFormik.errors.info_image ? (
                     <div className="text-danger">
@@ -671,6 +675,21 @@ const TopicManagment = () => {
                     }
                     // value={updateFormik.values.info_image}
                   />
+                  {typeof updateFormik.values.info_image === "string" && (
+                    <img
+                      className="mt-3"
+                      style={{ width: "8rem" }}
+                      src={`https://${HOST}${updateFormik.values.info_image}`}
+                    />
+                  )}
+                  {/* @ts-ignore */}
+                  {updateFormik.values.info_image instanceof File && (
+                    <img
+                      className="mt-3"
+                      style={{ width: "8rem" }}
+                      src={URL.createObjectURL(updateFormik.values.info_image)}
+                    />
+                  )}
                   {updateFormik.touched.info_image &&
                   updateFormik.errors.info_image ? (
                     <div className="text-danger">
@@ -766,7 +785,7 @@ const TopicManagment = () => {
                       name="assement_required"
                       required
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.assement_required.toString()}
+                      value={updateFormik.values.assement_required}
                     >
                       <option value={"True"}>Yes</option>
                       <option value={"False"}>No</option>

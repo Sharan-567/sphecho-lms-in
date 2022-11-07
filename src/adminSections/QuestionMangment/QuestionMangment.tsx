@@ -12,28 +12,27 @@ import {
 import { useFormik } from "formik";
 import ListItem from "../ListItem";
 import type { Topic } from "./../../definations/course";
-import type {Question} from "./../../definations/assessment"
+import type { Question } from "./../../definations/assessment";
 import { BASE_URL, HOST } from "../../features/settings";
 import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
 
-
 //create validation
 const createSchema = Yup.object().shape({
- question: Yup.string().required("question is required"),
- option_1: Yup.string().required("option 1 is required"),
- option_2: Yup.string().required("option 2 is required"),
- answer: Yup.string().required("answer is required"),
- correct_option: Yup.number().required("correct Option is required"),
- cnt: Yup.number().required("count is required"),
- marks: Yup.number().required("marks is required"),
+  question: Yup.string().required("question is required"),
+  option_01: Yup.string().required("option 1 is required"),
+  option_02: Yup.string().required("option 2 is required"),
+  answer: Yup.string().required("answer is required"),
+  correct_option: Yup.number().required("correct Option is required"),
+  cnt: Yup.number().required("count is required"),
+  marks: Yup.number().required("marks is required"),
 });
 
 const QuestionMangement = () => {
   const userType = localStorage.getItem("userType");
-  const [questions, setQuestions] = useState<Question[]>()
+  const [questions, setQuestions] = useState<Question[]>();
   const [topics, setTopics] = useState<Topic[]>([]);
   const [currentSelectedItem, setCurrentSelectedItem] = useState<Question>();
   const [currentModal, setCurrentModal] = useState<
@@ -53,36 +52,48 @@ const QuestionMangement = () => {
 
   const creatFormik = useFormik({
     initialValues: {
-     question:  "",
-     option_1: "",
-     option_2: "",
-     option_3: "",
-     option_4: "",
-     answer: "",
-     correct_option: "",
-     marks: "0",
-     topic: "",
-     cnt: "",
-     type: "1",
+      question: "",
+      option_01: "",
+      option_02: "",
+      option_03: "",
+      option_04: "",
+      answer: "",
+      correct_option: "",
+      marks: "0",
+      topic: "",
+      cnt: "",
+      type: "1",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
-    onSubmit: (data, { resetForm }) => createQuestion(data,resetForm),
+    onSubmit: (data, { resetForm }) => createQuestion(data, resetForm),
   });
 
   const updateFormik = useFormik({
     initialValues: {
-      question: currentSelectedItem?.question ? currentSelectedItem.question : "",
-      option_1: currentSelectedItem?.option_01 ? currentSelectedItem?.option_01  : "",
-      option_2: currentSelectedItem?.option_02 ? currentSelectedItem?.option_02 : "",
-      option_3: currentSelectedItem?.option_03 ? currentSelectedItem?.option_03 : "",
-      option_4: currentSelectedItem?.option_04 ? currentSelectedItem?.option_04 : "",
-      answer: currentSelectedItem?.answer ?currentSelectedItem.answer : "",
-      correct_option:  currentSelectedItem?.correct_option ?  currentSelectedItem?.correct_option : "",
-      cnt:  currentSelectedItem?.cnt ?currentSelectedItem.cnt : "",
-      marks:  currentSelectedItem?.marks ?currentSelectedItem.marks : "",
+      question: currentSelectedItem?.question
+        ? currentSelectedItem.question
+        : "",
+      option_01: currentSelectedItem?.option_01
+        ? currentSelectedItem?.option_01
+        : "",
+      option_02: currentSelectedItem?.option_02
+        ? currentSelectedItem?.option_02
+        : "",
+      option_03: currentSelectedItem?.option_03
+        ? currentSelectedItem?.option_03
+        : "",
+      option_04: currentSelectedItem?.option_04
+        ? currentSelectedItem?.option_04
+        : "",
+      answer: currentSelectedItem?.answer ? currentSelectedItem.answer : "",
+      correct_option: currentSelectedItem?.correct_option
+        ? currentSelectedItem?.correct_option
+        : "",
+      cnt: currentSelectedItem?.cnt ? currentSelectedItem.cnt : "",
+      marks: currentSelectedItem?.marks ? currentSelectedItem.marks : "0",
       topic: currentSelectedItem?.topic ? currentSelectedItem.topic : "",
-      type: "1"
+      type: "1",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
@@ -141,7 +152,7 @@ const QuestionMangement = () => {
       })
       .then((res) => {
         setShowSpinner("none");
-        setSuccess("Question deleted successfully")
+        setSuccess("Question deleted successfully");
         setErrorType("none");
         getQuestions();
       })
@@ -169,7 +180,7 @@ const QuestionMangement = () => {
       })
       .then((res) => {
         setTopics(res.data.topics);
-        console.log(res.data.topics)
+        console.log(res.data.topics);
       })
       .catch((err) => {
         if (err.response) {
@@ -219,7 +230,7 @@ const QuestionMangement = () => {
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
       // @ts-ignore
-        formData.append(key, val);
+      formData.append(key, val);
     });
     setShowSpinner("update");
     if (currentSelectedItem) {
@@ -256,7 +267,7 @@ const QuestionMangement = () => {
   };
   // create question
   const createQuestion = (data, resetForm) => {
-    console.log(data)
+    console.log(data);
     setShowSpinner("create");
     const formData = new FormData();
     const token = localStorage.getItem("token");
@@ -306,10 +317,13 @@ const QuestionMangement = () => {
 
   return (
     <Container className="p-4 w-75">
-      {error && errorType === "list" || errorType === "delete" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
+      {(error && errorType === "list") ||
+        (errorType === "delete" && (
+          <ErrorMessage setError={setError}>{error}</ErrorMessage>
+        ))}
+      {success && (
+        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
       )}
-      {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Questions</h3>
@@ -322,14 +336,18 @@ const QuestionMangement = () => {
         </div>
         {showSpinner === "list" ? (
           <Spinner />
-        ) : (questions || []).map(item =>  <ListItem
-          //@ts-ignore
-            item={item}
-            title={item.question}
-            key={item.id}
-            openModel={openModel}
-            sm={7}
-          ></ListItem>)}
+        ) : (
+          (questions || []).map((item) => (
+            <ListItem
+              //@ts-ignore
+              item={item}
+              title={item.question}
+              key={item.id}
+              openModel={openModel}
+              sm={7}
+            ></ListItem>
+          ))
+        )}
       </div>
 
       <Modal show={show} onHide={handleClose}>
@@ -346,115 +364,117 @@ const QuestionMangement = () => {
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
-              <Form.Group className="b-3">
-                    <Form.Label>Question</Form.Label>
-                    <Form.Control
-                      name="question"
-                      value={creatFormik.values.question}
-                      onChange={creatFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Topic question"
-                    />
-                    {creatFormik.touched.question && creatFormik.errors.question ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.question}
-                      </div>
-                    ) : null}
-                  </Form.Group>
+                <Form.Group className="b-3">
+                  <Form.Label>Question</Form.Label>
+                  <Form.Control
+                    name="question"
+                    value={creatFormik.values.question}
+                    onChange={creatFormik.handleChange}
+                    type="text"
+                    required
+                    placeholder="Enter Topic question"
+                  />
+                  {creatFormik.touched.question &&
+                  creatFormik.errors.question ? (
+                    <div className="text-danger">
+                      {creatFormik.errors.question}
+                    </div>
+                  ) : null}
+                </Form.Group>
 
-            
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
                     <Form.Label>option 1</Form.Label>
                     <Form.Control
-                      name="option_1"
+                      name="option_01"
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.option_1}
+                      value={creatFormik.values.option_01}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {creatFormik.touched.option_1 && creatFormik.errors.option_1 ? (
+                    {creatFormik.touched.option_01 &&
+                    creatFormik.errors.option_01 ? (
                       <div className="text-danger">
-                        {creatFormik.errors.option_1}
+                        {creatFormik.errors.option_01}
                       </div>
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
                     <Form.Label>option 2</Form.Label>
                     <Form.Control
-                      name="option_2"
+                      name="option_02"
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.option_2}
+                      value={creatFormik.values.option_02}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {creatFormik.touched.option_2 && creatFormik.errors.option_2 ? (
+                    {creatFormik.touched.option_02 &&
+                    creatFormik.errors.option_02 ? (
                       <div className="text-danger">
-                        {creatFormik.errors.option_2}
+                        {creatFormik.errors.option_02}
                       </div>
                     ) : null}
                   </Form.Group>
-                 </Row>
-                
- 
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
+                </Row>
+
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
                     <Form.Label>option 3</Form.Label>
                     <Form.Control
-                      name="option_3"
+                      name="option_03"
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.option_3}
+                      value={creatFormik.values.option_03}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {creatFormik.touched.option_3 && creatFormik.errors.option_3 ? (
+                    {creatFormik.touched.option_03 &&
+                    creatFormik.errors.option_03 ? (
                       <div className="text-danger">
-                        {creatFormik.errors.option_3}
+                        {creatFormik.errors.option_03}
                       </div>
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
                     <Form.Label>option 4</Form.Label>
                     <Form.Control
-                      name="option_4"
+                      name="option_04"
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.option_4}
+                      value={creatFormik.values.option_04}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {creatFormik.touched.option_4 && creatFormik.errors.option_4 ? (
+                    {creatFormik.touched.option_04 &&
+                    creatFormik.errors.option_04 ? (
                       <div className="text-danger">
-                        {creatFormik.errors.option_4}
+                        {creatFormik.errors.option_04}
                       </div>
                     ) : null}
                   </Form.Group>
-                 </Row>
+                </Row>
 
+                <Form.Group className="mb-2">
+                  <Form.Label>Answer</Form.Label>
+                  <Form.Control
+                    name="answer"
+                    onChange={creatFormik.handleChange}
+                    value={creatFormik.values.answer}
+                    type="text"
+                    required
+                    placeholder="Enter play,example.."
+                  />
+                  {creatFormik.touched.answer && creatFormik.errors.answer ? (
+                    <div className="text-danger">
+                      {creatFormik.errors.answer}
+                    </div>
+                  ) : null}
+                </Form.Group>
 
-                 <Form.Group className="mb-2">
-                    <Form.Label>Answer</Form.Label>
-                    <Form.Control
-                      name="answer"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.answer}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {creatFormik.touched.answer && creatFormik.errors.answer ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.answer}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-               <Row className="mb-2">
-               <Form.Group as={Col}>
+                <Row className="mb-2">
+                  <Form.Group as={Col}>
                     <Form.Label>Correct Option</Form.Label>
                     <Form.Control
                       name="correct_option"
@@ -464,7 +484,8 @@ const QuestionMangement = () => {
                       required
                       placeholder="Enter play,example.."
                     />
-                    {creatFormik.touched.correct_option && creatFormik.errors.correct_option ? (
+                    {creatFormik.touched.correct_option &&
+                    creatFormik.errors.correct_option ? (
                       <div className="text-danger">
                         {creatFormik.errors.correct_option}
                       </div>
@@ -486,34 +507,38 @@ const QuestionMangement = () => {
                       </div>
                     ) : null}
                   </Form.Group>
-               </Row>
-               <Form.Group className="mb-2">
-                    <Form.Label>Marks</Form.Label>
-                    <Form.Control
-                      name="marks"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.marks}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {creatFormik.touched.marks && creatFormik.errors.marks ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.marks}
-                      </div>
-                    ) : null}
-                  </Form.Group>
+                </Row>
+                <Form.Group className="mb-2">
+                  <Form.Label>Marks</Form.Label>
+                  <Form.Control
+                    name="marks"
+                    onChange={creatFormik.handleChange}
+                    value={creatFormik.values.marks}
+                    type="text"
+                    required
+                    placeholder="Enter play,example.."
+                  />
+                  {creatFormik.touched.marks && creatFormik.errors.marks ? (
+                    <div className="text-danger">
+                      {creatFormik.errors.marks}
+                    </div>
+                  ) : null}
+                </Form.Group>
                 <Form.Group>
-                    <Form.Label>Topic</Form.Label>
-                    <Form.Select
-                      required
-                      name="topic"
-                      onChange={creatFormik.handleChange}
-                    >
-                      <option>select the Topic</option>
-                      {(topics || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
+                  <Form.Label>Topic</Form.Label>
+                  <Form.Select
+                    required
+                    name="topic"
+                    onChange={creatFormik.handleChange}
+                  >
+                    <option>select the Topic</option>
+                    {(topics || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Close
@@ -533,10 +558,12 @@ const QuestionMangement = () => {
         )}
         {currentModal === "delete" && (
           <>
-          {error && errorType === "delete" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
-      )}
-      {success && <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>}
+            {error && errorType === "delete" && (
+              <ErrorMessage setError={setError}>{error}</ErrorMessage>
+            )}
+            {success && (
+              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
+            )}
             <Modal.Header closeButton>
               <Modal.Title>Delete Question</Modal.Title>
             </Modal.Header>
@@ -548,15 +575,16 @@ const QuestionMangement = () => {
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-             {!success &&  <Button
-                    className="d-flex align-items-center"
-                    variant="danger text-white"
-                  
-                    onClick={() => deleteQuestion()}
-                  >
-                    {showSpinner === "delete" && <Spinner />}
-                    Delete
-                  </Button>}
+              {!success && (
+                <Button
+                  className="d-flex align-items-center"
+                  variant="danger text-white"
+                  onClick={() => deleteQuestion()}
+                >
+                  {showSpinner === "delete" && <Spinner />}
+                  Delete
+                </Button>
+              )}
             </Modal.Footer>
           </>
         )}
@@ -593,120 +621,122 @@ const QuestionMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-             <Modal.Header closeButton>
+            <Modal.Header closeButton>
               <Modal.Title>Edit Question</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
-              <Form.Group className="b-3">
-                    <Form.Label>Question</Form.Label>
-                    <Form.Control
-                      name="question"
-                      value={updateFormik.values.question}
-                      onChange={updateFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Topic question"
-                    />
-                    {updateFormik.touched.question && updateFormik.errors.question ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.question}
-                      </div>
-                    ) : null}
-                  </Form.Group>
+                <Form.Group className="b-3">
+                  <Form.Label>Question</Form.Label>
+                  <Form.Control
+                    name="question"
+                    value={updateFormik.values.question}
+                    onChange={updateFormik.handleChange}
+                    type="text"
+                    required
+                    placeholder="Enter Topic question"
+                  />
+                  {updateFormik.touched.question &&
+                  updateFormik.errors.question ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.question}
+                    </div>
+                  ) : null}
+                </Form.Group>
 
-            
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
                     <Form.Label>option 1</Form.Label>
                     <Form.Control
-                      name="option_1"
+                      name="option_01"
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_1}
+                      value={updateFormik.values.option_01}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {updateFormik.touched.option_1 && updateFormik.errors.option_1 ? (
+                    {updateFormik.touched.option_01 &&
+                    updateFormik.errors.option_01 ? (
                       <div className="text-danger">
-                        {updateFormik.errors.option_1}
+                        {updateFormik.errors.option_01}
                       </div>
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
                     <Form.Label>option 2</Form.Label>
                     <Form.Control
-                      name="option_2"
+                      name="option_02"
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_2}
+                      value={updateFormik.values.option_02}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {updateFormik.touched.option_2 && updateFormik.errors.option_2 ? (
+                    {updateFormik.touched.option_02 &&
+                    updateFormik.errors.option_02 ? (
                       <div className="text-danger">
-                        {updateFormik.errors.option_2}
+                        {updateFormik.errors.option_02}
                       </div>
                     ) : null}
                   </Form.Group>
-                 </Row>
-                
- 
-                 <Row className="mb-3">
-                 <Form.Group as={Col}>
+                </Row>
+
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
                     <Form.Label>option 3</Form.Label>
                     <Form.Control
-                      name="option_3"
+                      name="option_03"
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_3}
+                      value={updateFormik.values.option_03}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {updateFormik.touched.option_3 && updateFormik.errors.option_3 ? (
+                    {updateFormik.touched.option_03 &&
+                    updateFormik.errors.option_03 ? (
                       <div className="text-danger">
-                        {updateFormik.errors.option_3}
+                        {updateFormik.errors.option_03}
                       </div>
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
                     <Form.Label>option 4</Form.Label>
                     <Form.Control
-                      name="option_4"
+                      name="option_04"
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.option_4}
+                      value={updateFormik.values.option_04}
                       type="text"
                       required
                       placeholder="Enter play,example.."
                     />
-                    {updateFormik.touched.option_4 && updateFormik.errors.option_4 ? (
+                    {updateFormik.touched.option_04 &&
+                    updateFormik.errors.option_04 ? (
                       <div className="text-danger">
-                        {updateFormik.errors.option_4}
+                        {updateFormik.errors.option_04}
                       </div>
                     ) : null}
                   </Form.Group>
-                 </Row>
+                </Row>
 
+                <Form.Group className="mb-2">
+                  <Form.Label>Answer</Form.Label>
+                  <Form.Control
+                    name="answer"
+                    onChange={updateFormik.handleChange}
+                    value={updateFormik.values.answer}
+                    type="text"
+                    required
+                    placeholder="Enter play,example.."
+                  />
+                  {updateFormik.touched.answer && updateFormik.errors.answer ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.answer}
+                    </div>
+                  ) : null}
+                </Form.Group>
 
-                 <Form.Group className="mb-2">
-                    <Form.Label>Answer</Form.Label>
-                    <Form.Control
-                      name="answer"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.answer}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.answer && updateFormik.errors.answer ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.answer}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-               <Row className="mb-2">
-               <Form.Group as={Col}>
+                <Row className="mb-2">
+                  <Form.Group as={Col}>
                     <Form.Label>Correct Option</Form.Label>
                     <Form.Control
                       name="correct_option"
@@ -716,7 +746,8 @@ const QuestionMangement = () => {
                       required
                       placeholder="Enter play,example.."
                     />
-                    {updateFormik.touched.correct_option && updateFormik.errors.correct_option ? (
+                    {updateFormik.touched.correct_option &&
+                    updateFormik.errors.correct_option ? (
                       <div className="text-danger">
                         {updateFormik.errors.correct_option}
                       </div>
@@ -738,34 +769,38 @@ const QuestionMangement = () => {
                       </div>
                     ) : null}
                   </Form.Group>
-               </Row>
-               <Form.Group className="mb-2">
-                    <Form.Label>Marks</Form.Label>
-                    <Form.Control
-                      name="marks"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.marks}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.marks && updateFormik.errors.marks ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.marks}
-                      </div>
-                    ) : null}
-                  </Form.Group>
+                </Row>
+                <Form.Group className="mb-2">
+                  <Form.Label>Marks</Form.Label>
+                  <Form.Control
+                    name="marks"
+                    onChange={updateFormik.handleChange}
+                    value={updateFormik.values.marks}
+                    type="text"
+                    required
+                    placeholder="Enter play,example.."
+                  />
+                  {updateFormik.touched.marks && updateFormik.errors.marks ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.marks}
+                    </div>
+                  ) : null}
+                </Form.Group>
                 <Form.Group>
-                    <Form.Label>Topic</Form.Label>
-                    <Form.Select
-                      required
-                      name="topic"
-                      onChange={updateFormik.handleChange}
-                    >
-                      <option>select the Topic</option>
-                      {(topics || []).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </Form.Select>
-                  </Form.Group>
+                  <Form.Label>Topic</Form.Label>
+                  <Form.Select
+                    required
+                    name="topic"
+                    onChange={updateFormik.handleChange}
+                  >
+                    <option>select the Topic</option>
+                    {(topics || []).map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
                     Close

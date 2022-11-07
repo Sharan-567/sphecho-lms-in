@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Container,
   Form,
@@ -18,7 +18,9 @@ import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
-
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState } from "draft-js";
+import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -101,6 +103,7 @@ const CertificationManagment = () => {
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
 
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
   const openModel = (
     certificate: Certificate,
     type: "create" | "delete" | "update" | "read"
@@ -110,6 +113,7 @@ const CertificationManagment = () => {
     setShow(true);
     setCurrentModal(type);
   };
+  // console.log(editorState.getCurrentContent().getPlainText());
 
   const createCourseOpenModal = () => {
     setCurrentModal("create");
@@ -120,6 +124,7 @@ const CertificationManagment = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    setShowEditor(false);
   };
   const handleShow = () => {
     setShow(true);
@@ -298,6 +303,12 @@ const CertificationManagment = () => {
       });
   };
 
+  const onEditorStateChange = useCallback(
+    (rawcontent) => {
+      setEditorState(rawcontent);
+    },
+    [editorState]
+  );
   return (
     <Container className="p-4 w-75">
       {error && errorType === "list" && (
@@ -331,8 +342,12 @@ const CertificationManagment = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
-        {currentModal === "create" && !showEditor && (
+      <Modal
+        show={show}
+        size={currentModal === "create" ? "lg" : "md"}
+        onHide={handleClose}
+      >
+        {currentModal === "create" && (
           <>
             {error && errorType === "create" && (
               <ErrorMessage setError={setError}>{error}</ErrorMessage>
@@ -345,147 +360,184 @@ const CertificationManagment = () => {
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Title</Form.Label>
-                    <Form.Control
-                      name="title"
-                      value={creatFormik.values.title}
-                      onChange={creatFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Certificate title"
+                {!showEditor ? (
+                  <>
+                    <Row className="mb-3">
+                      <Form.Group as={Col}>
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control
+                          name="title"
+                          value={creatFormik.values.title}
+                          onChange={creatFormik.handleChange}
+                          type="text"
+                          required
+                          placeholder="Enter Certificate title"
+                        />
+                        {creatFormik.touched.title &&
+                        creatFormik.errors.title ? (
+                          <div className="text-danger">
+                            {creatFormik.errors.title}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                      <Form.Group as={Col}>
+                        <Form.Label>text</Form.Label>
+                        <Form.Control
+                          name="text"
+                          value={creatFormik.values.text}
+                          onChange={creatFormik.handleChange}
+                          type="text"
+                          required
+                          placeholder="Enter Certificate title"
+                        />
+                        {creatFormik.touched.text && creatFormik.errors.text ? (
+                          <div className="text-danger">
+                            {creatFormik.errors.text}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                    </Row>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Background Image</Form.Label>
+                      <Form.Control
+                        name="background_image"
+                        type="file"
+                        required
+                        placeholder="Upload background image"
+                        onChange={(e) =>
+                          creatFormik.setFieldValue(
+                            "background_image",
+                            //@ts-ignore
+                            e.currentTarget.files[0]
+                          )
+                        }
+                        // value={creatFormik.values.info_image}
+                      />
+                      {creatFormik.touched.background_image &&
+                      creatFormik.errors.background_image ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.background_image}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+
+                    <Row className="mb-3">
+                      <Form.Group as={Col}>
+                        <Form.Label>On Complition</Form.Label>
+                        <Form.Select
+                          required
+                          name="on_complition"
+                          onChange={creatFormik.handleChange}
+                          value={creatFormik.values.on_complition}
+                        >
+                          <option value={"True"}>Yes</option>
+                          <option value={"False"}>No</option>
+                        </Form.Select>
+                        {creatFormik.touched.on_complition &&
+                        creatFormik.errors.on_complition ? (
+                          <div className="text-danger">
+                            {creatFormik.errors.on_complition}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+
+                      <Form.Group as={Col}>
+                        <Form.Label>On Attend</Form.Label>
+                        <Form.Select
+                          name="on_attend"
+                          required
+                          onChange={creatFormik.handleChange}
+                          value={creatFormik.values.on_attend}
+                        >
+                          <option value={"True"}>Yes</option>
+                          <option value={"False"}>No</option>
+                        </Form.Select>
+                      </Form.Group>
+                    </Row>
+                    <Form.Group>
+                      <Form.Label>Assessment</Form.Label>
+                      <Form.Select
+                        required
+                        name="assesment"
+                        onChange={creatFormik.handleChange}
+                      >
+                        <option>select the assesment</option>
+                        {(assesments || []).map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>select the Topic</Form.Label>
+                      <Form.Select
+                        required
+                        name="topic"
+                        onChange={creatFormik.handleChange}
+                      >
+                        <option>select the Topic</option>
+                        {(topics || []).map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                  </>
+                ) : (
+                  <>
+                    <Editor
+                      wrapperClassName="wrapper-class"
+                      editorClassName="editor-class"
+                      toolbarClassName="toolbar-class"
+                      wrapperStyle={{}}
+                      editorStyle={{}}
+                      toolbarStyle={{}}
+                      editorState={editorState}
+                      onEditorStateChange={onEditorStateChange}
                     />
-                    {creatFormik.touched.title && creatFormik.errors.title ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.title}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>text</Form.Label>
-                    <Form.Control
-                      name="text"
-                      value={creatFormik.values.text}
-                      onChange={creatFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Certificate title"
-                    />
-                    {creatFormik.touched.text && creatFormik.errors.text ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.text}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Background Image</Form.Label>
-                  <Form.Control
-                    name="background_image"
-                    type="file"
-                    required
-                    placeholder="Upload background image"
-                    onChange={(e) =>
-                      creatFormik.setFieldValue(
-                        "background_image",
-                        //@ts-ignore
-                        e.currentTarget.files[0]
-                      )
-                    }
-                    // value={creatFormik.values.info_image}
-                  />
-                  {creatFormik.touched.background_image &&
-                  creatFormik.errors.background_image ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.background_image}
-                    </div>
-                  ) : null}
-                </Form.Group>
-
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>On Complition</Form.Label>
-                    <Form.Select
-                      required
-                      name="on_complition"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.on_complition}
+                  </>
+                )}
+                {!showEditor ? (
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button
+                      className="d-flex align-items-center"
+                      variant="admingreen text-white"
+                      onClick={() => setShowEditor(true)}
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {creatFormik.touched.on_complition &&
-                    creatFormik.errors.on_complition ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.on_complition}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>On Attend</Form.Label>
-                    <Form.Select
-                      name="on_attend"
-                      required
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.on_attend}
+                      Next
+                    </Button>
+                  </Modal.Footer>
+                ) : (
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button
+                      className="d-flex align-items-center"
+                      variant="admingreen text-white"
+                      onClick={() => setShowEditor(false)}
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Row>
-                <Form.Group>
-                  <Form.Label>Assessment</Form.Label>
-                  <Form.Select
-                    required
-                    name="assesment"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>select the assesment</option>
-                    {(assesments || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>select the Topic</Form.Label>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>select the Topic</option>
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "create" && <Spinner />}
-                    Create
-                  </Button>
-                </Modal.Footer>
+                      Back
+                    </Button>
+                    <Button
+                      className="d-flex align-items-center"
+                      variant="admingreen text-white"
+                      type="submit"
+                    >
+                      {showSpinner === "create" && <Spinner />}
+                      Create
+                    </Button>
+                  </Modal.Footer>
+                )}
               </Form>
             </Modal.Body>
           </>
-        )}
-        {currentModal === "create" && showEditor(
-          <h1></h1>
         )}
         {currentModal === "delete" && (
           <>
