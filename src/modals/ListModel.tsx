@@ -22,7 +22,7 @@ const typeOfUsers: UserType[] = [
   },
   {
     id: 2,
-    title: "Health Care Provider",
+    title: "Provider",
     type: "doctor",
   },
 ];

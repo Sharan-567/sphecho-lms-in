@@ -48,7 +48,7 @@ const CalenderWithEvents = () => {
   const [date, setDate] = useState(new Date());
 
   return (
-    <Row className="bg-skyBlue br-2">
+    <Row className="bg-skyBlue p-2 br-2">
       <Col sm={6} className="bg-white p-3 br-2">
         <Calendar className="bg-white" onChange={setDate} value={date} />
       </Col>

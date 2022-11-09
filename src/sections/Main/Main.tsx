@@ -92,7 +92,7 @@ const Main = () => {
           You have tauth 6 hours yesterday
         </p>
         <Col sm={4} className="p-3">
-          <div className="p-3 bg-white br-2 h-100 ">
+          <div className="p-3 bg-graydark br-2 h-100 ">
             {/* <h5 className="b-700 mb-4">Rating</h5> */}
             {/* <img
               src={bg1}

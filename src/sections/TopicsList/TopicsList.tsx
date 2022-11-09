@@ -76,14 +76,14 @@ const TopicsList = () => {
                   Topics
                 </h4>
                 <ListGroup className="p-2 ">
-                  {topics.map((topic, id) => {
+                  {(topics || []).map((topic, id) => {
                     return (
                       <ListGroup.Item
                         key={id}
                         style={{ borderRadius: ".5rem" }}
                         className={`d-flex align-items-center p-2 mb-3 ${
-                          topic.customId === currentTopic?.customId &&
-                          "bg-blue text-white"
+                          topic.customId === currentTopic?.customId ?
+                          "bg-blue text-white" : "bg-gray"
                         }`}
                       >
                         <div className="me-2">

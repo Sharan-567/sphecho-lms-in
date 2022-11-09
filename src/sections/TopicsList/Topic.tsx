@@ -41,12 +41,12 @@ const Topic = ({ topic, courseId }: TopicProp) => {
         <h4 className="b-700 px-3 pt-4">{topic.name}</h4>
 
         <div className="py-4 px-5 margin-auto">
-          <ReactPlayer
+          {topic?.video ? <ReactPlayer
             width={"100%"}
             controls
             url={topic?.video}
             onEnded={() => setVideoCompleted(true)}
-          />
+          /> : null}
         </div>
         <p className="p-3 my-1">{topic?.content}</p>
         {topic?.pdf && (
