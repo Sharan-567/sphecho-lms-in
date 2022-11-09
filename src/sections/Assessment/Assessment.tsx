@@ -71,12 +71,12 @@ const Assessment = ({ assessmentId }: Props) => {
               )}
             </Col>
             <Col sm={3}>
-              <p className="small b-700">Total Questions: {questions.length}</p>
+              <p className="small b-700">Total Questions: {questions?.length}</p>
               <p className="small b-700 lh-0 text-green"></p>
             </Col>
           </Row>
           <Col className="p-3 bg-graydark round">
-            {questions.map((q, id) => {
+            {(questions || []).map((q, id) => {
               return (
                 <Question
                   key={q.id}

@@ -31,7 +31,7 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
   };
   return (
     <div
-      className="my-5 bg-white br-3 p-5 item "
+      className="my-5 bg-graydark br-3 p-5 item "
       style={{
         borderRadius: "2rem !important",
         border: "none",
@@ -83,7 +83,7 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
             }}
           />
           <div className="d-flex align-items-center mb-3">
-            <img
+           {course.trainer_name &&  <img
               alt=""
               src={`https://${HOST}${course.trainer_image}`}
               className="round-50 obj-fit-cover me-2"
@@ -92,7 +92,7 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
                 height: "3rem",
                 border: "5px solid white",
               }}
-            />
+            />}
             <h4>{course.trainer_name}</h4>
           </div>
           <div className="d-flex align-items-center justify-content-between mb-1">

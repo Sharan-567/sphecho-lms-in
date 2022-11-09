@@ -48,7 +48,7 @@ const Course = () => {
   }
 
   return (
-    <div className="container px-5 py-2 mt-4 w-100">
+    <div className="container px-5 py-5 mt-4 w-100">
       {loading ? (
         <div className="w-100 d-flex justify-content-center mt-5">
           <Spinner animation="border" variant="green" />
@@ -76,7 +76,7 @@ const Course = () => {
               })}
             </div>
           </div>
-          <h2 className="b-700 mt-5 text-blue">All Courses</h2>
+          {/* <h2 className="b-700 mt-5 text-blue">All Courses</h2>
           <div>
             {courses.map((course) => {
               return (
@@ -89,7 +89,7 @@ const Course = () => {
                 )
               );
             })}
-          </div>
+          </div> */}
         </div>
       )}
     </div>
