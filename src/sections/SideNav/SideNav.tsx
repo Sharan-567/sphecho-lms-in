@@ -71,7 +71,7 @@ const SideNav = () => {
       }}
     >
       <motion.div
-        className="bg-blue"
+        className="bg-primary"
         animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
         style={{
           position: "sticky",

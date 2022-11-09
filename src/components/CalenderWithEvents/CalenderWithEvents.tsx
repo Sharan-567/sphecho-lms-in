@@ -48,11 +48,11 @@ const CalenderWithEvents = () => {
   const [date, setDate] = useState(new Date());
 
   return (
-    <Row className="bg-skyBlue p-2 br-2">
+    <Row className="bg-primary p-2 br-2">
       <Col sm={6} className="bg-white p-3 br-2">
         <Calendar className="bg-white" onChange={setDate} value={date} />
       </Col>
-      <Col sm={6} className="bg-skyBlue p-3 br-2">
+      <Col sm={6} className="bg-primary p-3 br-2">
         <div className="d-flex justify-content-between align-items-center mb-2">
           <h6 className="tiny text-white">{date.toDateString()} Events</h6>
           {/* <Button className="tiny bg-blue py-1 text-white">Add Event</Button> */}
@@ -62,7 +62,7 @@ const CalenderWithEvents = () => {
             return (
               <Button
                 key={e.id}
-                className="br-1 w-100 mb-2 bg-gray"
+                className="br-1 w-100 mb-2 bg-white"
                 style={{
                   textAlign: "left",
                   borderLeft: "7px solid rgb(30, 37, 79)",

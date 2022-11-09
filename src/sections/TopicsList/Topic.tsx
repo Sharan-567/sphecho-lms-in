@@ -6,15 +6,23 @@ import { Assessment } from "../../definations/assessment";
 import type { Topic as TopicType } from "../../definations/course";
 import { fetchAllProgress, updateProgress } from "../../features/progress";
 import { useAppDispatch } from "../../store";
+import { Document, Page  } from 'react-pdf'
 
 type TopicProp = {
   topic?: Assessment | TopicType;
   courseId?: string;
 };
 
+
 const Topic = ({ topic, courseId }: TopicProp) => {
   const [videoCompleted, setVideoCompleted] = useState(false);
-  const dispatch = useAppDispatch();
+  
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+  const dispatch = useAppDispatch()
+
+  console.log(topic?.pdf)
+
 
   useEffect(() => {
     const disPacthFun = async () => {
@@ -35,6 +43,10 @@ const Topic = ({ topic, courseId }: TopicProp) => {
     disPacthFun();
   }, [videoCompleted]);
 
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
   if (topic && "content" in topic) {
     return (
       <div className="p-3 br-2 bg-gray">
@@ -50,15 +62,17 @@ const Topic = ({ topic, courseId }: TopicProp) => {
         </div>
         <p className="p-3 my-1">{topic?.content}</p>
         {topic?.pdf && (
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={topic?.pdf}
-            className="d-flex align-items-center p-2 mb-2 bg-graydark round"
-          >
-            <BsFillFileEarmarkPdfFill color="red" size="24" />
-            <p className="ms-3 mt-2">{topic.pdf}</p>
-          </a>
+          // <a
+          //   target="_blank"
+          //   rel="noreferrer"
+          //   href={topic?.pdf}
+          //   className="d-flex align-items-center p-2 mb-2 bg-graydark round"
+          // >
+          //   <BsFillFileEarmarkPdfFill color="red" size="24" />
+          //   <p className="ms-3 mt-2">{topic.pdf}</p>
+          // </a>
+          <iframe src={topic?.pdf} width="100%" height="580"></iframe>
+
         )}
       </div>
     );

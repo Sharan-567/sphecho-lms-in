@@ -65,7 +65,7 @@ const Course = () => {
             <h2 className="b-700 text-blue">My Courses</h2>
             <div>
               {getUsersCourses(userCourses).map((course) => {
-                return (
+              return (
                   <CourseContainer
                     key={`course-${course.id}`}
                     no_of_topics={getNoOftopics(course.id)}

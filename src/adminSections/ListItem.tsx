@@ -7,6 +7,7 @@ type ListItem<T> = {
   item: T;
   openModel: (c: T, type: "update" | "delete" | "read") => void;
   NoDelete?: boolean;
+  NoEdit?: boolean,
   sm?: number;
 };
 
@@ -28,12 +29,13 @@ const ListItem = <T extends {}>(props: ListItem<T>) => {
             </Button>
           )}
 
+          {!props.NoEdit && (
           <Button
             className="bg-adminsecondary text-white me-1 br-2"
             onClick={() => props.openModel(props.item, "update")}
           >
             Edit
-          </Button>
+          </Button>)}
 
           <Button
             className="bg-admingreen text-white br-2"

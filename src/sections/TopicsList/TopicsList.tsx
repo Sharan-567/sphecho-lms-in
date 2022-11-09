@@ -83,7 +83,7 @@ const TopicsList = () => {
                         style={{ borderRadius: ".5rem" }}
                         className={`d-flex align-items-center p-2 mb-3 ${
                           topic.customId === currentTopic?.customId ?
-                          "bg-blue text-white" : "bg-gray"
+                          "bg-primary text-white" : "bg-gray"
                         }`}
                       >
                         <div className="me-2">
@@ -99,7 +99,7 @@ const TopicsList = () => {
                         <button
                           className={`small ${
                             topic.customId === currentTopic?.customId &&
-                            "bg-blue text-white"
+                            "bg-primary text-white"
                           }`}
                           style={{
                             background: "none",

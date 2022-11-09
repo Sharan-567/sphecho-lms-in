@@ -12,7 +12,6 @@ import CalenderWithEvents from "../../components/CalenderWithEvents";
 import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
-import bg1 from "../../assets/bg-1.jpg"; // its dummy imaage usally have to come from server
 import { logout } from "../../features/auth";
 
 const Main = () => {

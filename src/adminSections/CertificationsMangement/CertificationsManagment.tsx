@@ -262,46 +262,7 @@ const CertificationManagment = () => {
       });
   };
 
-  // create course
-  const createCourse = (data, resetForm) => {
-    setShowSpinner("create");
-    const formData = new FormData();
-    const token = localStorage.getItem("token");
-    Object.entries(data).map(([key, val]) => {
-      // @ts-ignore
-      formData.append(key, val);
-    });
-    axios
-      .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/course-create/",
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
-      .then((res) => {
-        setShowSpinner("none");
-        resetForm();
-        setSuccess("Course is created successfully");
-        getCertif();
-        setErrorType("none");
-      })
-      .catch((error) => {
-        setShowSpinner("none");
-        setSuccess("");
-        setErrorType("create");
-        if (error.request) {
-          setError(error.response.statusText);
-          console.log(error.response.statusText);
-        } else if (error.request) {
-          setError(error.request.statusText);
-        } else {
-          setError(error);
-        }
-      });
-  };
+
 
   const onEditorStateChange = useCallback(
     (rawcontent) => {
@@ -335,6 +296,7 @@ const CertificationManagment = () => {
                 key={item.id}
                 openModel={openModel}
                 NoDelete
+                NoEdit
                 sm={9}
               ></ListItem>
             );
