@@ -38,10 +38,10 @@ const Card: React.FC<Props> = ({ course }) => {
 
   return (
     <div
-      className="bg-gray p-2 br-1"
+      className="bg-graydark p-2 br-1"
       style={{
         width: "12rem",
-        minHeight: "17rem",
+        height: "17rem",
       }}
     >
       <img
@@ -56,7 +56,7 @@ const Card: React.FC<Props> = ({ course }) => {
       <div>
         <p
           className="p-2 tiny b-600"
-          style={{ minHeight: "4rem", textAlign: "left" }}
+          style={{ height: "4rem", textAlign: "left", overflow: "hidden" }}
         >
           {course?.name?.slice(0, 60)}...
         </p>
@@ -71,7 +71,7 @@ const Card: React.FC<Props> = ({ course }) => {
           <Button
             onClick={() => dispatch(addItem(course))}
             variant="green"
-            className="text-white"
+            className="text-white p-2 w-100"
             style={{ fontSize: ".8rem" }}
           >
             Add To Cart

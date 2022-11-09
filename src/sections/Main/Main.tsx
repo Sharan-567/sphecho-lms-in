@@ -147,7 +147,7 @@ const Main = () => {
                     className="bg-skyBlue text-white p-2 b-900"
                   >{`>`}</span>
                 )}
-                items={latestCourses.map((course) => (
+                items={(latestCourses || []).map((course) => (
                   <Card key={course.id} course={course} />
                 ))}
               />
