@@ -28,7 +28,7 @@ const createSchema = Yup.object().shape({
   pdf: Yup.string().required("pdf url is required"),
   image: Yup.string().required("image url is required"),
   content: Yup.string().required("content is required"),
-  description: Yup.string().required("description is required"),
+  description: Yup.string().required("description is required").max(500),
   order: Yup.number().required("order is required"),
 });
 

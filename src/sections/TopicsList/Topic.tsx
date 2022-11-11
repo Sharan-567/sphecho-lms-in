@@ -19,36 +19,14 @@ const Topic = ({ topic, courseId }: TopicProp) => {
   const dispatch = useAppDispatch()
   const {progress} = useAppSelector(state => state.progress)
 
-
-  useEffect(() => {
-    dispatch(fetchAllProgress({}))
-    const disPacthFun = async () => {
-      try {
-        if (topic && "content" in topic && courseId) {
-          if (!topic.video || videoCompleted) {
-            let data = await dispatch(
-              updateProgress({ course: courseId, topic: topic?.id })
-            ).unwrap();
-            console.log(data);
-            dispatch(fetchAllProgress({}));
-          }
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    disPacthFun();
-  }, [videoCompleted]);
-
   
   useEffect(() => {
     if(topic?.id && courseId) {
       if(courseId in progress && progress[courseId].topics.includes(topic?.id)) {
         setCompleted(true)
       }
-    } else {
-      setCompleted(false)
     }
+    return () => setCompleted(false)
   }, [topic?.id, courseId])
 
   const updateProgressHanlder = () => {
@@ -56,6 +34,7 @@ const Topic = ({ topic, courseId }: TopicProp) => {
       dispatch(updateProgress({ course: courseId, topic: topic?.id })).unwrap()
         .then((data) => {
           console.log(data)
+          dispatch(fetchAllProgress({}))
           setCompleted(true)
         })
     }
