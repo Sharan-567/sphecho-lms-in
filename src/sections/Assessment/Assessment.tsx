@@ -26,7 +26,7 @@ const Assessment = ({ assessmentId }: Props) => {
 
   const submitAnswers = () => {
     setIsAttempted(true);
-    if (correctAnswers === questions.length) {
+    if (correctAnswers === questions?.length) {
       if (courseId)
         dispatch(
           updateProgress({ course: courseId, assessment: assessmentId })

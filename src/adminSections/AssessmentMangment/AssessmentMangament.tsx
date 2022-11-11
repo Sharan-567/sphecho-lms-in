@@ -330,13 +330,6 @@ const AssessmentMangement = () => {
 
   return (
     <Container className="p-4 w-75">
-      {(error && errorType === "list") ||
-        (errorType === "delete" && (
-          <ErrorMessage setError={setError}>{error}</ErrorMessage>
-        ))}
-      {success && (
-        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
-      )}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Assessments</h3>

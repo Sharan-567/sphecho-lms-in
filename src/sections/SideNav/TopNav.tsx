@@ -12,7 +12,7 @@ import {
 
 const TopNav = () => {
   return (
-    <Navbar bg="blue" variant="dark" className="py-3" expand="lg">
+    <Navbar bg="primary" variant="dark" className="py-3" expand="lg">
       <Container>
         <Navbar.Brand href="/">
           <h1 className="text-white b-700" style={{ fontSize: "2.2rem" }}>

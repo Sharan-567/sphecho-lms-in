@@ -9,7 +9,7 @@ import {
   Col,
   Alert,
 } from "react-bootstrap";
-import { useFormik } from "formik";
+import { useFormik, validateYupSchema } from "formik";
 import ListItem from "../ListItem";
 import type { Course, Certificate, Topic } from "./../../definations/course";
 import type { Assessment } from "./../../definations/assessment";
@@ -21,7 +21,7 @@ import * as Yup from "yup";
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState } from "draft-js";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-type CourseCreateType = Record<string, string>;
+
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -31,7 +31,7 @@ const createSchema = Yup.object().shape({
     .nullable(),
   on_complition: Yup.string().required("On complition is required"),
   on_attend: Yup.string().required("On attend is required"),
-  text: Yup.string().required("Text is required"),
+  // text: Yup.string().required("Text is required"),
 });
 
 const CertificationManagment = () => {
@@ -42,6 +42,8 @@ const CertificationManagment = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [currentSelectedItem, setCurrentSelectedItem] = useState<Certificate>();
   const [showEditor, setShowEditor] = useState(false);
+  const [validateErrors, setValidateErros] = useState<Record<string, string>>({})
+  const [certificateTags, setCertificateTags] = useState<Record<string, string>>({})
   const [currentModal, setCurrentModal] = useState<
     "update" | "delete" | "read" | "create"
   >();
@@ -65,33 +67,12 @@ const CertificationManagment = () => {
       assesment: "",
       on_complition: "True",
       on_attend: "True",
-      text: "",
+      // text: "",
     },
     validationSchema: createSchema,
-    onSubmit: (data, { resetForm }) => console.log(data),
-  });
-
-  const updateFormik = useFormik({
-    initialValues: {
-      name: currentSelectedItem?.name ? currentSelectedItem.name : "",
-      tags: currentSelectedItem?.tags ? currentSelectedItem.tags : "",
-      info_image: currentSelectedItem?.info_image
-        ? currentSelectedItem?.info_image
-        : "",
-      description: currentSelectedItem?.description
-        ? currentSelectedItem?.description
-        : "",
-      trainer_name: currentSelectedItem?.trainer_name
-        ? currentSelectedItem.trainer_name
-        : "",
-      view_all: currentSelectedItem?.view_all ? "True" : "False",
-      enroll_all: currentSelectedItem?.enroll_all ? "True" : "False",
-      featured: currentSelectedItem?.featured ? "True" : "False",
-    },
-    enableReinitialize: true,
-    validationSchema: createSchema,
-    onSubmit: (data) => {
-      updateCourse(data);
+    onSubmit: (data, { resetForm }) => {
+      data['text'] = editorState.getCurrentContent().getPlainText()
+      createCertificate(data, resetForm)
     },
   });
 
@@ -137,11 +118,36 @@ const CertificationManagment = () => {
     getCertificationList();
     getTopicsList();
     getAssessmentList();
+    getCertificatesTags()
   }, []);
 
-  const deleteCourse = () => {
-    console.log("course deleted");
-    handleClose();
+
+  const deleteCertificate = () => {
+    let token = localStorage.getItem("token");
+    setShowSpinner("delete");
+    axios
+      .get(`${BASE_URL}/master/certificate-delete/${currentSelectedItem?.id}`, {
+        headers: { Authorization: `token ${token}` },
+      })
+      .then((res) => {
+        setShowSpinner("none");
+        setSuccess("Certificate deleted successfully");
+        setErrorType("none");
+        getCertificationList();
+      })
+      .catch((err) => {
+        setShowSpinner("none");
+        setErrorType("delete");
+        if (err.response) {
+          setError(err.response.statusText);
+          console.log(err.response.statusText);
+        } else if (err.request) {
+          setError(err.response.statusText);
+          console.log(err.request.statusText);
+        } else {
+          console.log(err);
+        }
+      });
   };
 
   //get Certification list
@@ -172,6 +178,74 @@ const CertificationManagment = () => {
       });
   };
 
+   //get Certification tags list
+   const getCertificatesTags = () => {
+    let token = localStorage.getItem("token");
+    axios
+      .get(`${BASE_URL}/master/certificate-create`, {
+        headers: { Authorization: `token ${token}` },
+      })
+      .then((res) => {
+        setCertificateTags(res.data.tags);
+        // console.info(res.data.tags)
+        setShowSpinner("none");
+        setErrorType("none");
+      })
+      .catch((err) => {
+        setShowSpinner("none");
+        if (err.response) {
+          setError(err.response.statusText);
+          console.log(err.response.statusText);
+        } else if (err.request) {
+          setError(err.response.statusText);
+          console.log(err.request.statusText);
+        } else {
+          console.log(err);
+        }
+      });
+  };
+
+   // create certificate
+   const createCertificate = (data, resetForm) => {
+    setShowSpinner("create");
+    const formData = new FormData();
+    const token = localStorage.getItem("token");
+    Object.entries(data).map(([key, val]) => {
+      // @ts-ignore
+      formData.append(key, val);
+    });
+    axios
+      .post(
+        "https://lmsv2.metahos.com/lms_api_v1/master/certificate-create/",
+        formData,
+        {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        }
+      )
+      .then((res) => {
+        setShowSpinner("none");
+        resetForm();
+        setSuccess("Certificate is created successfully");
+        getCertificationList();
+        setErrorType("none");
+      })
+      .catch((error) => {
+        setShowSpinner("none");
+        setSuccess("");
+        setErrorType("create");
+        if (error.request) {
+          setError(error.response.statusText);
+          console.log(error.response.statusText);
+        } else if (error.request) {
+          setError(error.request.statusText);
+        } else {
+          setError(error);
+        }
+      });
+  };
+
   //get assessment list
   const getAssessmentList = () => {
     let token = localStorage.getItem("token");
@@ -195,48 +269,7 @@ const CertificationManagment = () => {
       });
   };
 
-  // update
-  const updateCourse = (data) => {
-    console.log(data);
-    let token = localStorage.getItem("token");
-    const formData = new FormData();
-    Object.entries(data || {}).forEach(([key, val]) => {
-      //@ts-ignore
-      formData.append(key, val);
-    });
-    setShowSpinner("update");
-    if (currentSelectedItem) {
-      axios
-        .post(
-          `${BASE_URL}/master/course-update/${currentSelectedItem.id}/`,
-          formData,
-          {
-            headers: { Authorization: `token ${token}` },
-          }
-        )
-        .then((res) => {
-          setErrorType("none");
-          setShowSpinner("none");
-          getCertificationList();
-          setSuccess("Course updated successfully.");
-          console.log(res.data);
-        })
-        .catch((err) => {
-          setShowSpinner("none");
-          setErrorType("update");
-          if (err.response) {
-            setError(err.response.statusText);
-            console.log(err.response.status);
-          } else if (err.request) {
-            setError(err.request.statusText);
-            console.log(err.request);
-          } else {
-            setError(err);
-            console.log(err);
-          }
-        });
-    }
-  };
+
 
   //get topics list
   const getTopicsList = () => {
@@ -262,19 +295,23 @@ const CertificationManagment = () => {
       });
   };
 
+  const validateAndNext = () => {
+    creatFormik.validateForm()
+      .then(data => {
+        if(Object.keys(data).length === 0) {
+          setShowEditor(true)
+        } else {
+          setValidateErros(data)
+        }
+      })
+  }
 
+  const onEditorStateChange = (editorState: EditorState) => {
+    setEditorState(editorState)
+  }
 
-  const onEditorStateChange = useCallback(
-    (rawcontent) => {
-      setEditorState(rawcontent);
-    },
-    [editorState]
-  );
   return (
     <Container className="p-4 w-75">
-      {error && errorType === "list" && (
-        <ErrorMessage setError={setError}>{error}</ErrorMessage>
-      )}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Certificates</h3>
@@ -288,14 +325,13 @@ const CertificationManagment = () => {
         {showSpinner === "list" ? (
           <Spinner />
         ) : (
-          certificates.map((item) => {
+          (certificates || []).map((item) => {
             return (
               <ListItem
                 item={item}
                 title={item.title}
                 key={item.id}
                 openModel={openModel}
-                NoDelete
                 NoEdit
                 sm={9}
               ></ListItem>
@@ -306,7 +342,8 @@ const CertificationManagment = () => {
 
       <Modal
         show={show}
-        size={currentModal === "create" ? "lg" : "md"}
+        //@ts-ignore
+        size={currentModal === "create" ? "lg" : ""}
         onHide={handleClose}
       >
         {currentModal === "create" && (
@@ -324,8 +361,7 @@ const CertificationManagment = () => {
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
                 {!showEditor ? (
                   <>
-                    <Row className="mb-3">
-                      <Form.Group as={Col}>
+                      <Form.Group className="mb-3">
                         <Form.Label>Title</Form.Label>
                         <Form.Control
                           name="title"
@@ -341,25 +377,14 @@ const CertificationManagment = () => {
                             {creatFormik.errors.title}
                           </div>
                         ) : null}
+                        {
+                          validateErrors?.title ?  <div className="text-danger">
+                          {validateErrors.title}
+                        </div> : null
+                        }
                       </Form.Group>
-                      <Form.Group as={Col}>
-                        <Form.Label>text</Form.Label>
-                        <Form.Control
-                          name="text"
-                          value={creatFormik.values.text}
-                          onChange={creatFormik.handleChange}
-                          type="text"
-                          required
-                          placeholder="Enter Certificate title"
-                        />
-                        {creatFormik.touched.text && creatFormik.errors.text ? (
-                          <div className="text-danger">
-                            {creatFormik.errors.text}
-                          </div>
-                        ) : null}
-                      </Form.Group>
-                    </Row>
-
+                        
+                      
                     <Form.Group className="mb-3">
                       <Form.Label>Background Image</Form.Label>
                       <Form.Control
@@ -382,6 +407,11 @@ const CertificationManagment = () => {
                           {creatFormik.errors.background_image}
                         </div>
                       ) : null}
+                       {
+                          validateErrors?.background_image ?  <div className="text-danger">
+                          {validateErrors.background_image}
+                        </div> : null
+                        }
                     </Form.Group>
 
                     <Row className="mb-3">
@@ -450,15 +480,28 @@ const CertificationManagment = () => {
                   </>
                 ) : (
                   <>
+                  <div>
+                    <h6>Use the following tags only.</h6>
+                   <p className="me-2">
+                    {
+                      Object.entries(certificateTags || {}).map(([key, value]) => (
+                        `${key}: ${value}, `
+                      ))
+                    }
+                    </p>
+                  </div>
                     <Editor
-                      wrapperClassName="wrapper-class"
-                      editorClassName="editor-class"
-                      toolbarClassName="toolbar-class"
-                      wrapperStyle={{}}
-                      editorStyle={{}}
-                      toolbarStyle={{}}
+                      editorStyle={{minHeight: "15rem"}}
                       editorState={editorState}
                       onEditorStateChange={onEditorStateChange}
+                      mention={{
+                        separator: " ",
+                        trigger: '{',
+                        suggestions: Object.entries(certificateTags || {}).map(([key, value]) => (
+                            {text: key, value: value.slice(1)}
+                          ))
+                        ,
+                      }}
                     />
                   </>
                 )}
@@ -470,7 +513,7 @@ const CertificationManagment = () => {
                     <Button
                       className="d-flex align-items-center"
                       variant="admingreen text-white"
-                      onClick={() => setShowEditor(true)}
+                      onClick={() => validateAndNext()}
                     >
                       Next
                     </Button>
@@ -503,15 +546,23 @@ const CertificationManagment = () => {
         )}
         {currentModal === "delete" && (
           <>
+             {error && errorType === "delete" && (
+              <ErrorMessage setError={setError}>{error}</ErrorMessage>
+            )}
+            {success && (
+              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
+            )}
             <Modal.Header closeButton>
-              <Modal.Title>Delete Course</Modal.Title>
+              <Modal.Title>Delete Certificate</Modal.Title>
             </Modal.Header>
-            <Modal.Body></Modal.Body>
+            <Modal.Body>
+              <p>Are you sure to delete this {currentSelectedItem?.title} Certificate </p>
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-              <Button variant="danger text-white" onClick={deleteCourse}>
+              <Button variant="danger text-white" onClick={deleteCertificate}>
                 delete
               </Button>
             </Modal.Footer>
@@ -541,191 +592,6 @@ const CertificationManagment = () => {
           </>
         )}
 
-        {currentModal === "update" && (
-          <>
-            {error && errorType === "update" && (
-              <ErrorMessage setError={setError}>{error}</ErrorMessage>
-            )}
-            {success && (
-              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
-            )}
-            <Modal.Header closeButton>
-              <Modal.Title>Update Course</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={updateFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Course Name</Form.Label>
-                    <Form.Control
-                      name="name"
-                      value={updateFormik.values.name}
-                      onChange={updateFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Course Name"
-                    />
-                    {updateFormik.touched.name && updateFormik.errors.name ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.name}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Tags</Form.Label>
-                    <Form.Control
-                      name="tags"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.tags}
-                      type="text"
-                      required
-                      placeholder="Enter play,example.."
-                    />
-                    {updateFormik.touched.tags && updateFormik.errors.tags ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.tags}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Info Image</Form.Label>
-                  <Form.Control
-                    name="info_image"
-                    type="file"
-                    required
-                    placeholder="Upload info image"
-                    onChange={(e) =>
-                      updateFormik.setFieldValue(
-                        "info_image",
-                        //@ts-ignore
-                        e.currentTarget.files[0]
-                      )
-                    }
-                    // value={updateFormik.values.info_image}
-                  />
-                  {typeof updateFormik.values.info_image === "string" && (
-                    <img
-                      className="mt-3"
-                      style={{ width: "8rem" }}
-                      src={`https://${HOST}${updateFormik.values.info_image}`}
-                    />
-                  )}
-                  {/* @ts-ignore */}
-                  {updateFormik.values.info_image instanceof File && (
-                    <img
-                      className="mt-3"
-                      style={{ width: "8rem" }}
-                      src={URL.createObjectURL(updateFormik.values.info_image)}
-                    />
-                  )}
-                  {updateFormik.touched.info_image &&
-                  updateFormik.errors.info_image ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.info_image}
-                    </div>
-                  ) : null}
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    name="description"
-                    rows={5}
-                    as="textarea"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.description}
-                    placeholder="Add the course description.."
-                  />
-                  {updateFormik.touched.description &&
-                  updateFormik.errors.description ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.description}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Trainer Name</Form.Label>
-                  <Form.Control
-                    name="trainer_name"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.trainer_name}
-                    type="text"
-                  />
-                  {updateFormik.touched.trainer_name &&
-                  updateFormik.errors.trainer_name ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.trainer_name}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>View All</Form.Label>
-                    <Form.Select
-                      required
-                      name="view_all"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.view_all.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {updateFormik.touched.view_all &&
-                    updateFormik.errors.view_all ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.view_all.toString()}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Enroll All</Form.Label>
-                    <Form.Select
-                      name="on_"
-                      required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.enroll_all.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Featured</Form.Label>
-                    <Form.Select
-                      required
-                      name="featured"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.featured.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Row>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "update" && <Spinner />}
-                    Update
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            </Modal.Body>
-          </>
-        )}
       </Modal>
     </Container>
   );

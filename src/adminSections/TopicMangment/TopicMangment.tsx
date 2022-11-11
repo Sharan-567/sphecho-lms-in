@@ -226,6 +226,7 @@ const TopicManagment = () => {
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
+      //@ts-ignore
       formData.append(key, val);
     });
     setShowSpinner("update");
@@ -311,13 +312,6 @@ const TopicManagment = () => {
 
   return (
     <Container className="p-4 w-75">
-      {(error && errorType === "list") ||
-        (errorType === "delete" && (
-          <ErrorMessage setError={setError}>{error}</ErrorMessage>
-        ))}
-      {success && (
-        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
-      )}
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Topics</h3>
@@ -555,12 +549,7 @@ const TopicManagment = () => {
         )}
         {currentModal === "delete" && (
           <>
-            {error && errorType === "delete" && (
-              <ErrorMessage setError={setError}>{error}</ErrorMessage>
-            )}
-            {success && (
-              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
-            )}
+            c
             <Modal.Header closeButton>
               <Modal.Title>Delete Topic</Modal.Title>
             </Modal.Header>

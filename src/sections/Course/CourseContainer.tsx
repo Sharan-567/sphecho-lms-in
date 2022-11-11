@@ -51,7 +51,7 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
               {course.description.slice(0, 573)}...
             </p>
           </div>
-          {no_of_topics && (
+           {no_of_topics && no_of_topics > 0 ? (
             <div className="d-flex align-items-center p-2">
               <Progress
                 Value={getPercentageValue(`${course.id}`)}
@@ -64,7 +64,7 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
                 title="Total Available Topics"
               />
             </div>
-          )}
+          ): <p className="b-500 text-green">No Topics Found on this Course</p>}
         </Col>
         <Col
           sm={5}

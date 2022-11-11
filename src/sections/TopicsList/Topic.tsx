@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-import { BsFillFileEarmarkPdfFill } from "react-icons/bs";
+import { BsCheckCircleFill } from "react-icons/bs";
+import {Button} from "react-bootstrap"
 import AssesmentComp from "../../sections/Assessment";
 import { Assessment } from "../../definations/assessment";
 import type { Topic as TopicType } from "../../definations/course";
 import { fetchAllProgress, updateProgress } from "../../features/progress";
-import { useAppDispatch } from "../../store";
-import { Document, Page  } from 'react-pdf'
+import { useAppDispatch, useAppSelector } from "../../store";
 
 type TopicProp = {
   topic?: Assessment | TopicType;
   courseId?: string;
 };
 
-
 const Topic = ({ topic, courseId }: TopicProp) => {
   const [videoCompleted, setVideoCompleted] = useState(false);
-  
-    const [numPages, setNumPages] = useState(null);
-    const [pageNumber, setPageNumber] = useState(1);
+  const [completed, setCompleted] = useState(false);
   const dispatch = useAppDispatch()
-
-  console.log(topic?.pdf)
+  const {progress} = useAppSelector(state => state.progress)
 
 
   useEffect(() => {
+    dispatch(fetchAllProgress({}))
     const disPacthFun = async () => {
       try {
         if (topic && "content" in topic && courseId) {
@@ -43,14 +40,40 @@ const Topic = ({ topic, courseId }: TopicProp) => {
     disPacthFun();
   }, [videoCompleted]);
 
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
+  
+  useEffect(() => {
+    if(topic?.id && courseId) {
+      if(courseId in progress && progress[courseId].topics.includes(topic?.id)) {
+        setCompleted(true)
+      }
+    } else {
+      setCompleted(false)
+    }
+  }, [topic?.id, courseId])
+
+  const updateProgressHanlder = () => {
+    if(topic?.id && courseId) {
+      dispatch(updateProgress({ course: courseId, topic: topic?.id })).unwrap()
+        .then((data) => {
+          console.log(data)
+          setCompleted(true)
+        })
+    }
   }
+
 
   if (topic && "content" in topic) {
     return (
       <div className="p-3 br-2 bg-gray">
-        <h4 className="b-700 px-3 pt-4">{topic.name}</h4>
+        <div className="d-flex justify-content-between align-items-center">
+          <h4 className="b-700 px-3 pt-4">{topic.name}</h4>
+          {!completed ? <Button className="bg-white text-black" style={{height: "3rem"}} onClick={updateProgressHanlder}>
+           Mark as Completed
+          </Button>:
+          <Button  className="bg-white text-black">
+          <BsCheckCircleFill className="me-2" size="20" />Completed
+          </Button>}
+        </div>
 
         <div className="py-4 px-5 margin-auto">
           {topic?.video ? <ReactPlayer
@@ -83,6 +106,7 @@ const Topic = ({ topic, courseId }: TopicProp) => {
       </div>
     );
   }
+  return <h3 className="p-2 m-auto">No topics available to this course yet.</h3>
 };
 
 export default Topic;
