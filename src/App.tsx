@@ -7,6 +7,7 @@ import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
+import Login from './pages/Login/Login'
 
 // adminSection
 import {
@@ -37,6 +38,7 @@ function App() {
           {!isLoggedIn ? (
             <Route path="/">
               <Route index element={<Home />} />
+              <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />
               <Route path="curriculum" element={<Curriculum />} />
               <Route path="resourcehub" element={<ResourceHub />} />

@@ -138,7 +138,7 @@ const NavBar = ({ showLogo = true }: navBarProps) => {
         </div>
       </div>
       {/* login modal */}
-      <LoginModal {...{ handleOpenModel, handleCloseModal, showLoginModal }} />
+      {/* <LoginModal {...{ handleOpenModel, handleCloseModal, showLoginModal }} /> */}
     </>
   );
 };

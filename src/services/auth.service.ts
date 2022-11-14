@@ -21,7 +21,7 @@ const login = async ({
     formData.append("password", password);
     let res;
 
-    // django amin login
+    // django admin login
     if (type === "superadmin") {
       formData.append("type", "4");
       res = await customAxios.post("/accounts/login/", formData);
@@ -53,12 +53,12 @@ const getOTP = async ({
   usertype,
 }: {
   phone: string;
-  usertype: string;
+  usertype: "patient" | "admin" | "supertype" | "doctor";
 }) => {
   try {
     const formData = new FormData();
     formData.append("mobile", phone);
-    formData.append("type", "2");
+    formData.append("type", "2"); //type 2 means its patient type user
     const res = await customAxios.post("/accounts/auth/", formData);
     if (res.data.error) {
       return Promise.reject(getErrorMessageWithCode(401));
@@ -86,7 +86,7 @@ const verifyOTP = async (data: VerifyOTP) => {
     formData.append("type", "3");
     const res = await customAxios.post(`/accounts/auth/`, formData);
     if (res.data.error) {
-      return Promise.reject(getErrorMessageWithCode(401));
+      return Promise.resolve(res.data.error);
     }
     return Promise.resolve(res.data);
   } catch (error) {
