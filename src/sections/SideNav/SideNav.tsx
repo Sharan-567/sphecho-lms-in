@@ -17,7 +17,6 @@ import {
 } from "react-icons/ai";
 import TopNav from "./TopNav";
 import { number } from "yup/lib/locale";
-import Menu from "./Menu";
 
 interface MenuList {
   id: number;
@@ -31,12 +30,19 @@ interface MenuList {
   }[];
 }
 
+const ButtonMotion = {
+  rest: { scale: 1 },
+  hover: { scale: 1.05 },
+  pressed: { scale: 0.98 },
+};
+
 const SideNav = () => {
-  const currentTab = useMotionValue<number>(0);
-  const [currentSelectedTab, setCurrentSelectedTab] = useState<number>(0);
+  const [currentSelectedTab, setCurrentSelectedTab] = useState<number>(1);
   const [closeNav, setCloseNav] = useState(false);
-  const parentRef = useRef<HTMLDivElement>();
-  const childListRef = useRef([]);
+  const childListRef = useRef<Array<HTMLDivElement | null>>([]);
+  const parentRef = useRef<HTMLDivElement>(null);
+  const subNavRef = useRef<HTMLDivElement>(null);
+  const [currentActiveSubNavList, setCurrentActiveSubList] = useState<number>();
   const navigate = useNavigate();
 
   const menuList: MenuList[] = [
@@ -78,12 +84,25 @@ const SideNav = () => {
     },
   ];
 
+  const getSubNavList = () => {
+    return menuList.filter((nav) => nav.subNavItems);
+  };
+
   const getYpostion = () => {
-    parentRef.current?.getBoundingClientRect();
+    let parentTop = parentRef.current?.getBoundingClientRect().top;
+    let childTop =
+      childListRef.current[currentSelectedTab]?.getBoundingClientRect().top;
+    if (parentTop && childTop) {
+      return childTop - parentTop - 19.5;
+    }
+    return 0;
   };
 
   const handleTab = (route?: string, tabNo?: number) => {
-    if (tabNo) setCurrentSelectedTab(tabNo);
+    if (tabNo) {
+      setCurrentSelectedTab(tabNo);
+      setCurrentActiveSubList(tabNo);
+    }
     if (route) navigate(route);
   };
 
@@ -128,9 +147,10 @@ const SideNav = () => {
           </div>
         </div>
         <div
+          ref={parentRef}
           style={
             {
-              //  outline: "1px solid yellow"
+              // outline: "1px solid yellow",
             }
           }
         >
@@ -154,12 +174,77 @@ const SideNav = () => {
               </defs>
             </svg>
           </div>
-
+          {/* 
           <motion.div
             className="tab bg-white"
             animate={{ transform: `translateY(${getYpostion()}px)` }}
-          ></motion.div>
-          <Menu {...{ menuList, currentSelectedTab, handleTab, closeNav }} />
+          ></motion.div> */}
+
+          {(menuList || []).map((link) => {
+            return (
+              <div key={link.id}>
+                <motion.div
+                  ref={(el) => (childListRef.current[link.id] = el)}
+                  onClick={() => handleTab(link.to, link.id)}
+                  className={`${
+                    currentSelectedTab == link.id
+                      ? "text-blue bg-white"
+                      : "text-white"
+                  } b-700 px-4 p-3 my-3`}
+                  animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
+                  variants={ButtonMotion}
+                  initial="rest"
+                  whileHover="hover"
+                  whileTap="pressed"
+                  style={{
+                    fontSize: "1.1rem",
+                    // outline: "1px solid red",
+                    cursor: "pointer",
+                    width: "14rem",
+                    borderRadius: "2rem 0rem 0rem 2rem",
+                  }}
+                >
+                  <link.Icon size={"1.5rem"} className="me-3" />
+                  {link.title}
+                </motion.div>
+                {link.subNavItems && currentSelectedTab === link.id ? (
+                  <motion.div
+                    ref={subNavRef}
+                    className="br-2 p-2"
+                    initial={{ scale: 0.6 }}
+                    animate={{ scale: 1 }}
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.328)",
+                      width: "13rem",
+                    }}
+                  >
+                    {(link.subNavItems || []).map((subLink) => {
+                      return (
+                        <motion.div
+                          className="p-2 ps-4 text-white br-1 mb-2"
+                          onClick={() => handleTab(subLink.to)}
+                          variants={ButtonMotion}
+                          initial="rest"
+                          whileHover="hover"
+                          whileTap="pressed"
+                          animate={{ scale: 1 }}
+                          style={{
+                            fontSize: "1.1rem",
+                            // outline: "1px solid red",
+                            cursor: "pointer",
+                            width: "13rem",
+                          }}
+                        >
+                          <link.Icon size={"1.5rem"} className="me-3" />
+                          {subLink.title}
+                        </motion.div>
+                      );
+                    })}
+                  </motion.div>
+                ) : null}
+              </div>
+            );
+          })}
         </div>
       </motion.div>
     </div>
