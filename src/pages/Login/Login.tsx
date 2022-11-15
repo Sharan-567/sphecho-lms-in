@@ -115,7 +115,9 @@ const Login = () => {
                 {loginType === "Patient" ? (
                   <PatientLogin {...{ setLoginType }} />
                 ) : null}
-                {loginType === "Provider" ? <ProviderLogin /> : null}
+                {loginType === "Provider" ? (
+                  <ProviderLogin {...{ setLoginType }} />
+                ) : null}
               </div>
             )}
           </div>

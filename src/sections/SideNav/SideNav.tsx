@@ -4,7 +4,6 @@ import "./SideNav.scss";
 import { Row, Col } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
-import Bg1 from "../../assets/bg-1.jpg";
 
 import {
   AiOutlineUser,
@@ -13,38 +12,66 @@ import {
   AiOutlineFire,
   AiOutlineTool,
   AiOutlineLogout,
+  AiOutlineAccountBook,
+  AiOutlineCalculator,
 } from "react-icons/ai";
 import TopNav from "./TopNav";
+import { number } from "yup/lib/locale";
+import Menu from "./Menu";
 
 interface MenuList {
+  id: number;
   Icon: IconType;
   title: string;
-  to: string;
+  to?: string;
+  subNavItems?: {
+    Icon: IconType;
+    title: string;
+    to: string;
+  }[];
 }
 
 const SideNav = () => {
   const currentTab = useMotionValue<number>(0);
+  const [currentSelectedTab, setCurrentSelectedTab] = useState<number>(0);
   const [closeNav, setCloseNav] = useState(false);
+  const parentRef = useRef<HTMLDivElement>();
+  const childListRef = useRef([]);
   const navigate = useNavigate();
 
   const menuList: MenuList[] = [
     {
+      id: 1,
       Icon: AiOutlineUser,
       title: "My Profile",
       to: "/",
     },
     {
+      id: 2,
       Icon: AiOutlineFire,
-      title: "Courses",
-      to: "/courses",
+      title: "Curriculum",
+      subNavItems: [
+        {
+          title: "Courses",
+          Icon: AiOutlineAccountBook,
+          to: "/courses",
+        },
+        {
+          title: "Exam",
+          Icon: AiOutlineCalculator,
+          to: "/exam",
+        },
+      ],
     },
     {
+      id: 3,
       Icon: AiOutlineNotification,
       title: "Webinars",
       to: "/webinars",
     },
 
     {
+      id: 4,
       Icon: AiOutlineComment,
       title: "Community",
       to: "/Forum",
@@ -52,12 +79,12 @@ const SideNav = () => {
   ];
 
   const getYpostion = () => {
-    return currentTab.get() * 61;
+    parentRef.current?.getBoundingClientRect();
   };
 
-  const handleTab = (route: string, tabNo: number) => {
-    currentTab.set(tabNo);
-    navigate(route);
+  const handleTab = (route?: string, tabNo?: number) => {
+    if (tabNo) setCurrentSelectedTab(tabNo);
+    if (route) navigate(route);
   };
 
   return (
@@ -132,29 +159,7 @@ const SideNav = () => {
             className="tab bg-white"
             animate={{ transform: `translateY(${getYpostion()}px)` }}
           ></motion.div>
-
-          {menuList.map((link, id) => {
-            return (
-              <div key={id}>
-                <motion.div
-                  onClick={() => handleTab(link.to, id)}
-                  className={`${
-                    currentTab.get() == id ? "text-blue" : "text-white"
-                  } b-700 px-4 p-3 my-3`}
-                  animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
-                  style={{
-                    fontSize: "1.1rem",
-                    // outline: "1px solid red",
-                    cursor: "pointer",
-                    width: "14rem",
-                  }}
-                >
-                  <link.Icon size={"1.5rem"} className="me-3" />
-                  {link.title}
-                </motion.div>
-              </div>
-            );
-          })}
+          <Menu {...{ menuList, currentSelectedTab, handleTab, closeNav }} />
         </div>
       </motion.div>
     </div>
