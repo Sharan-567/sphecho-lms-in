@@ -10,14 +10,16 @@ import {  BASE_URL } from '../../features/settings'
 // type 2
 //user_id,  email, firstname, course: id,  user_type : 1-pa, 2-staff
 
+// type 3
+//user_id,  email, firstname, course: id,  user_type : 1-pa, 2-staff
 
 
 const AddUserToCourse = ({setState, currentSelectedUser, setError, currentSelectedUserRole}) => {
     const [data, setData] = useState({
         firstname: currentSelectedUserRole === '1' ? currentSelectedUser.firstname : currentSelectedUser.Name,
         email: currentSelectedUser.Email,
-        role: currentSelectedUserRole,
         user_type: currentSelectedUserRole,
+        course: "40"
     })
     
     console.log(currentSelectedUser)
@@ -32,10 +34,11 @@ const AddUserToCourse = ({setState, currentSelectedUser, setError, currentSelect
             const formData = new FormData()
             formData.append("user_id", currentSelectedUser._id)
             formData.append("email", data.email)
-            formData.append("role", data.role)
             formData.append("user_type", data.user_type)
-            formData.append("type", "1")
-            axios.post(`${BASE_URL}/master/user-course-update/`, formData, {headers},)
+            formData.append("type", "2")
+            formData.append("firstname", data.firstname)
+            formData.append("course", data.course)
+            axios.post(`${BASE_URL}/master/user-course-update/`, formData, {headers})
                 .then(res => {
                 console.log(res)
                 }).catch(err => {
@@ -59,9 +62,9 @@ const AddUserToCourse = ({setState, currentSelectedUser, setError, currentSelect
         <h1>update User {currentSelectedUser.name}</h1>
         <input placeholder='firstname' name="firstname" value={data.firstname} onChange={inputChangeHandler}></input>
         <input placeholder='email' name="email" value={data.email} onChange={inputChangeHandler}></input>
-        <input placeholder='role' name="role" value={data.role} onChange={inputChangeHandler}></input>
         <input placeholder='users Type' name="user_type" value={data.user_type} onChange={inputChangeHandler}></input>
-        <Button onClick={AddUserToCourseHandler}>Update User</Button>
+        <input placeholder='Course' name="course" value={data.course} onChange={inputChangeHandler}></input>
+        <Button onClick={AddUserToCourseHandler}>Add User to Course</Button>
     </div>
 }
 
