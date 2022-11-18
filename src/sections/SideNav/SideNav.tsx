@@ -10,9 +10,8 @@ import {
   AiOutlineNotification,
   AiOutlineComment,
   AiOutlineFire,
-  AiOutlineTool,
-  AiOutlineLogout,
   AiOutlineAccountBook,
+  AiOutlineFileProtect,
   AiOutlineCalculator,
 } from "react-icons/ai";
 import TopNav from "./TopNav";
@@ -59,13 +58,13 @@ const SideNav = () => {
       subNavItems: [
         {
           title: "Courses",
-          Icon: AiOutlineAccountBook,
+          Icon: AiOutlineCalculator,
           to: "/courses",
         },
         {
-          title: "Exam",
-          Icon: AiOutlineCalculator,
-          to: "/exam",
+          title: "Certification",
+          Icon: AiOutlineFileProtect,
+          to: "/certification",
         },
       ],
     },
@@ -235,7 +234,7 @@ const SideNav = () => {
                             width: "13rem",
                           }}
                         >
-                          <link.Icon size={"1.5rem"} className="me-3" />
+                          <subLink.Icon size={"1.5rem"} className="me-3" />
                           {subLink.title}
                         </motion.div>
                       );

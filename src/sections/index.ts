@@ -6,6 +6,7 @@ import Assessment from "./Assessment";
 import CourseDetail from "./CourseDetail";
 import Cart from "./Cart";
 import Webinars from "./Webinars";
+import Certification from "./Certfication";
 
 export {
   Course,
@@ -16,4 +17,5 @@ export {
   CourseDetail,
   Cart,
   Webinars,
+  Certification
 };

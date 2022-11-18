@@ -18,6 +18,7 @@ import {
   QuestionMangement,
   BadgeMangement,
   CertificationMangement,
+  UserMangement
 } from "./adminSections";
 import {
   Course,
@@ -26,6 +27,7 @@ import {
   CourseDetail,
   Cart,
   Webinars,
+  Certification,
 } from "./sections";
 
 function App() {
@@ -51,10 +53,12 @@ function App() {
                 <Route path=":courseId" element={<TopicsList />} />
                 <Route path="detail/:id" element={<CourseDetail />} />
               </Route>
+              <Route path="certification" element={<Certification />} />
               <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
               <Route path="admin">
                 <Route index element={<AdminMain />} />
+                <Route path="userMangement" element={<UserMangement />} />
                 <Route path="coursesMangement" element={<CousreMangement />} />
                 <Route path="topicsMangement" element={<TopicMangment />} />
                 <Route

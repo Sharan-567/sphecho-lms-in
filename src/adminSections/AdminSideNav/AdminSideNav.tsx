@@ -31,6 +31,11 @@ const AdminSideNav = () => {
       to: "/admin",
     },
     {
+      Icon: AiOutlineUser,
+      title: "Users",
+      to: "/admin/userMangement",
+    },
+    {
       Icon: AiOutlineFire,
       title: "Courses",
       to: "/admin/coursesMangement",

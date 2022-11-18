@@ -5,7 +5,7 @@ import AssessmentMangement from "./AssessmentMangment";
 import QuestionMangement from "./QuestionMangment/QuestionMangment";
 import BadgeMangement from "./BadgeMangement/BadgeMangement";
 import CertificationMangement from "./CertificationsMangement";
-
+import UserMangement from "./UserMangement/UserMangement";
 export {
   CousreMangement,
   AdminMain,
@@ -14,4 +14,6 @@ export {
   QuestionMangement,
   BadgeMangement,
   CertificationMangement,
+  UserMangement
 };
+
