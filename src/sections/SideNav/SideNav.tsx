@@ -75,12 +75,12 @@ const SideNav = () => {
       to: "/webinars",
     },
 
-    {
-      id: 4,
-      Icon: AiOutlineComment,
-      title: "Community",
-      to: "/Forum",
-    },
+    // {
+    //   id: 4,
+    //   Icon: AiOutlineComment,
+    //   title: "Community",
+    //   to: "/Forum",
+    // },
   ];
 
   const getSubNavList = () => {

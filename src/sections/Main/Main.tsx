@@ -67,7 +67,11 @@ const Main = () => {
                 {items.length}
               </Badge>
             </Link>
-            <Button onClick={logoutHandler}>
+            <Button
+              className="bg-white"
+              style={{ border: "none" }}
+              onClick={logoutHandler}
+            >
               <AiOutlineLogout size={"1.8rem"} />
             </Button>
             {isAdmin() && (
@@ -83,13 +87,13 @@ const Main = () => {
         </Col>
       </Row>
       <Row className="p-5 py-3">
-        <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
+        {/* <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
         <p
           style={{ fontWeight: "500", lineHeight: ".8rem" }}
           className="small text-blue"
         >
           You have tauth 6 hours yesterday
-        </p>
+        </p> */}
         <Col sm={4} className="p-3">
           <div className="p-3 bg-graydark br-2 h-100 ">
             {/* <h5 className="b-700 mb-4">Rating</h5> */}

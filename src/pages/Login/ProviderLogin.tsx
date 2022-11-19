@@ -43,7 +43,7 @@ const ProviderLogin = ({ setLoginType }: Props) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         className="py-3 text-center b-600 br-2 mb-3"
-        placeholder="Mobile Number"
+        placeholder="Password"
         style={{
           fontSize: "1.2rem",
           border: "1px solid #81a31b",
