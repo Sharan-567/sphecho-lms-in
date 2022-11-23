@@ -1,107 +1,55 @@
-$homePrimary: #ffb605;
+$gray: #f1f0ee;
+$primary: #67b045;
 
-.vector-img {
-  width: 43%;
+// * {
+//   outline: 1px solid red;
+// }
+
+.coursel-img {
+  height: 120vh;
+  width: 100%;
+  object-fit: cover;
+}
+
+.banner-container {
+  position: relative;
+  overflow: hidden;
+  clip-path: path(
+    "M422.5 736.173C203.3 765.978 55.1667 648.085 1 578.914V1H1443V760C1357 710.324 1254.5 637.5 1082.5 637.5C974.466 637.5 696.5 698.916 422.5 736.173Z"
+  );
+}
+
+.banner-container::after {
+  content: "";
   position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
-  left: -10%;
-  z-index: 3;
+  background-image: linear-gradient(
+    to bottom right,
+    #67b045 20%,
+    rgba(255, 255, 255, 0.632) 70%
+  );
 }
 
-.c-logo {
-  top: 0%;
-  left: 2%;
-  width: 40%;
-  z-index: 0;
-  opacity: 0.5;
-}
+// title content
 
-.s-logo {
-  top: 45%;
-  left: 10%;
-  width: 15%;
-  z-index: 0;
-}
-
-.c-bg {
-  bottom: -30%;
-  left: 12%;
-  width: 65%;
-}
-
-// event section
-.event {
-  margin-top: 10rem;
-  .e-big-nb {
-    font-size: 2.6rem;
-    line-height: 2rem;
-    margin-top: 0.5em;
-    font-weight: bold;
-    color: $homePrimary;
-  }
-  .e-img-left {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .e-img-tag {
-    width: 100%;
-    height: 19.9rem;
-    object-fit: cover;
-    object-position: right;
-  }
-  .e-inner-text {
-    position: absolute;
-    top: 6%;
-    right: 1%;
-    color: white;
-    width: 60%;
+.title-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  p {
+    display: block;
+    width: 70%;
+    font-size: 1.2rem;
+    text-align: center;
   }
 }
 
-.e-btn {
-  border: 1px solid black;
-}
-
-// registration
-.registration {
-  color: white;
-  margin-top: 10rem;
-  .bg {
-    width: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    .title {
-      color: white;
-      text-align: center;
-      margin-top: 7rem;
-    }
-    input {
-      border-radius: 0;
-    }
-    .mybtn {
-      background-color: $homePrimary;
-      width: 100%;
-      color: black;
-      border-radius: 0;
-    }
-  }
-}
-
-// testmonial
-
-.testmonial {
-  margin-top: 5rem;
-  text-align: center;
-
-  .t-img {
-    width: 3rem;
-    height: 3rem;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    margin: 0 0.5em;
-  }
+// Benfits of certification
+.benefits-title {
+  font-weight: 800;
+  color: $primary;
 }
