@@ -173,11 +173,7 @@ const SideNav = () => {
               </defs>
             </svg>
           </div>
-          {/* 
-          <motion.div
-            className="tab bg-white"
-            animate={{ transform: `translateY(${getYpostion()}px)` }}
-          ></motion.div> */}
+ 
 
           {(menuList || []).map((link) => {
             return (
@@ -187,7 +183,7 @@ const SideNav = () => {
                   onClick={() => handleTab(link.to, link.id)}
                   className={`${
                     currentSelectedTab == link.id
-                      ? "text-blue bg-white"
+                      ? "text-blue"
                       : "text-white"
                   } b-700 px-4 p-3 my-3`}
                   animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
@@ -197,14 +193,23 @@ const SideNav = () => {
                   whileTap="pressed"
                   style={{
                     fontSize: "1.1rem",
+                    position: "relative",
                     // outline: "1px solid red",
                     cursor: "pointer",
                     width: "14rem",
-                    borderRadius: "2rem 0rem 0rem 2rem",
+                    // borderRadius: "2rem 0rem 0rem 2rem",
                   }}
                 >
                   <link.Icon size={"1.5rem"} className="me-3" />
                   {link.title}
+                  {currentSelectedTab === link.id ?
+                    <motion.div
+                    className="tab bg-white"
+                    layoutId="back"
+                    style={{position: "absolute" , top: -18, width: "100%"}}
+                    transition={{type: "spring", duration: .5, stiffness: 500, damping: 32}}
+                  ></motion.div>
+                  : null}
                 </motion.div>
                 {link.subNavItems && currentSelectedTab === link.id ? (
                   <motion.div

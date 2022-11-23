@@ -1,38 +1,30 @@
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import {
-  AiOutlineTool,
+    AiOutlineUser,
+    AiOutlineNotification,
+    AiOutlineComment,
+    AiOutlineFire,
+    AiOutlineTool,
+    AiOutlineHome,
+    AiOutlinePercentage,
+    AiOutlineSafety,
   AiOutlineLogout,
   AiOutlineAccountBook,
-  AiOutlineUser,
   AiOutlineShopping,
-  AiOutlineComment,
-  AiOutlineFire,
   AiOutlineFileProtect,
   AiOutlineCalculator,
 } from "react-icons/ai";
+
 import {logout} from '../../features/auth'
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../store";
 
-const TopNav = () => {
+const AdminTopNav = () => {
 
 const dispatch = useAppDispatch();
 const logoutHandler = () => {
   dispatch(logout());
-};
-
-const isAdmin = () => {
-  const userType = localStorage.getItem("userType");
-  const typeId = localStorage.getItem("typeId");
-  if (userType && typeId) {
-    if (userType === "doctor" || typeId === "2") {
-      return true;
-    } else if (userType === "superadmin" || typeId === "4") {
-      return true;
-    }
-  }
-  return false;
 };
 
   return (
@@ -49,42 +41,54 @@ const isAdmin = () => {
         />
         <Navbar.Collapse id="basic-navbar-nav text-white">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
+            <Nav.Link as={Link} to="/admin">
               <div className="d-flex py-2">
-                <AiOutlineFire color="white" size={22} />
-                <h5 className="ms-2 text-white">Home</h5>
+                <AiOutlineHome color="white" size={22} />
+                <h5 className="ms-2 text-white">Dashboard</h5>
               </div>
             </Nav.Link>
-            <Nav.Link as={Link} to="courses">
+            <Nav.Link as={Link} to="/admin/userMangement">
               <div className="d-flex py-2">
-                <AiOutlineFileProtect color="white" size={22} />
+                <AiOutlineUser color="white" size={22} />
+                <h5 className="ms-2 text-white">Users</h5>
+              </div>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/admin/coursesMangement">
+              <div className="d-flex py-2">
+                <AiOutlineFire color="white" size={22} />
                 <h5 className="ms-2 text-white">Courses</h5>
               </div>
             </Nav.Link>
-            <Nav.Link as={Link} to="certification">
+            <Nav.Link as={Link} to="/admin/topicsMangement">
               <div className="d-flex py-2">
-                <AiOutlineAccountBook color="white" size={22} />
-                <h5 className="ms-2 text-white">certification</h5>
+                <AiOutlineNotification color="white" size={22} />
+                <h5 className="ms-2 text-white">Topics</h5>
               </div>
             </Nav.Link>
-            <Nav.Link as={Link} to="webinars">
+            <Nav.Link as={Link} to="/admin/assessmentMangement">
               <div className="d-flex py-2">
-                <AiOutlineComment color="white" size={22} />
-                <h5 className="ms-2 text-white">Webinars</h5>
+                <AiOutlinePercentage color="white" size={22} />
+                <h5 className="ms-2 text-white">Assessment</h5>
               </div>
             </Nav.Link>
-            <Nav.Link as={Link} to="cart">
-              <div className="d-flex py-2">
-                <AiOutlineShopping color="white" size={22} />
-                <h5 className="ms-2 text-white">Cart</h5>
-              </div>
-            </Nav.Link>
-            {isAdmin() ? <Nav.Link as={Link} to="admin">
+            <Nav.Link as={Link} to="/admin/questionMangement">
               <div className="d-flex py-2">
                 <AiOutlineTool color="white" size={22} />
-                <h5 className="ms-2 text-white">Go to Admin</h5>
+                <h5 className="ms-2 text-white">Questions</h5>
               </div>
-            </Nav.Link>: null}
+            </Nav.Link>
+            <Nav.Link as={Link} to="/admin/badgeMangement">
+              <div className="d-flex py-2">
+                <AiOutlineSafety color="white" size={22} />
+                <h5 className="ms-2 text-white">Badges</h5>
+              </div>
+            </Nav.Link>
+            <Nav.Link as={Link} to="/admin/certificationMangement">
+              <div className="d-flex py-2">
+                <AiOutlineComment color="white" size={22} />
+                <h5 className="ms-2 text-white">Certification</h5>
+              </div>
+            </Nav.Link>
             <Nav.Link onClick={logoutHandler}>
               <div className="d-flex py-2">
                 <AiOutlineLogout color="white" size={22} />
@@ -98,4 +102,4 @@ const isAdmin = () => {
   );
 };
 
-export default TopNav;
+export default AdminTopNav;

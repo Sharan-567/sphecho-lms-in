@@ -10,7 +10,9 @@ import {
   AiOutlineComment,
   AiOutlineFire,
   AiOutlineTool,
-  AiOutlineLogout,
+  AiOutlineHome,
+  AiOutlinePercentage,
+  AiOutlineSafety
 } from "react-icons/ai";
 
 interface MenuList {
@@ -26,7 +28,7 @@ const AdminSideNav = () => {
 
   const menuList: MenuList[] = [
     {
-      Icon: AiOutlineUser,
+      Icon: AiOutlineHome,
       title: "Dashboard",
       to: "/admin",
     },
@@ -46,17 +48,17 @@ const AdminSideNav = () => {
       to: "/admin/topicsMangement",
     },
     {
-      Icon: AiOutlineTool,
+      Icon: AiOutlinePercentage,
       title: "Assessment",
       to: "/admin/assessmentMangement",
     },
     {
-      Icon: AiOutlineComment,
+      Icon: AiOutlineTool,
       title: "Questions",
       to: "/admin/questionMangement",
     },
     {
-      Icon: AiOutlineComment,
+      Icon: AiOutlineSafety,
       title: "Badges",
       to: "/admin/badgeMangement",
     },
@@ -152,10 +154,6 @@ const AdminSideNav = () => {
             </svg>
           </div>
 
-          <motion.div
-            className="tab bg-white"
-            animate={{ transform: `translateY(${getYpostion()}px)` }}
-          ></motion.div>
 
           {menuList.map((link, id) => {
             return (
@@ -171,10 +169,18 @@ const AdminSideNav = () => {
                     // outline: "1px solid red",
                     cursor: "pointer",
                     width: "14rem",
+                    position: "relative"
                   }}
                 >
                   <link.Icon size={"1.5rem"} className="me-3" />
                   {link.title}
+                  {currentTab.get() === id ? 
+          <motion.div
+            className="tab bg-white"
+            layoutId="back"
+            style={{position: "absolute" , top: -18, width: "100%"}}
+            transition={{type: "spring", duration: .5, stiffness: 500, damping: 32}}
+          ></motion.div> : null}
                 </motion.div>
               </div>
             );

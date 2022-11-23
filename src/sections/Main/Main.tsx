@@ -53,11 +53,11 @@ const Main = () => {
           sm={4}
           className="d-flex px-4 align-items-center justify-content-between w-100"
         >
-          <div></div>
+          <div className="none"></div>
           <Search />
-          <div>
+          <div className="none">
             <Link to="/cart">
-              <AiOutlineShopping size={"2rem"} />
+              <AiOutlineShopping width={"2rem"} size={"2rem"} />
               <Badge
                 bg="danger"
                 text="white"
@@ -76,8 +76,8 @@ const Main = () => {
             </Button>
             {isAdmin() && (
               <Button
-                className="bg-green text-white"
-                style={{ borderRadius: "2rem" }}
+                className="bg-green text-white go-to-btn"
+                style={{ borderRadius: "2rem", width: "8rem" }}
                 onClick={() => navigate("/admin")}
               >
                 Go to Admin
