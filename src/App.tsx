@@ -3,11 +3,12 @@ import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAppSelector } from "./store";
 import Home from "./pages/Home";
+import Shop from "./pages/Shop";
 import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
-import Login from './pages/Login/Login'
+import Login from "./pages/Login/Login";
 
 // adminSection
 import {
@@ -18,7 +19,7 @@ import {
   QuestionMangement,
   BadgeMangement,
   CertificationMangement,
-  UserMangement
+  UserMangement,
 } from "./adminSections";
 import {
   Course,
@@ -40,6 +41,7 @@ function App() {
           {!isLoggedIn ? (
             <Route path="/">
               <Route index element={<Home />} />
+              <Route path="shop" element={<Shop />} />
               <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />
               <Route path="curriculum" element={<Curriculum />} />

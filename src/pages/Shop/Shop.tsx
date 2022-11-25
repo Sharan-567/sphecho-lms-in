@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Row, Col, Container, Button } from "react-bootstrap";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import Carousel from "react-bootstrap/Carousel";
 import Accordion from "react-bootstrap/Accordion";
 import Nav from "react-bootstrap/Nav";
@@ -10,10 +11,14 @@ import career from "../../assets/career.png";
 import discover from "../../assets/discover.png";
 import enhance from "../../assets/enhance.png";
 import improve from "../../assets/improve.png";
-import noImage from "../../assets/no-img.png";
-import logo from "../../assets/sphechoLogo.png";
-import colorLogo from "../../assets/colorlogo.png";
 
+import noImage from "../../assets/no-img.png";
+import logo from "../../assets/shop/sphechoLogo.png";
+import colorLogo from "../../assets/shop/colorlogo.png";
+import hearing from "../../assets/shop/hearing.png";
+import play from "../../assets/shop/play.png";
+import kit from "../../assets/shop/kit.png";
+import therepy from "../../assets/shop/therapy.png";
 import apple from "../../assets/apple.png";
 import fb from "../../assets/fb.png";
 import ig from "../../assets/ig.png";
@@ -21,18 +26,19 @@ import ins from "../../assets/in.png";
 import playstore from "../../assets/playstore.png";
 import tw from "../../assets/tw.png";
 import yt from "../../assets/yt.png";
-import "./home.scss";
+import "./shop.scss";
+import { threadId } from "worker_threads";
 
 // const Home = () => {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
 // }
 
-const Home = () => {
+const Shop = () => {
   return (
     <div style={{ position: "relative" }}>
       <NavBar />
       <Banner />
-      <TitleContainer />
+      <Store />
       <BenfitsOfCertification />
       <Board />
       <Committe />
@@ -63,27 +69,29 @@ const NavBar = () => {
         <Navbar.Brand as={Link} to="/">
           <img src={logo} width="170rem" />
         </Navbar.Brand>
+        <div>
+          <input type="search" className="search px-2" placeholder="Search" />
+        </div>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
+          <Nav className="nav-links ms-auto">
             <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              BLACKBOARD
+              STORE
             </Nav.Link>
             <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              WEBINARS
-            </Nav.Link>
-            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              FEATURES
+              RESOURCE HUB
             </Nav.Link>
             <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
               SUPPORT
             </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="login"
-              className="text-white b-700 link-nav"
-            >
+            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
+              REGISTER
+            </Nav.Link>
+            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
               LOGIN
+            </Nav.Link>
+            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
+              <AiOutlineShoppingCart size="1.7rem" />
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
@@ -113,32 +121,96 @@ const Banner = () => {
           </Carousel.Item>
         </Carousel>
         <h1 className="banner-title">
-          <h1>LEARN CONTINUALLY- THERE’S ALWAYS </h1>
+          YOU CAN ALWAYS
           <i>
-            <b style={{ fontSize: "3rem" }}>“ONE MORE THING”</b>
+            <b style={{ fontSize: "3rem" }}> FIND</b>
           </i>{" "}
-          TO LEARN.
+          <h1>
+            SOMETHING YOU{" "}
+            <i>
+              <b style={{ fontSize: "3rem" }}>Want</b>
+            </i>{" "}
+          </h1>
         </h1>
       </div>
     </div>
   );
 };
 
-const TitleContainer = () => {
+const Store = () => {
+  const store = [
+    { id: 1, name: "THERAPY MATERIALS", img: therepy },
+    {
+      id: 2,
+      name: `PLAY & DEVELOPMENT`,
+      img: play,
+    },
+    {
+      id: 3,
+      name: `HEARING AIDS & ACCESSSORIES`,
+      img: hearing,
+    },
+    {
+      id: 4,
+      name: `STARTER KIT`,
+      img: kit,
+    },
+  ];
+
   return (
-    <div className="title-content">
-      <p>
-        The SPHECHO curriculum and cerification program is for professionals who
-        are responsible for the support and/or services provided to people of
-        determination. The program's objective is to offer a comprehensive,
-        multidisciplinary training program and specialized credential to
-        professionals in order to supplement their existing knowledge, make sure
-        they are up to date on best practices and research, and ensure they
-        incorporate new knowledge into professional practice.
-      </p>
+    <div className="container my-4">
+      <h2 className="benefits-title bg-600 text-center mb-4">STORE</h2>
+      <div className="m-auto w-75">
+        <Row>
+          {store.map((item) => (
+            <Col sm="3" key={item.id}>
+              <img src={item.img} className="store-img" />
+              <p className="b-600 text-center mt-3">{item.name}</p>
+            </Col>
+          ))}
+        </Row>
+      </div>
     </div>
   );
 };
+
+const Resource = () => {
+  const store = [
+    { id: 1, name: "THERAPY MATERIALS", img: therepy },
+    {
+      id: 2,
+      name: `PLAY & DEVELOPMENT`,
+      img: play,
+    },
+    {
+      id: 3,
+      name: `HEARING AIDS & ACCESSSORIES`,
+      img: hearing,
+    },
+    {
+      id: 4,
+      name: `STARTER KIT`,
+      img: kit,
+    },
+  ];
+
+  return (
+    <div className="container my-4">
+      <h2 className="benefits-title bg-600 text-center mb-4">STORE</h2>
+      <div className="m-auto w-75">
+        <Row>
+          {store.map((item) => (
+            <Col sm="3" key={item.id}>
+              <img src={item.img} className="store-img" />
+              <p className="b-600 text-center mt-3">{item.name}</p>
+            </Col>
+          ))}
+        </Row>
+      </div>
+    </div>
+  );
+};
+
 
 const BenfitsOfCertification = () => {
   const benifits = [
@@ -684,4 +756,4 @@ const Footer = () => {
   );
 };
 
-export default Home;
+export default Shop;
