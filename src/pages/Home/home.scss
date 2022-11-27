@@ -8,8 +8,8 @@ $primary: #67b045;
 .banner-title {
   position: absolute;
   z-index: 80;
-  top: 43%;
-  width: 60%;
+  top: 40%;
+  width: 100%;
   padding: 0rem 4rem;
   color: white;
 }
@@ -30,7 +30,7 @@ $primary: #67b045;
 }
 
 .coursel-img {
-  height: 120vh;
+  height: 140vh;
   width: 100%;
   object-fit: cover;
 }
@@ -38,9 +38,13 @@ $primary: #67b045;
 .banner-container {
   position: relative;
   overflow: hidden;
-  clip-path: path(
-    "M422.5 736.173C203.3 765.978 55.1667 648.085 1 578.914V1H1443V760C1357 710.324 1254.5 637.5 1082.5 637.5C974.466 637.5 696.5 698.916 422.5 736.173Z"
-  );
+  width: 100%;
+  clip-path: url(#clipPath);
+}
+
+#svgPath {
+  height: 0;
+  width: 0;
 }
 
 .banner-container::after {
