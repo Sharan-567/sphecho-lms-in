@@ -4,7 +4,7 @@ import "./SideNav.scss";
 import { Row, Col } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
-
+import whiteLogo from "../../assets/white-logo.png";
 import {
   AiOutlineUser,
   AiOutlineNotification,
@@ -118,6 +118,7 @@ const SideNav = () => {
       <motion.div
         className="bg-primary"
         animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
+        transition={{ bounce: 0 }}
         style={{
           position: "sticky",
           top: "3rem",
@@ -132,6 +133,7 @@ const SideNav = () => {
               animate={
                 closeNav ? { width: "1.5rem", marginLeft: "-1.7rem" } : {}
               }
+              transition={{ damping: "1000", bounce: 0 }}
               onClick={() => setCloseNav((p) => !p)}
               style={{
                 outline: "none",
@@ -141,7 +143,10 @@ const SideNav = () => {
                 overflow: "hidden",
               }}
             >
-              <h1>Specho</h1>
+              <motion.img
+                src={whiteLogo}
+                animate={closeNav ? { width: "4.7rem" } : { width: "10rem" }}
+              />
             </motion.button>
           </div>
         </div>
@@ -173,7 +178,6 @@ const SideNav = () => {
               </defs>
             </svg>
           </div>
- 
 
           {(menuList || []).map((link) => {
             return (
@@ -182,9 +186,7 @@ const SideNav = () => {
                   ref={(el) => (childListRef.current[link.id] = el)}
                   onClick={() => handleTab(link.to, link.id)}
                   className={`${
-                    currentSelectedTab == link.id
-                      ? "text-blue"
-                      : "text-white"
+                    currentSelectedTab == link.id ? "text-blue" : "text-white"
                   } b-700 px-4 p-3 my-3`}
                   animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
                   variants={ButtonMotion}
@@ -202,14 +204,19 @@ const SideNav = () => {
                 >
                   <link.Icon size={"1.5rem"} className="me-3" />
                   {link.title}
-                  {currentSelectedTab === link.id ?
+                  {currentSelectedTab === link.id ? (
                     <motion.div
-                    className="tab bg-white"
-                    layoutId="back"
-                    style={{position: "absolute" , top: -18, width: "100%"}}
-                    transition={{type: "spring", duration: .5, stiffness: 500, damping: 32}}
-                  ></motion.div>
-                  : null}
+                      className="tab bg-white"
+                      layoutId="back"
+                      style={{ position: "absolute", top: -18, width: "100%" }}
+                      transition={{
+                        type: "spring",
+                        duration: 0.5,
+                        stiffness: 500,
+                        damping: 32,
+                      }}
+                    ></motion.div>
+                  ) : null}
                 </motion.div>
                 {link.subNavItems && currentSelectedTab === link.id ? (
                   <motion.div

@@ -29,7 +29,7 @@ const createSchema = Yup.object().shape({
   background_image: Yup.string()
     .required("background ima ge  is required")
     .nullable(),
-  on_complition: Yup.string().required("On complition is required"),
+  on_complition: Yup.string().required("On completion is required"),
   on_attend: Yup.string().required("On attend is required"),
   // text: Yup.string().required("Text is required"),
 });
@@ -419,7 +419,7 @@ const CertificationManagment = () => {
 
                     <Row className="mb-3">
                       <Form.Group as={Col}>
-                        <Form.Label>On Complition</Form.Label>
+                        <Form.Label>On Completion</Form.Label>
                         <Form.Select
                           required
                           name="on_complition"
@@ -457,7 +457,7 @@ const CertificationManagment = () => {
                         name="assesment"
                         onChange={creatFormik.handleChange}
                       >
-                        <option>select the assesment</option>
+                        <option>select the assessment</option>
                         {(assesments || []).map((c) => (
                           <option key={c.id} value={c.id}>
                             {c.name}
