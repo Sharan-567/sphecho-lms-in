@@ -534,6 +534,7 @@ const RequestForm = () => {
               </Col>
             </Row>
             <Button className="bg-white text-black">Sumbit</Button>
+            <p className="tiny text-white pt-2">This site is protected by SPHECHO privacy policy and its terms and conditions</p>
           </div>
         </div>
       </div>
@@ -564,6 +565,7 @@ const NewLetter = () => {
             </Col>
           </Row>
         </div>
+        <p className="text-center pt-2">By subscribing, you consent to us sharing updates with you.</p>
       </div>
     </div>
   );
