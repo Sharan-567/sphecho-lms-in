@@ -56,7 +56,7 @@ const NavBar = () => {
       className="nav-bar-container"
       style={{
         position: "absolute",
-        top: "1%",
+        top: "0%",
         left: 0,
         right: 0,
         zIndex: 100,
