@@ -13,6 +13,8 @@ import improve from "../../assets/improve.png";
 import noImage from "../../assets/no-img.png";
 import logo from "../../assets/sphechoLogo.png";
 import colorLogo from "../../assets/colorlogo.png";
+import lb1 from "../../assets/lb1.jpg";
+import lb2 from "../../assets/lb2.jpg";
 
 import apple from "../../assets/apple.png";
 import fb from "../../assets/fb.png";
@@ -21,6 +23,9 @@ import ins from "../../assets/in.png";
 import playstore from "../../assets/playstore.png";
 import tw from "../../assets/tw.png";
 import yt from "../../assets/yt.png";
+
+import wave from "../../assets/wave.png"
+
 import "./home.scss";
 
 // const Home = () => {
@@ -94,11 +99,12 @@ const NavBar = () => {
 
 const Banner = () => {
   return (
+    <div className="position-relative">
     <div
-      className="banner-container position: relative"
-      style={{ height: "130vh", width: "100wh" }}
+      className="banner-container"
+      style={{ height: "130vh", width: "100wh", position: "relative" }}
     >
-      <svg
+      {/* <svg
         id="svgPath"
         viewBox="0 0 1438 693"
         fill="none"
@@ -113,19 +119,22 @@ const Banner = () => {
             />
           </clipPath>
         </defs>
-      </svg>
+      </svg> */}
       <div className="clip-container position-relative">
         <Carousel>
           <Carousel.Item>
             <img
               className="d-block coursel-img"
-              src={landing}
+              src={lb1}
               alt="First slide"
             />
-            {/* <Carousel.Caption>
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-          </Carousel.Caption> */}
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block coursel-img"
+              src={lb2}
+              alt="First slide"
+            />
           </Carousel.Item>
         </Carousel>
         <div className="banner-title">
@@ -138,6 +147,8 @@ const Banner = () => {
           </h1>
         </div>
       </div>
+    </div>
+      <img className="wave" src={wave} style={{width: "100%", position:"absolute", bottom: "0"}} />
     </div>
   );
 };

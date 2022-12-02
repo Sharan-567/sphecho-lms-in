@@ -3,7 +3,6 @@ import "./App.scss";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useAppSelector } from "./store";
 import Home from "./pages/Home";
-import Shop from "./pages/Shop";
 import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
@@ -40,8 +39,7 @@ function App() {
         <Routes>
           {!isLoggedIn ? (
             <Route path="/">
-              <Route index element={<Home />} />
-              <Route path="shop" element={<Shop />} />
+              <Route index element={<Home />} />s
               <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />
               <Route path="curriculum" element={<Curriculum />} />
