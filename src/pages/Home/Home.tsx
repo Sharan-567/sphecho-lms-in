@@ -405,40 +405,45 @@ const FAQS = () => {
     {
       id: 1,
       header: "What is the SPHECHO Certification Program",
+      content: "The SPHECHO certification program is intended to assess the knowledge, talents, and skills needed to carry out a certain job, and, upon passing a certification exam, to serve as a testament to an individual's level of professional competence."
     },
     {
       id: 2,
       header: "Who verifies the SPHECHO credentials?",
+      content: "Our credentials are governed and approved by our professional board that frequently reviews all policies and procedures of SPHECHO. The board is composed of a variety of specialists and experts, including clinical experts, therapists, special education professionals etc."
     },
     {
       id: 3,
       header: "What is the value in becoming certified?",
+      content: `Recognition for voluntarily meeting standards beyond professional and regional licensing requirements
+      Enhancement of reputation and credibility`
     },
     {
       id: 4,
       header: "What job can I get with this certification?",
+      content: "SPHECHO does not guarantee employment or specific job roles, however many professionals can utilize SPHECHO credentials on their professional resume to assist them in standing out among other applicants. All SPHECHO providers are certified."
     },
     {
       id: 5,
       header:
         "Once I register to begin my certification program, how long do I have to complete the training and exam?",
+        content: "You will have to complete the coursework and final exam within 30 days."
     },
     {
       id: 6,
       header: "Is the online learning available on demand?",
+      content: "Yes, the SPHECHO learning management system is available 24/7 and is accessible as long as you have internet access. Once you have registered as a provider on the SPHECHO platform and paid for your program, you will be able to access the training modules online."
     },
     {
       id: 7,
       header: "When do the courses start?",
+      content: "Once you register and pay for your program, you will have access to your online profile and application. You then have 30 days to access the online training, complete your profile and application details, pass the exam, and submit for approval. "
     },
     {
       id: 8,
-      header: "When do the courses start?",
-    },
-    {
-      id: 9,
       header:
         "After I complete my final exam and submit my application, how long will it be before I get my certification?",
+        content: "Upon board approval, your certification packet will be prepared within 2-3 weeks. Once approved, you will have immediate access to the digital copy of your certificate and badge."
     },
   ];
 
@@ -468,13 +473,7 @@ const FAQS = () => {
                 className="accordin-content"
                 style={{ fontSize: "1.2rem" }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-                nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                sunt in culpa qui officia deserunt mollit anim id est laborum.
+               {faq.content}
               </Accordion.Body>
             </Accordion.Item>
           ))}
