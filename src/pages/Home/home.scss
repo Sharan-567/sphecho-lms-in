@@ -1,107 +1,228 @@
-$homePrimary: #ffb605;
+$gray: #f1f0ee;
+$primary: #67b045;
 
-.vector-img {
-  width: 43%;
+// * {
+//   outline: 1px solid red;
+// }
+
+@font-face {
+  font-family: "bs";
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Black.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Black.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Bold.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Light.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Light.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Medium.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Medium.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Regular.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Regular.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Thin.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Thin.ttf") format("truetype");
+}
+
+* {
+  // outline: 1px solid red;
+  font-family: bs;
+}
+.banner-title {
   position: absolute;
-  bottom: 0;
-  left: -10%;
-  z-index: 3;
-}
-
-.c-logo {
-  top: 0%;
-  left: 2%;
-  width: 40%;
-  z-index: 0;
-  opacity: 0.5;
-}
-
-.s-logo {
-  top: 45%;
-  left: 10%;
-  width: 15%;
-  z-index: 0;
-}
-
-.c-bg {
-  bottom: -30%;
-  left: 12%;
-  width: 65%;
-}
-
-// event section
-.event {
-  margin-top: 10rem;
-  .e-big-nb {
-    font-size: 2.6rem;
-    line-height: 2rem;
-    margin-top: 0.5em;
-    font-weight: bold;
-    color: $homePrimary;
-  }
-  .e-img-left {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .e-img-tag {
-    width: 100%;
-    height: 19.9rem;
-    object-fit: cover;
-    object-position: right;
-  }
-  .e-inner-text {
-    position: absolute;
-    top: 6%;
-    right: 1%;
-    color: white;
-    width: 60%;
-  }
-}
-
-.e-btn {
-  border: 1px solid black;
-}
-
-// registration
-.registration {
+  z-index: 80;
+  top: 40%;
+  width: 100%;
+  padding: 0rem 4rem;
   color: white;
-  margin-top: 10rem;
-  .bg {
-    width: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
+}
 
-    .title {
-      color: white;
-      text-align: center;
-      margin-top: 7rem;
-    }
-    input {
-      border-radius: 0;
-    }
-    .mybtn {
-      background-color: $homePrimary;
-      width: 100%;
-      color: black;
-      border-radius: 0;
-    }
+@media only screen and (max-width: 768px) {
+  .nav-bar-container {
+    top: 0 !important;
+  }
+  .banner-title {
+    top: 30%;
+    width: 90%;
   }
 }
 
-// testmonial
+.link-nav {
+  font-size: 1.2rem !important;
+  margin-right: 1em !important;
+}
 
-.testmonial {
-  margin-top: 5rem;
-  text-align: center;
+.coursel-img {
+  height: 140vh;
+  width: 100%;
+  object-fit: cover;
+}
 
-  .t-img {
-    width: 3rem;
-    height: 3rem;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 50%;
-    margin: 0 0.5em;
+.banner-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  clip-path: url(#clipPath);
+}
+
+#svgPath {
+  height: 0;
+  width: 0;
+}
+
+.banner-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+    to bottom right,
+    #67b045 20%,
+    rgba(255, 255, 255, 0.632) 70%
+  );
+}
+
+// title content
+
+.title-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  p {
+    display: block;
+    width: 70%;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+}
+
+// Benfits of certification
+.benefits-title {
+  font-weight: 800;
+  color: $primary;
+}
+
+// FAQS
+.accordion-item {
+  border: 2px solid $primary;
+  border-left: none;
+  border-right: none;
+}
+.accordion-button:not(.collapsed) {
+  color: #ffffff;
+  background-color: $primary;
+  box-shadow: inset 0 -1px 0 rgb(0 0 0 / 13%);
+}
+
+.accordin-title {
+  border-left: 10px solid $primary;
+  height: 3.8rem;
+  padding-top: 1rem;
+  padding-left: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 400;
+}
+@media only screen and (max-width: 768px) {
+  .accordin-title {
+    font-size: 1.1rem;
+    height: 4rem;
+    padding-top: 0.3rem;
+  }
+  .accordin-content {
+    font-size: 1rem;
+  }
+}
+
+// request from
+.bg-image {
+  background-image: linear-gradient(
+      to right,
+      rgba(33, 31, 31, 0.822),
+      rgba(0, 0, 0, 0.368)
+    ),
+    url("../../assets/contactbg.png");
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+.input {
+  border: 1px solid white;
+  border-radius: 3rem;
+  color: white;
+  width: 100%;
+  background-color: transparent;
+  font-weight: 700;
+  padding: 0.5em;
+}
+
+.input::placeholder {
+  color: white;
+}
+
+.input-container {
+  width: 50%;
+  margin: auto;
+}
+
+@media only screen and (max-width: 768px) {
+  .input {
+    margin-bottom: 1rem;
+  }
+  .input-container {
+    width: 85%;
+  }
+}
+.newLetter-input {
+  width: 100%;
+  height: 4rem;
+  border-radius: 2rem;
+  background: none;
+  border: 2px solid rgb(163, 160, 160);
+  padding: 1rem 2rem;
+  font-size: 1.6rem;
+  color: rgb(163, 160, 160);
+}
+
+.newsLetter-btn {
+  background: none;
+  height: 4rem;
+  border-radius: 4rem;
+  border: 2px solid rgb(163, 160, 160);
+  color: rgb(163, 160, 160);
+  font-size: 1.6rem;
+  width: 10rem;
+}
+
+// footer
+footer {
+  background: rgb(163, 160, 160);
+  .link-header {
+    margin: 1rem 0rem;
+    font-size: 1.3rem;
+    padding-bottom: 1.2rem;
+  }
+  .link {
+    text-decoration: none;
+    color: white;
+    display: block;
+    font-size: 1.1rem;
+  }
+  .link:hover {
+    text-decoration: underline;
+  }
+}
+.navlinks-container-footer {
+  background-color: #67b045;
+  color: white;
+  border-radius: 20rem 0rem 0rem 0rem;
+}
+
+@media only screen and (max-width: 768px) {
+  .navlinks-container-footer {
+    border-radius: 0rem;
   }
 }

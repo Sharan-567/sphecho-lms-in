@@ -38,10 +38,10 @@ const Webinars = () => {
             width: "100%",
             height: "100%",
           }}
-          className="px-5 flex-direction-column align-items-center"
+          className="px-5  py-5 flex-direction-column align-items-center"
         >
           <div>
-            <h2 className="b-700 text-blue">Webinars</h2>
+            <h2 className="b-700 text-blue ms-2">Webinars</h2>
             <div>
               {courses.map((course) => {
                 return (

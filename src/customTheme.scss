@@ -1,21 +1,37 @@
 // custom variants
 $theme-colors: (
   "primary": #81a31b,
-  "secondary": #A9C465,
+  "secondary": #a9c465,
   "danger": #ff6347,
   "blue": #1e254f,
   "skyBlue": #0e9cf0,
   "sky": rgb(194, 233, 255),
-  "green": #98B839,
-  "gray": #E0EBC0,
+  "green": #98b839,
+  "gray": #e0ebc0,
   "graydark": #eaeee0,
   "lightblue": rgb(133, 210, 255),
   "admingreen": #3d5654,
   "adminsecondary": #d6af14,
   "adminteritory": #18b3a7,
+  "opaque": rgba(255, 255, 255, 0.328),
+  "landingPrimary": #67b045,
+  "landingGary": #f1f0ee,
 );
 // custom variables
 $skyBlue: rgb(14, 156, 240);
+
+.p-5 {
+  padding: 5rem !important;
+}
+.py-5 {
+  padding: 0rem 5rem;
+}
+.my-5 {
+  margin: 0 5rem;
+}
+.p-6 {
+  padding: 6rem !important;
+}
 
 .b-200 {
   font-weight: 200;

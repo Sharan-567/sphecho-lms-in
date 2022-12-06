@@ -48,16 +48,13 @@ const login = async ({
   }
 };
 
-const getOTP = async ({
-  phone,
-  usertype,
-}: {
-  phone: string;
-  usertype: "patient" | "admin" | "supertype" | "doctor";
-}) => {
+const getOTP = async (
+  number: string,
+  userType: "patient" | "admin" | "supertype" | "doctor"
+) => {
   try {
     const formData = new FormData();
-    formData.append("mobile", phone);
+    formData.append("mobile", number);
     formData.append("type", "2"); //type 2 means its patient type user
     const res = await customAxios.post("/accounts/auth/", formData);
     if (res.data.error) {
@@ -73,15 +70,15 @@ type VerifyOTP = {
   mobile: string;
   name: string;
   otp: string;
+  hashcode: string;
 };
 
 const verifyOTP = async (data: VerifyOTP) => {
   try {
-    const hashcode = localStorage.getItem("hash");
     const formData = new FormData();
     formData.append("name", data.name);
     formData.append("mobile", data.mobile);
-    formData.append("hash", hashcode!);
+    formData.append("hash", data.hashcode);
     formData.append("otp", data.otp);
     formData.append("type", "3");
     const res = await customAxios.post(`/accounts/auth/`, formData);
@@ -94,17 +91,12 @@ const verifyOTP = async (data: VerifyOTP) => {
   }
 };
 
-type PatientListType = {
-  contact: string;
-  token: string;
-};
-
-const GetPatientList = async (data: PatientListType) => {
+const GetPatientList = async (number: string, token: string) => {
   try {
     const formData = new FormData();
     formData.append("type", "4");
-    formData.append("contact", data.contact);
-    formData.append("token", data.token);
+    formData.append("contact", number);
+    formData.append("token", token);
 
     const res = await customAxios.post("accounts/auth/", formData);
     if (res.data.error) {

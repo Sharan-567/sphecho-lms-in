@@ -7,7 +7,7 @@ import Profession from "./pages/Profession";
 import Curriculum from "./pages/Curriculum/Curriculum";
 import ResourceHub from "./pages/ResourceHub";
 import Dashboard from "./pages/DashBoard/";
-import Login from './pages/Login/Login'
+import Login from "./pages/Login/Login";
 
 // adminSection
 import {
@@ -18,6 +18,7 @@ import {
   QuestionMangement,
   BadgeMangement,
   CertificationMangement,
+  UserMangement,
 } from "./adminSections";
 import {
   Course,
@@ -26,6 +27,7 @@ import {
   CourseDetail,
   Cart,
   Webinars,
+  Certification,
 } from "./sections";
 
 function App() {
@@ -37,7 +39,7 @@ function App() {
         <Routes>
           {!isLoggedIn ? (
             <Route path="/">
-              <Route index element={<Home />} />
+              <Route index element={<Home />} />s
               <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />
               <Route path="curriculum" element={<Curriculum />} />
@@ -51,10 +53,12 @@ function App() {
                 <Route path=":courseId" element={<TopicsList />} />
                 <Route path="detail/:id" element={<CourseDetail />} />
               </Route>
+              <Route path="certification" element={<Certification />} />
               <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
               <Route path="admin">
                 <Route index element={<AdminMain />} />
+                <Route path="userMangement" element={<UserMangement />} />
                 <Route path="coursesMangement" element={<CousreMangement />} />
                 <Route path="topicsMangement" element={<TopicMangment />} />
                 <Route

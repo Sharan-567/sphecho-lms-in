@@ -1,5 +1,7 @@
 import React from "react";
 import { Button, Col, Row } from "react-bootstrap";
+import { BsPenFill, BsFileTextFill } from "react-icons/bs";
+import { AiTwotoneDelete } from "react-icons/ai";
 
 type ListItem<T> = {
   title: string;
@@ -7,7 +9,7 @@ type ListItem<T> = {
   item: T;
   openModel: (c: T, type: "update" | "delete" | "read") => void;
   NoDelete?: boolean;
-  NoEdit?: boolean,
+  NoEdit?: boolean;
   sm?: number;
 };
 
@@ -22,26 +24,30 @@ const ListItem = <T extends {}>(props: ListItem<T>) => {
         <Col>
           {!props.NoDelete && (
             <Button
-              className="bg-danger text-white me-1 br-2"
+              className="bg-graydark text-white me-1 br-2"
+              style={{ outline: "none", border: "none" }}
               onClick={() => props.openModel(props.item, "delete")}
             >
-              Delete
+              <AiTwotoneDelete className="text-danger" size={22} />
             </Button>
           )}
 
           {!props.NoEdit && (
-          <Button
-            className="bg-adminsecondary text-white me-1 br-2"
-            onClick={() => props.openModel(props.item, "update")}
-          >
-            Edit
-          </Button>)}
+            <Button
+              className=" text-white me-1 bg-graydark"
+              style={{ outline: "none", border: "none" }}
+              onClick={() => props.openModel(props.item, "update")}
+            >
+              <BsPenFill className="text-adminsecondary" size="20" />
+            </Button>
+          )}
 
           <Button
-            className="bg-admingreen text-white br-2"
+            className="bg-graydark text-white"
+            style={{ outline: "none", border: "none" }}
             onClick={() => props.openModel(props.item, "read")}
           >
-            Detail
+            <BsFileTextFill className="text-primary" size="20" />
           </Button>
         </Col>
       </Row>

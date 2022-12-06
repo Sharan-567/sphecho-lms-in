@@ -18,10 +18,10 @@ import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
+import { EditorState, convertToRaw } from "draft-js";
+import draftToHtml from "draftjs-to-html";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState } from "draft-js";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -29,7 +29,7 @@ const createSchema = Yup.object().shape({
   background_image: Yup.string()
     .required("background ima ge  is required")
     .nullable(),
-  on_complition: Yup.string().required("On complition is required"),
+  on_complition: Yup.string().required("On completion is required"),
   on_attend: Yup.string().required("On attend is required"),
   // text: Yup.string().required("Text is required"),
 });
@@ -42,8 +42,12 @@ const CertificationManagment = () => {
   const [topics, setTopics] = useState<Topic[]>([]);
   const [currentSelectedItem, setCurrentSelectedItem] = useState<Certificate>();
   const [showEditor, setShowEditor] = useState(false);
-  const [validateErrors, setValidateErros] = useState<Record<string, string>>({})
-  const [certificateTags, setCertificateTags] = useState<Record<string, string>>({})
+  const [validateErrors, setValidateErros] = useState<Record<string, string>>(
+    {}
+  );
+  const [certificateTags, setCertificateTags] = useState<
+    Record<string, string>
+  >({});
   const [currentModal, setCurrentModal] = useState<
     "update" | "delete" | "read" | "create"
   >();
@@ -71,8 +75,10 @@ const CertificationManagment = () => {
     },
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => {
-      data['text'] = editorState.getCurrentContent().getPlainText()
-      createCertificate(data, resetForm)
+      console.log(editorState.getCurrentContent());
+      const markup = draftToHtml(convertToRaw(editorState.getCurrentContent()));
+      data["text"] = markup;
+      createCertificate(data, resetForm);
     },
   });
 
@@ -84,7 +90,10 @@ const CertificationManagment = () => {
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
 
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const [editorState, setEditorState] = useState<EditorState>(
+    EditorState.createEmpty()
+  );
+
   const openModel = (
     certificate: Certificate,
     type: "create" | "delete" | "update" | "read"
@@ -118,9 +127,8 @@ const CertificationManagment = () => {
     getCertificationList();
     getTopicsList();
     getAssessmentList();
-    getCertificatesTags()
+    getCertificatesTags();
   }, []);
-
 
   const deleteCertificate = () => {
     let token = localStorage.getItem("token");
@@ -178,8 +186,8 @@ const CertificationManagment = () => {
       });
   };
 
-   //get Certification tags list
-   const getCertificatesTags = () => {
+  //get Certification tags list
+  const getCertificatesTags = () => {
     let token = localStorage.getItem("token");
     axios
       .get(`${BASE_URL}/master/certificate-create`, {
@@ -205,8 +213,8 @@ const CertificationManagment = () => {
       });
   };
 
-   // create certificate
-   const createCertificate = (data, resetForm) => {
+  // create certificate
+  const createCertificate = (data, resetForm) => {
     setShowSpinner("create");
     const formData = new FormData();
     const token = localStorage.getItem("token");
@@ -269,8 +277,6 @@ const CertificationManagment = () => {
       });
   };
 
-
-
   //get topics list
   const getTopicsList = () => {
     let token = localStorage.getItem("token");
@@ -296,19 +302,18 @@ const CertificationManagment = () => {
   };
 
   const validateAndNext = () => {
-    creatFormik.validateForm()
-      .then(data => {
-        if(Object.keys(data).length === 0) {
-          setShowEditor(true)
-        } else {
-          setValidateErros(data)
-        }
-      })
-  }
+    creatFormik.validateForm().then((data) => {
+      if (Object.keys(data).length === 0) {
+        setShowEditor(true);
+      } else {
+        setValidateErros(data);
+      }
+    });
+  };
 
   const onEditorStateChange = (editorState: EditorState) => {
-    setEditorState(editorState)
-  }
+    setEditorState(editorState);
+  };
 
   return (
     <Container className="p-4 w-75">
@@ -361,30 +366,28 @@ const CertificationManagment = () => {
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
                 {!showEditor ? (
                   <>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Title</Form.Label>
-                        <Form.Control
-                          name="title"
-                          value={creatFormik.values.title}
-                          onChange={creatFormik.handleChange}
-                          type="text"
-                          required
-                          placeholder="Enter Certificate title"
-                        />
-                        {creatFormik.touched.title &&
-                        creatFormik.errors.title ? (
-                          <div className="text-danger">
-                            {creatFormik.errors.title}
-                          </div>
-                        ) : null}
-                        {
-                          validateErrors?.title ?  <div className="text-danger">
+                    <Form.Group className="mb-3">
+                      <Form.Label>Title</Form.Label>
+                      <Form.Control
+                        name="title"
+                        value={creatFormik.values.title}
+                        onChange={creatFormik.handleChange}
+                        type="text"
+                        required
+                        placeholder="Enter Certificate title"
+                      />
+                      {creatFormik.touched.title && creatFormik.errors.title ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.title}
+                        </div>
+                      ) : null}
+                      {validateErrors?.title ? (
+                        <div className="text-danger">
                           {validateErrors.title}
-                        </div> : null
-                        }
-                      </Form.Group>
-                        
-                      
+                        </div>
+                      ) : null}
+                    </Form.Group>
+
                     <Form.Group className="mb-3">
                       <Form.Label>Background Image</Form.Label>
                       <Form.Control
@@ -407,16 +410,16 @@ const CertificationManagment = () => {
                           {creatFormik.errors.background_image}
                         </div>
                       ) : null}
-                       {
-                          validateErrors?.background_image ?  <div className="text-danger">
+                      {validateErrors?.background_image ? (
+                        <div className="text-danger">
                           {validateErrors.background_image}
-                        </div> : null
-                        }
+                        </div>
+                      ) : null}
                     </Form.Group>
 
                     <Row className="mb-3">
                       <Form.Group as={Col}>
-                        <Form.Label>On Complition</Form.Label>
+                        <Form.Label>On Completion</Form.Label>
                         <Form.Select
                           required
                           name="on_complition"
@@ -454,7 +457,7 @@ const CertificationManagment = () => {
                         name="assesment"
                         onChange={creatFormik.handleChange}
                       >
-                        <option>select the assesment</option>
+                        <option>select the assessment</option>
                         {(assesments || []).map((c) => (
                           <option key={c.id} value={c.id}>
                             {c.name}
@@ -480,27 +483,27 @@ const CertificationManagment = () => {
                   </>
                 ) : (
                   <>
-                  <div>
-                    <h6>Use the following tags only.</h6>
-                   <p className="me-2">
-                    {
-                      Object.entries(certificateTags || {}).map(([key, value]) => (
-                        `${key}: ${value}, `
-                      ))
-                    }
-                    </p>
-                  </div>
+                    <div>
+                      <h6>Use the following tags only.</h6>
+                      <p className="me-2">
+                        {Object.entries(certificateTags || {}).map(
+                          ([key, value]) => `${key}: ${value}, `
+                        )}
+                      </p>
+                    </div>
                     <Editor
-                      editorStyle={{minHeight: "15rem"}}
+                      editorStyle={{ minHeight: "15rem" }}
                       editorState={editorState}
                       onEditorStateChange={onEditorStateChange}
                       mention={{
                         separator: " ",
-                        trigger: '{',
-                        suggestions: Object.entries(certificateTags || {}).map(([key, value]) => (
-                            {text: key, value: value.slice(1)}
-                          ))
-                        ,
+                        trigger: "{",
+                        suggestions: Object.entries(certificateTags || {}).map(
+                          ([key, value]) => ({
+                            text: key,
+                            value: value.slice(1),
+                          })
+                        ),
                       }}
                     />
                   </>
@@ -546,7 +549,7 @@ const CertificationManagment = () => {
         )}
         {currentModal === "delete" && (
           <>
-             {error && errorType === "delete" && (
+            {error && errorType === "delete" && (
               <ErrorMessage setError={setError}>{error}</ErrorMessage>
             )}
             {success && (
@@ -556,7 +559,10 @@ const CertificationManagment = () => {
               <Modal.Title>Delete Certificate</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <p>Are you sure to delete this {currentSelectedItem?.title} Certificate </p>
+              <p>
+                Are you sure to delete this {currentSelectedItem?.title}{" "}
+                Certificate{" "}
+              </p>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
@@ -591,7 +597,6 @@ const CertificationManagment = () => {
             </Modal.Footer>
           </>
         )}
-
       </Modal>
     </Container>
   );

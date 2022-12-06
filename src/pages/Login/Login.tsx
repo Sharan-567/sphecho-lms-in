@@ -23,10 +23,6 @@ const Login = () => {
       title: "Provider",
       userType: "Provider",
     },
-    {
-      title: "superUser",
-      userType: "SuperUser",
-    },
   ];
 
   return (
@@ -106,6 +102,25 @@ const Login = () => {
                     {item.title}
                   </motion.button>
                 ))}
+                <a href="https://lmsv2.metahos.com/lms_api_v1/super-admin/login/?next=/lms_api_v1/super-admin/">
+                  <motion.button
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      duration: 0.8,
+                      ease: [0, 0.71, 0.2, 1.01],
+                      staggerChildren: 0.5,
+                    }}
+                    style={{
+                      border: "none",
+                      borderLeft: "7px solid #81a31b",
+                      fontSize: "1.4rem",
+                    }}
+                    className="w-100 m-3 b-600 py-4 btn-login shadow br-1 bg-white"
+                  >
+                    Super Admin
+                  </motion.button>
+                </a>
               </>
             ) : (
               <div
@@ -115,7 +130,9 @@ const Login = () => {
                 {loginType === "Patient" ? (
                   <PatientLogin {...{ setLoginType }} />
                 ) : null}
-                {loginType === "Provider" ? <ProviderLogin /> : null}
+                {loginType === "Provider" ? (
+                  <ProviderLogin {...{ setLoginType }} />
+                ) : null}
               </div>
             )}
           </div>

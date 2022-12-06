@@ -1,0 +1,8 @@
+.embed::-webkit-scrollbar {
+  display: none !important;
+}
+
+.embed {
+  -ms-overflow-style: none !important;  
+  scrollbar-width: none !important;
+}

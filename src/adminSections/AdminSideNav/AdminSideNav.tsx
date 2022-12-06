@@ -3,14 +3,16 @@ import { useMotionValue, motion } from "framer-motion";
 import { Row, Col } from "react-bootstrap";
 import { NavLink, useNavigate } from "react-router-dom";
 import { IconType } from "react-icons";
-
+import whiteLogo from "../../assets/white-logo.png";
 import {
   AiOutlineUser,
   AiOutlineNotification,
   AiOutlineComment,
   AiOutlineFire,
   AiOutlineTool,
-  AiOutlineLogout,
+  AiOutlineHome,
+  AiOutlinePercentage,
+  AiOutlineSafety,
 } from "react-icons/ai";
 
 interface MenuList {
@@ -26,9 +28,14 @@ const AdminSideNav = () => {
 
   const menuList: MenuList[] = [
     {
-      Icon: AiOutlineUser,
+      Icon: AiOutlineHome,
       title: "Dashboard",
       to: "/admin",
+    },
+    {
+      Icon: AiOutlineUser,
+      title: "Users",
+      to: "/admin/userMangement",
     },
     {
       Icon: AiOutlineFire,
@@ -41,17 +48,17 @@ const AdminSideNav = () => {
       to: "/admin/topicsMangement",
     },
     {
-      Icon: AiOutlineTool,
+      Icon: AiOutlinePercentage,
       title: "Assessment",
       to: "/admin/assessmentMangement",
     },
     {
-      Icon: AiOutlineComment,
+      Icon: AiOutlineTool,
       title: "Questions",
       to: "/admin/questionMangement",
     },
     {
-      Icon: AiOutlineComment,
+      Icon: AiOutlineSafety,
       title: "Badges",
       to: "/admin/badgeMangement",
     },
@@ -84,6 +91,7 @@ const AdminSideNav = () => {
       <motion.div
         className="bg-primary "
         animate={{ width: `${closeNav ? "4.5rem" : "16rem"}` }}
+        transition={{ bounce: 0 }}
         style={{
           // borderRadius: "0rem 3rem 3rem 0rem",
           position: "sticky",
@@ -108,14 +116,17 @@ const AdminSideNav = () => {
                 overflow: "hidden",
               }}
             >
-              <h1>Specho</h1>
-              <motion.p
+              <motion.img
+                src={whiteLogo}
+                animate={closeNav ? { width: "4.7rem" } : { width: "8rem" }}
+              />
+              {/* <motion.p
                 animate={
                   closeNav ? { fontSize: ".5rem" } : { fontSize: ".9rem" }
                 }
               >
                 admin
-              </motion.p>
+              </motion.p> */}
             </motion.button>
           </div>
         </div>
@@ -126,7 +137,7 @@ const AdminSideNav = () => {
             }
           }
         >
-          <div style={{ height: 0, display: "hidden" }}>
+          <div style={{ height: 0, width: "0", display: "hidden" }}>
             <svg
               viewBox="0 0 230 107"
               fill="white"
@@ -146,34 +157,48 @@ const AdminSideNav = () => {
               </defs>
             </svg>
           </div>
-
-          <motion.div
-            className="tab bg-white"
-            animate={{ transform: `translateY(${getYpostion()}px)` }}
-          ></motion.div>
-
-          {menuList.map((link, id) => {
-            return (
-              <div key={id}>
-                <motion.div
-                  onClick={() => handleTab(link.to, id)}
-                  className={`${
-                    currentTab.get() == id ? "text-blue" : "text-white"
-                  } b-700 px-4 p-3 my-3`}
-                  animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
-                  style={{
-                    fontSize: "1.1rem",
-                    // outline: "1px solid red",
-                    cursor: "pointer",
-                    width: "14rem",
-                  }}
-                >
-                  <link.Icon size={"1.5rem"} className="me-3" />
-                  {link.title}
-                </motion.div>
-              </div>
-            );
-          })}
+          <div style={{ marginTop: "-.5rem" }}>
+            {menuList.map((link, id) => {
+              return (
+                <div key={id}>
+                  <motion.div
+                    onClick={() => handleTab(link.to, id)}
+                    className={`${
+                      currentTab.get() == id ? "text-blue" : "text-white"
+                    } b-700 px-4 p-3 my-1`}
+                    animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
+                    style={{
+                      fontSize: "1.1rem",
+                      // outline: "1px solid red",
+                      cursor: "pointer",
+                      width: "14rem",
+                      position: "relative",
+                    }}
+                  >
+                    <link.Icon size={"1.5rem"} className="me-3" />
+                    {link.title}
+                    {currentTab.get() === id ? (
+                      <motion.div
+                        className="tab bg-white"
+                        layoutId="back"
+                        style={{
+                          position: "absolute",
+                          top: -18,
+                          width: "100%",
+                        }}
+                        transition={{
+                          type: "spring",
+                          duration: 0.5,
+                          stiffness: 500,
+                          damping: 32,
+                        }}
+                      ></motion.div>
+                    ) : null}
+                  </motion.div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </motion.div>
     </div>
