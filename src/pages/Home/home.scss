@@ -6,7 +6,7 @@ $primary: #67b045;
 // }
 
 @font-face {
-  font-family: "bs";
+  font-family: bs;
   src: url("../../assets/fonts/BwSeidoRoundDEMO-Black.woff") format("woff"),
     url("../../assets/fonts/BwSeidoRoundDEMO-Black.ttf") format("truetype");
   src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
@@ -23,9 +23,17 @@ $primary: #67b045;
     url("../../assets/fonts/BwSeidoRoundDEMO-Thin.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: bs;
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Bold.ttf") format("truetype");
+ font-weight: bold;
+}
+
 * {
   // outline: 1px solid red;
   font-family: bs;
+
 }
 .banner-title {
   position: absolute;
@@ -44,6 +52,12 @@ $primary: #67b045;
     top: 30%;
     width: 90%;
   }
+}
+
+@media only screen and (max-width: 768px) {
+  .coursel-img{
+  object-position: 69.3%;
+ }
 }
 
 .link-nav {
@@ -79,7 +93,7 @@ $primary: #67b045;
   background-image: linear-gradient(
     to bottom right,
     #67b045 20%,
-    rgba(255, 255, 255, 0.632) 70%
+    rgba(255, 255, 255, 0) 70%
   );
 }
 

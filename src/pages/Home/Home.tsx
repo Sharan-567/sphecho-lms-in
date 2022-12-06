@@ -139,9 +139,9 @@ const Banner = () => {
         </Carousel>
         <div className="banner-title">
           <h1 className="container">
-            <h1>LEARN CONTINUALLY- THERE’S ALWAYS </h1>
+            <h1 style={{fontWeight: "bold"}}>LEARN CONTINUALLY- THERE’S ALWAYS </h1>
             <i>
-              <b style={{ fontSize: "3rem" }}>“ONE MORE THING”</b>
+              <b style={{ fontSize: "3rem" }}>“ONE MORE THING” </b>
             </i>{" "}
             TO LEARN.
           </h1>
@@ -453,7 +453,7 @@ const FAQS = () => {
       style={{ marginBottom: "5rem" }}
     >
       <div className="w-75 m-auto ">
-        <h1 className="text-landingPrimary my-4">FREQUENTLY ASKED QUESTIONS</h1>
+        <h1 className="text-landingPrimary my-4 b-600">FREQUENTLY ASKED QUESTIONS</h1>
         <p style={{ fontSize: "1.2rem", marginBottom: "6rem" }}>
           Please click on a topic below to view common questions. Once you have
           chosen your topic simply click any question to reveal the answer.
