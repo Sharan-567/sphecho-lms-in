@@ -133,8 +133,8 @@ const AddUserToCourse = ({
             name="user_type"
             value={data.user_type}
             onChange={inputChangeHandler}
+            placeholder="Select user type"
           >
-            <option>Open this select user_type</option>
             <option value="1">Patient</option>
             <option value="2">Doctor</option>
           </Form.Select>

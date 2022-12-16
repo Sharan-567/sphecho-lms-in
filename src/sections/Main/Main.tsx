@@ -75,13 +75,15 @@ const Main = () => {
               <AiOutlineLogout size={"1.8rem"} />
             </Button>
             {isAdmin() && (
+              <a href="/admin">
               <Button
                 className="bg-green text-white go-to-btn"
                 style={{ borderRadius: "2rem", width: "8rem" }}
-                onClick={() => navigate("/admin")}
+                // onClick={() => navigate("/admin")}
               >
                 Go to Admin
               </Button>
+              </a>
             )}
           </div>
         </Col>
