@@ -8,7 +8,7 @@ type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<Usertype | undefined>>;
 };
 
-const ProviderLogin = ({ setLoginType }: Props) => {
+const StaffMember = ({ setLoginType }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { err: error } = useAppSelector((state) => state.auth);
@@ -26,12 +26,12 @@ const ProviderLogin = ({ setLoginType }: Props) => {
   return (
     <div className="p-2 w-100 d-flex flex-column justify-content-center align-items-center">
       {error ? <p className="text-danger">{error}</p> : null}
-      <h1 className="mb-5 text-primary text-center">Provider Login</h1>
+      <h1 className="mb-5 text-primary text-center">Staff Member Login</h1>
       <input
         value={username}
         onChange={(e) => setUsername(e.target.value)}
         className="py-3 text-center b-600 br-2 mb-2"
-        placeholder="Mobile Number"
+        placeholder="UserName"
         style={{
           fontSize: "1.2rem",
           border: "1px solid #81a31b",
@@ -67,4 +67,4 @@ const ProviderLogin = ({ setLoginType }: Props) => {
   );
 };
 
-export default ProviderLogin;
+export default StaffMember;

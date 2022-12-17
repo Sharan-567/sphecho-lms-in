@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
 import { motion } from "framer-motion";
 import PatientLogin from "./PatientLogin";
-import ProviderLogin from "./ProviderLogin";
 
 import logo from "../../assets/01_Logo_2x.png";
 import circle from "../../assets/element-bg2.png";
 import bg from "../../assets/banner-bg.png";
 import "./Login.scss";
-type Usertype = "Patient" | "Provider" | "SuperUser";
+import StaffMember from "./StaffMember";
+import Provider from "./Provider";
+type Usertype = "Patient" | "Provider" | "SuperUser" | "staffMember";
 
 const Login = () => {
   const [loginType, setLoginType] = useState<Usertype>();
@@ -22,6 +23,10 @@ const Login = () => {
     {
       title: "Provider",
       userType: "Provider",
+    },
+    {
+      title: "Staff Member",
+      userType: "staffMember",
     },
   ];
 
@@ -130,8 +135,11 @@ const Login = () => {
                 {loginType === "Patient" ? (
                   <PatientLogin {...{ setLoginType }} />
                 ) : null}
+                {loginType === "staffMember" ? (
+                  <StaffMember {...{ setLoginType }} />
+                ) : null}
                 {loginType === "Provider" ? (
-                  <ProviderLogin {...{ setLoginType }} />
+                  <Provider {...{ setLoginType }} />
                 ) : null}
               </div>
             )}
