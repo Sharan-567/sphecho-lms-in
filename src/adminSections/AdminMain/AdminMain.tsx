@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Row } from "react-bootstrap";
 import ReactAPexChart from "react-apexcharts";
+import { ApexOptions } from "apexcharts";
 const AdminMain = () => {
   const [totalUsers, setTotalUsers] = useState([6, 10]);
   const [graphSeries, setGraphSeries] = useState([
@@ -12,7 +13,7 @@ const AdminMain = () => {
   ]);
   const navigate = useNavigate();
 
-  const usersOptions = {
+  const usersOptions: ApexOptions = {
     labels: ["Authors", "students"],
     colors: ["#D6AF14", "#18B3A7"],
     chart: {
@@ -42,7 +43,7 @@ const AdminMain = () => {
       height: 230,
     },
   };
-  const coursesOPtions = {
+  const coursesOPtions: ApexOptions = {
     labels: ["Authors", "students"],
     colors: ["#425C5A", "#D6AF14"],
     chart: {
@@ -58,7 +59,7 @@ const AdminMain = () => {
       height: 230,
     },
   };
-  const webinarsOptions = {
+  const webinarsOptions: ApexOptions = {
     labels: ["Authors", "students"],
     colors: ["#D6AF14", "#1890B3"],
     chart: {
@@ -75,7 +76,7 @@ const AdminMain = () => {
     },
   };
 
-  const GraphOptions = {
+  const GraphOptions: ApexOptions = {
     chart: {
       height: 350,
       type: "area",
@@ -99,8 +100,9 @@ const AdminMain = () => {
     },
   };
 
+
   return (
-    <div className="container p-3">
+    <div className="container p-3" style={{display: "block"}}>
       <Row>
         <Col>
           <div>
@@ -115,11 +117,10 @@ const AdminMain = () => {
         </Col>
       </Row>
       <Row>
-        <Col className="p-4" sm={4}>
+        <Col  sm={4}>
           <div className="p-1 br-2 bg-white">
             <h5 className="b-700 px-3 py-2">Total Users</h5>
             <ReactAPexChart
-              //@ts-ignore
               options={usersOptions}
               type="donut"
               series={totalUsers}
@@ -127,11 +128,10 @@ const AdminMain = () => {
             />
           </div>
         </Col>
-        <Col className="p-4" sm={4}>
+        <Col  sm={4}>
           <div className="p-1 br-2 bg-white">
             <h5 className="b-700 px-3 py-2">No of Courses</h5>
             <ReactAPexChart
-              //@ts-ignore
               options={coursesOPtions}
               type="donut"
               series={totalUsers}
@@ -139,11 +139,10 @@ const AdminMain = () => {
             />
           </div>
         </Col>
-        <Col className="p-4" sm={4}>
+        <Col  sm={4}>
           <div className="p-1 br-2 bg-white">
             <h5 className="b-700 px-3 py-2">No of Webinars</h5>
             <ReactAPexChart
-              //@ts-ignore
               options={webinarsOptions}
               type="donut"
               series={totalUsers}
@@ -152,12 +151,11 @@ const AdminMain = () => {
           </div>
         </Col>
       </Row>
-      <Row>
+      <Row style={{display: "block"}}>
         <Col className="p-3" sm={12}>
           <div className="br-2 p-1 bg-white">
             <h5 className="px-3 b-700 py-1">Monthly active Users</h5>
             <ReactAPexChart
-              //@ts-ignore
               options={GraphOptions}
               type="area"
               series={graphSeries}

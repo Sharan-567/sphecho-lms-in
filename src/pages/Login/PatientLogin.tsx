@@ -11,7 +11,7 @@ type Props = {
 
 type DataType = {
   phone: string;
-  usertype: string;
+  userState: string;
 };
 type StageType = "NUMBER" | "OTP" | "PATIENTS_LIST";
 
@@ -55,7 +55,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
       try {
         if (selectedPatient) {
           const { token } = await authService.verifyPatient(selectedPatient);
-          await authService.AuthorizeLMS({ token, typeId: 6 });
+          await authService.AuthorizeLMS({ token, typeId: "1" });
         }
       } catch (err) {
         setError(err);
@@ -121,7 +121,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
           {(patientList || []).map((patient) => {
             return (
               <div
-                className="bg-green p-3 br-1 text-white"
+                className="bg-green my-2 p-3 br-1 text-white"
                 style={{ cursor: "pointer" }}
                 key={patient._id}
                 onClick={() => setSelectedPatient(patient)}
