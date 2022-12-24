@@ -172,8 +172,8 @@ const CourseMangement = () => {
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
-        //@ts-ignore
-        formData.append(key, val);
+      //@ts-ignore
+      formData.append(key, val);
     });
     setShowSpinner("update");
     if (currentSelectedItem) {
@@ -188,7 +188,7 @@ const CourseMangement = () => {
         .then((res) => {
           setErrorType("none");
           setShowSpinner("none");
-          getCourseList()
+          getCourseList();
           setSuccess("Course updated successfully.");
           console.log(res.data);
         })
@@ -257,6 +257,8 @@ const CourseMangement = () => {
     setUpdatedItem((p) => ({ ...p, [key]: e.target.value }));
   };
 
+  const userState = localStorage.getItem("userState");
+
   return (
     <Container className="p-4 w-75">
       {error && errorType === "list" && (
@@ -265,12 +267,14 @@ const CourseMangement = () => {
       <div className="bg-white p-5 br-2">
         <div className="d-flex justify-content-between mb-3">
           <h3 className="b-700">Courses</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createCourseOpenModal}
-          >
-            Create Course
-          </Button>
+          {userState === "staffMember" || userState === "SuperUser" ? (
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create Course
+            </Button>
+          ) : null}
         </div>
         {showSpinner === "list" ? (
           <Spinner />

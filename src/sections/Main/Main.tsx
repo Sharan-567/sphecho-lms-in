@@ -34,14 +34,14 @@ const Main = () => {
   };
 
   const isAdmin = () => {
-    const userType = localStorage.getItem("userType");
-    const typeId = localStorage.getItem("typeId");
-    if (userType && typeId) {
-      if (userType === "doctor" || typeId === "2") {
+    const userState = localStorage.getItem("userState");
+    if (userState) {
+      if (
+        userState === "SuperUser" ||
+        userState === "Provider" ||
+        userState === "staffMember"
+      )
         return true;
-      } else if (userType === "superadmin" || typeId === "4") {
-        return true;
-      }
     }
     return false;
   };
@@ -76,13 +76,13 @@ const Main = () => {
             </Button>
             {isAdmin() && (
               <a href="/admin">
-              <Button
-                className="bg-green text-white go-to-btn"
-                style={{ borderRadius: "2rem", width: "8rem" }}
-                // onClick={() => navigate("/admin")}
-              >
-                Go to Admin
-              </Button>
+                <Button
+                  className="bg-green text-white go-to-btn"
+                  style={{ borderRadius: "2rem", width: "8rem" }}
+                  // onClick={() => navigate("/admin")}
+                >
+                  Go to Admin
+                </Button>
               </a>
             )}
           </div>

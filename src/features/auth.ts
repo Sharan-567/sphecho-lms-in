@@ -56,8 +56,8 @@ export const login = createAsyncThunk<
       return thunkAPI.rejectWithValue("Not authorized");
     }
     if (metaHosResponse.userState && metaHosResponse.type) {
-      localStorage.setItem("userType", metaHosResponse.userState);
-      localStorage.setItem("typeId", metaHosResponse.type);
+      localStorage.setItem("userState", metaHosResponse.userState);
+      localStorage.setItem("metaHosType", metaHosResponse.type);
     }
     return { type: metaHosResponse.type, userState: metaHosResponse.userState };
   } catch (error) {
