@@ -39,7 +39,7 @@ const StaffMember = ({ setLoginType, currentSelectedAuth }: Props) => {
   return (
     <div className="p-2 w-100 d-flex flex-column justify-content-center align-items-center">
       {error ? <p className="text-danger">{error}</p> : null}
-      <h1 className="mb-5 text-primary text-center">Staff Member Login</h1>
+      <h1 className="mb-5 text-primary text-center">SuperUser Login</h1>
       <input
         value={username}
         onChange={(e) => setUsername(e.target.value)}

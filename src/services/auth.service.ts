@@ -3,6 +3,8 @@ import type { Patient } from "../definations/patients";
 import { BASE_URL } from "../features/settings";
 import { getErrorMessageWithCode } from "./utils";
 
+import type { UserState, Auth } from "../definations/Auth";
+
 const customAxios = axios.create({
   baseURL: BASE_URL,
 });
@@ -10,39 +12,31 @@ const login = async ({
   username,
   password,
   type,
+  user_type,
+  userState,
 }: {
   username: string;
   password: string;
   type: string;
-}) => {
+  user_type: string;
+  userState: UserState;
+}): Promise<{ userState: UserState; type: string; token: string }> => {
   try {
     const formData = new FormData();
     formData.append("username", username);
     formData.append("password", password);
-    let res;
+    formData.append("type", type); // for meta login type is 1
+    formData.append("user_type", user_type); // for type of user
+    let res = await customAxios.post("/accounts/auth/", formData);
 
-    // django admin login
-    if (type === "superadmin") {
-      formData.append("type", "4");
-      res = await customAxios.post("/accounts/login/", formData);
-      return Promise.resolve({
-        ...res.data,
-        userType: "superadmin",
-        typeId: "4",
-      });
-    } else if (type === "doctor") {
-      //metahos Login
-      formData.append("type", "1");
-      res = await customAxios.post("/accounts/auth/", formData);
-      return Promise.resolve({
-        ...res.data,
-        userType: "doctor",
-        typeId: 2,
-      });
-    }
     if (res.data.error) {
       return Promise.reject(getErrorMessageWithCode(401));
     }
+    return Promise.resolve({
+      ...res.data,
+      userState,
+      type,
+    });
   } catch (error) {
     return Promise.reject(getErrorMessageWithCode(error.response.status));
   }
@@ -110,7 +104,7 @@ const GetPatientList = async (number: string, token: string) => {
 
 type Authroizetype = {
   token: string;
-  typeId: number;
+  typeId: string;
 };
 
 const AuthorizeLMS = async ({ token, typeId }: Authroizetype) => {

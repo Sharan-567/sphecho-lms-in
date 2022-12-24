@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { Auth, UserState } from "../../definations/Auth";
 import { login } from "../../features/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
 
 type Props = {
-  setLoginType: React.Dispatch<React.SetStateAction<Usertype | undefined>>;
+  setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
+  currentSelectedAuth: Auth | undefined;
 };
 
-const Provider = ({ setLoginType }: Props) => {
+const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { err: error } = useAppSelector((state) => state.auth);
@@ -16,17 +18,20 @@ const Provider = ({ setLoginType }: Props) => {
   const navigate = useNavigate();
 
   const handleProviderLogin = () => {
-    dispatch(login({ username, password, type: "doctor" }))
-      .unwrap()
-      .then((res) => {
-        navigate("/");
-      });
+    if (currentSelectedAuth) {
+      const { type, userState, user_type } = currentSelectedAuth;
+      dispatch(login({ username, password, type, userState, user_type }))
+        .unwrap()
+        .then((res) => {
+          navigate("/");
+        });
+    }
   };
 
   return (
     <div className="p-2 w-100 d-flex flex-column justify-content-center align-items-center">
       {error ? <p className="text-danger">{error}</p> : null}
-      <h1 className="mb-5 text-primary text-center">Staff Member Login</h1>
+      <h1 className="mb-5 text-primary text-center">Provider Login</h1>
       <input
         value={username}
         onChange={(e) => setUsername(e.target.value)}

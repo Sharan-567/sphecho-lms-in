@@ -2,57 +2,64 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Patient } from "../definations/patients";
 import authService from "../services/auth.service";
 import type { RootState } from "./../store";
+import type { UserState } from "../definations/Auth";
 
 type InitialState = {
   loading: boolean;
   isLoggedIn: boolean;
   err?: string;
-  userType: string;
-  typeId: number;
+  userState: string;
+  type: string;
 };
 
 const isLoggedIn = () => {
   let token = localStorage.getItem("token");
   if (token) return true;
-
   else return false;
 };
 
 const initialState: InitialState = {
   loading: true,
   isLoggedIn: isLoggedIn(),
-  userType: "",
+  userState: "",
   err: "",
-  typeId: 0,
+  type: "",
 };
 
 export const login = createAsyncThunk<
-  { typeId: number; userType: string },
-  { username: string; password: string; type: string },
+  { type: string; userState: UserState },
+  {
+    username: string;
+    password: string;
+    type: string;
+    user_type: string;
+    userState: UserState;
+  },
   { rejectValue: string; serializedErrorType: string }
->("/login", async (data, thunkAPI) => {
+>("/login", async (reqData, thunkAPI) => {
   try {
     // get the login
-    const res = await authService.login(data);
-    let token = res.token;
-    if (res.userType !== "superadmin") {
-      // authorize with LMS Server
-      const data = await authService.AuthorizeLMS({
-        token: token,
-        typeId: res.typeId,
-      });
-      token = data.token;
-    }
+    const metaHosResponse = await authService.login(reqData);
+
+    let metaHosToken = metaHosResponse.token;
+
+    const data = await authService.AuthorizeLMS({
+      token: metaHosToken,
+      typeId: "2",
+    });
+
+    const token = data.token;
+
     if (token) {
       localStorage.setItem("token", token);
     } else {
       return thunkAPI.rejectWithValue("Not authorized");
     }
-    if (res.userType && res.typeId) {
-      localStorage.setItem("userType", res.userType);
-      localStorage.setItem("typeId", res.typeId);
+    if (metaHosResponse.userState && metaHosResponse.type) {
+      localStorage.setItem("userType", metaHosResponse.userState);
+      localStorage.setItem("typeId", metaHosResponse.type);
     }
-    return { ...res };
+    return { type: metaHosResponse.type, userState: metaHosResponse.userState };
   } catch (error) {
     return thunkAPI.rejectWithValue(error);
   }
@@ -145,6 +152,13 @@ const auth = createSlice({
     clearError: (state) => {
       state.err = "";
     },
+    addPatient: (state, action) => {
+      state.loading = false;
+      state.isLoggedIn = true;
+      state.err = "";
+      state.type = "0";
+      state.userState = "patient";
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -156,13 +170,13 @@ const auth = createSlice({
         state.loading = false;
         state.isLoggedIn = true;
         state.err = "";
-        state.typeId = action.payload.typeId;
-        state.userType = action.payload.userType;
+        state.type = action.payload.type;
+        state.userState = action.payload.userState;
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
         state.isLoggedIn = false;
-        state.typeId = 0;
+        state.type = "";
         state.err = action.payload;
       });
   },
