@@ -68,23 +68,12 @@ const Main = () => {
               </Badge>
             </Link>
             <Button
-              className="bg-white"
+              className="bg-primary text-white px-4 py-2 b-700 ms-4"
               style={{ border: "none" }}
               onClick={logoutHandler}
             >
-              <AiOutlineLogout size={"1.8rem"} />
+              Logout
             </Button>
-            {isAdmin() && (
-              <a href="/admin">
-                <Button
-                  className="bg-green text-white go-to-btn"
-                  style={{ borderRadius: "2rem", width: "8rem" }}
-                  // onClick={() => navigate("/admin")}
-                >
-                  Go to Admin
-                </Button>
-              </a>
-            )}
           </div>
         </Col>
       </Row>

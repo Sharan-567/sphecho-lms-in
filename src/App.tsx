@@ -56,7 +56,21 @@ function App() {
               <Route path="certification" element={<Certification />} />
               <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
-              <Route path="admin">
+              <Route index element={<AdminMain />} />
+              <Route path="userMangement" element={<UserMangement />} />
+              <Route path="coursesMangement" element={<CousreMangement />} />
+              <Route path="topicsMangement" element={<TopicMangment />} />
+              <Route
+                path="assessmentMangement"
+                element={<AssessmentMangement />}
+              />
+              <Route path="questionMangement" element={<QuestionMangement />} />
+              <Route path="badgeMangement" element={<BadgeMangement />} />
+              <Route
+                path="certificationMangement"
+                element={<CertificationMangement />}
+              />
+              {/* <Route path="admin">
                 <Route index element={<AdminMain />} />
                 <Route path="userMangement" element={<UserMangement />} />
                 <Route path="coursesMangement" element={<CousreMangement />} />
@@ -74,7 +88,7 @@ function App() {
                   path="certificationMangement"
                   element={<CertificationMangement />}
                 />
-              </Route>
+              </Route> */}
             </Route>
           )}
         </Routes>

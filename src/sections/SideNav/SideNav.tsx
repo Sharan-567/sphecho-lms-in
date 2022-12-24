@@ -13,6 +13,10 @@ import {
   AiOutlineAccountBook,
   AiOutlineFileProtect,
   AiOutlineCalculator,
+  AiOutlineTool,
+  AiOutlineHome,
+  AiOutlinePercentage,
+  AiOutlineSafety,
 } from "react-icons/ai";
 import TopNav from "./TopNav";
 import { number } from "yup/lib/locale";
@@ -43,59 +47,130 @@ const SideNav = () => {
   const subNavRef = useRef<HTMLDivElement>(null);
   const [currentActiveSubNavList, setCurrentActiveSubList] = useState<number>();
   const navigate = useNavigate();
+  const [menuList, setMenuList] = React.useState<MenuList[]>();
 
-  const menuList: MenuList[] = [
-    {
-      id: 1,
-      Icon: AiOutlineUser,
-      title: "My Profile",
-      to: "/",
-    },
-    {
-      id: 2,
-      Icon: AiOutlineFire,
-      title: "Curriculum",
-      subNavItems: [
-        {
-          title: "Courses",
-          Icon: AiOutlineCalculator,
-          to: "/courses",
-        },
-        {
-          title: "Certification",
-          Icon: AiOutlineFileProtect,
-          to: "/certification",
-        },
-      ],
-    },
-    {
-      id: 3,
-      Icon: AiOutlineNotification,
-      title: "Webinars",
-      to: "/webinars",
-    },
+  React.useEffect(() => {
+    const patientsMenu: MenuList[] = [
+      {
+        id: 1,
+        Icon: AiOutlineUser,
+        title: "My Profile",
+        to: "/",
+      },
+      {
+        id: 2,
+        Icon: AiOutlineFire,
+        title: "Curriculum",
+        subNavItems: [
+          {
+            title: "Courses",
+            Icon: AiOutlineCalculator,
+            to: "/courses",
+          },
+          {
+            title: "Certification",
+            Icon: AiOutlineFileProtect,
+            to: "/certification",
+          },
+        ],
+      },
+      {
+        id: 3,
+        Icon: AiOutlineNotification,
+        title: "Webinars",
+        to: "/webinars",
+      },
 
-    // {
-    //   id: 4,
-    //   Icon: AiOutlineComment,
-    //   title: "Community",
-    //   to: "/Forum",
-    // },
-  ];
+      // {
+      //   id: 4,
+      //   Icon: AiOutlineComment,
+      //   title: "Community",
+      //   to: "/Forum",
+      // },
+    ];
 
-  const getSubNavList = () => {
-    return menuList.filter((nav) => nav.subNavItems);
-  };
-
-  const getYpostion = () => {
-    let parentTop = parentRef.current?.getBoundingClientRect().top;
-    let childTop =
-      childListRef.current[currentSelectedTab]?.getBoundingClientRect().top;
-    if (parentTop && childTop) {
-      return childTop - parentTop - 19.5;
+    const superUserMenu: MenuList[] = [
+      {
+        id: 1,
+        Icon: AiOutlineUser,
+        title: "My Profile",
+        to: "/",
+      },
+      {
+        id: 2,
+        Icon: AiOutlineFire,
+        title: "Curriculum",
+        subNavItems: [
+          {
+            title: "Courses",
+            Icon: AiOutlineCalculator,
+            to: "/courses",
+          },
+          {
+            title: "Certification",
+            Icon: AiOutlineFileProtect,
+            to: "/certification",
+          },
+        ],
+      },
+      {
+        id: 3,
+        Icon: AiOutlineNotification,
+        title: "Webinars",
+        to: "/webinars",
+      },
+      {
+        id: 5,
+        Icon: AiOutlineUser,
+        title: "Users",
+        to: "/userMangement",
+      },
+      {
+        id: 6,
+        Icon: AiOutlineFire,
+        title: "Courses",
+        to: "/coursesMangement",
+      },
+      {
+        id: 7,
+        Icon: AiOutlineNotification,
+        title: "Topics",
+        to: "/topicsMangement",
+      },
+      {
+        id: 8,
+        Icon: AiOutlinePercentage,
+        title: "Assessment",
+        to: "/assessmentMangement",
+      },
+      {
+        id: 9,
+        Icon: AiOutlineTool,
+        title: "Questions",
+        to: "/questionMangement",
+      },
+      {
+        id: 10,
+        Icon: AiOutlineSafety,
+        title: "Badges",
+        to: "/badgeMangement",
+      },
+      {
+        id: 11,
+        Icon: AiOutlineComment,
+        title: "Certification",
+        to: "/certificationMangement",
+      },
+    ];
+    const userState = localStorage.getItem("userState");
+    if (userState) {
+      if (userState === "SuperUser" || userState === "staffMember") {
+        setMenuList(superUserMenu);
+      } else {
+        setMenuList(patientsMenu);
+      }
     }
-    return 0;
-  };
+  }, []);
 
   const handleTab = (route?: string, tabNo?: number) => {
     if (tabNo) {
@@ -187,7 +262,7 @@ const SideNav = () => {
                   onClick={() => handleTab(link.to, link.id)}
                   className={`${
                     currentSelectedTab == link.id ? "text-blue" : "text-white"
-                  } b-700 px-4 p-3 my-3`}
+                  } b-700 px-4 p-3 my-2`}
                   animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
                   variants={ButtonMotion}
                   initial="rest"
