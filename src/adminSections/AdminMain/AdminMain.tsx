@@ -100,24 +100,23 @@ const AdminMain = () => {
     },
   };
 
-
   return (
-    <div className="container p-3" style={{display: "block"}}>
+    <div className="container p-3" style={{ display: "block" }}>
       <Row>
         <Col>
           <div>
-            <Button
+            {/* <Button
               onClick={() => navigate("/")}
               className="bg-green text-white"
               style={{ borderRadius: "2rem" }}
             >
               Go to LMS
-            </Button>
+            </Button> */}
           </div>
         </Col>
       </Row>
       <Row>
-        <Col  sm={4}>
+        <Col sm={4}>
           <div className="p-1 br-2 bg-white">
             <h5 className="b-700 px-3 py-2">Total Users</h5>
             <ReactAPexChart
@@ -128,7 +127,7 @@ const AdminMain = () => {
             />
           </div>
         </Col>
-        <Col  sm={4}>
+        <Col sm={4}>
           <div className="p-1 br-2 bg-white">
             <h5 className="b-700 px-3 py-2">No of Courses</h5>
             <ReactAPexChart
@@ -139,7 +138,7 @@ const AdminMain = () => {
             />
           </div>
         </Col>
-        <Col  sm={4}>
+        <Col sm={4}>
           <div className="p-1 br-2 bg-white">
             <h5 className="b-700 px-3 py-2">No of Webinars</h5>
             <ReactAPexChart
@@ -151,7 +150,7 @@ const AdminMain = () => {
           </div>
         </Col>
       </Row>
-      <Row style={{display: "block"}}>
+      <Row style={{ display: "block" }}>
         <Col className="p-3" sm={12}>
           <div className="br-2 p-1 bg-white">
             <h5 className="px-3 b-700 py-1">Monthly active Users</h5>

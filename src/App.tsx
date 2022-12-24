@@ -56,7 +56,7 @@ function App() {
               <Route path="certification" element={<Certification />} />
               <Route path="webinars" element={<Webinars />} />
               <Route path="cart" element={<Cart />} />
-              <Route index element={<AdminMain />} />
+              <Route path="analytics" element={<AdminMain />} />
               <Route path="userMangement" element={<UserMangement />} />
               <Route path="coursesMangement" element={<CousreMangement />} />
               <Route path="topicsMangement" element={<TopicMangment />} />

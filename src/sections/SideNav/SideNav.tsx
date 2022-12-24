@@ -97,6 +97,12 @@ const SideNav = () => {
         to: "/",
       },
       {
+        id: 13,
+        Icon: AiOutlineAccountBook,
+        title: "Analytics",
+        to: "/analytics",
+      },
+      {
         id: 2,
         Icon: AiOutlineFire,
         title: "Curriculum",
@@ -266,7 +272,6 @@ const SideNav = () => {
                   animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
                   variants={ButtonMotion}
                   initial="rest"
-                  whileHover="hover"
                   whileTap="pressed"
                   style={{
                     fontSize: "1.1rem",
