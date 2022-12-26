@@ -3,5 +3,6 @@ export type Patient = {
   dob: string;
   _id: string;
   gender: string;
+  mobile: string;
   fullName: string;
 };

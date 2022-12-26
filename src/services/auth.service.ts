@@ -134,6 +134,7 @@ const verifyPatient = async (data: Patient) => {
     formData.append("id", data._id);
     formData.append("dob", data.dob);
     formData.append("gender", data.gender);
+    formData.append("contact", data.mobile);
     const res = await customAxios.post(`/accounts/auth/`, formData);
     if (res.data.error) {
       return Promise.reject(getErrorMessageWithCode(401));
