@@ -191,9 +191,8 @@ const SideNav = () => {
       // className="py-2 ps-3"
       style={{
         position: "sticky",
-        top: 0,
-        minHeight: "100vh",
-        maxHeight: "100vh",
+        top: "0",
+        height: "100vh",
       }}
     >
       <motion.div
@@ -231,14 +230,7 @@ const SideNav = () => {
             </motion.button>
           </div>
         </div>
-        <div
-          ref={parentRef}
-          style={
-            {
-              // outline: "1px solid yellow",
-            }
-          }
-        >
+        <div ref={parentRef} style={{ height: "80vh", overflowY: "scroll" }}>
           <div style={{ height: 0, display: "hidden" }}>
             <svg
               viewBox="0 0 230 107"

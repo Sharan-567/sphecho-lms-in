@@ -4,6 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../store";
 import authService from "../../services/auth.service";
 import type { Patient } from "../../definations/patients";
+import NewPatient from "./NewPatient";
 type Usertype = "Patient" | "Provider" | "SuperUser";
 type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<Usertype | undefined>>;
@@ -92,6 +93,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
               display: "block",
             }}
             type="tel"
+            maxLength={10}
           />
           <Button
             className="p-2 px-4 br-3 mt-4 text-white "
@@ -117,20 +119,26 @@ const PatientLogin = ({ setLoginType }: Props) => {
 
       {stage === "PATIENTS_LIST" ? (
         <div>
-          <p className="b-500 my-1">Select the Patient</p>
-          {(patientList || []).map((patient) => {
-            return (
-              <div
-                className="bg-green my-2 p-3 br-1 text-white"
-                style={{ cursor: "pointer" }}
-                key={patient._id}
-                onClick={() => setSelectedPatient(patient)}
-              >
-                <p>{patient.fullName}</p>
-                <p>{patient.dob}</p>
-              </div>
-            );
-          })}
+          {patientList.length === 0 ? (
+            <NewPatient mobile={number} />
+          ) : (
+            <>
+              <p className="b-500 my-1">Select the Patient</p>
+              {(patientList || []).map((patient) => {
+                return (
+                  <div
+                    className="bg-green my-2 p-3 br-1 text-white"
+                    style={{ cursor: "pointer" }}
+                    key={patient._id}
+                    onClick={() => setSelectedPatient(patient)}
+                  >
+                    <p>{patient.fullName}</p>
+                    <p>{patient.dob}</p>
+                  </div>
+                );
+              })}
+            </>
+          )}
         </div>
       ) : null}
 
