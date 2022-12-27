@@ -1,9 +1,15 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 import axios from "axios";
-import { Button } from "react-bootstrap";
+import { Button, Form } from "react-bootstrap";
+import { Patient } from "../../definations/patients";
 
-const NewPatient = ({ mobile }: { mobile: string }) => {
+type NewPatientProps = {
+  setSelectedPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
+  mobile: string;
+};
+
+const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
   const [fName, setFname] = React.useState("");
   const [age, setAge] = React.useState("");
   const [dob, setDob] = React.useState<Date>();
@@ -11,19 +17,18 @@ const NewPatient = ({ mobile }: { mobile: string }) => {
 
   const createPatient = () => {
     axios
-      .post(
-        "http://qish.metahos.com/patient/createPatientRecord",
-        {
-          fName,
-          age,
-          dob,
-          mobile,
-          createdOn: new Date(),
-          lean: "true",
-        },
-        { headers: { proxy: "https://qish.metahos.com" } }
-      )
-      .then((res) => console.log(res.data))
+      .post("https://qish.metahos.com/patient/createPatientRecord", {
+        fName,
+        age,
+        dob,
+        mobile,
+        createdOn: new Date(),
+        lean: "true",
+        gender: "male",
+      })
+      .then(({ data }) => {
+        setSelectedPatient(data.patient);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -64,12 +69,29 @@ const NewPatient = ({ mobile }: { mobile: string }) => {
         selected={dob}
         onChange={(date: Date) => setDob(date)}
       />
+      <Form.Select
+        name="Gender"
+        id="gender"
+        className="py-3 px-1 text-center b-600 br-2 my-3"
+        placeholder="Age"
+        style={{
+          fontSize: "1.2rem",
+          border: "1px solid #81a31b",
+          display: "block",
+          margin: "auto",
+        }}
+      >
+        <option value="mercedes">Male</option>
+        <option value="audi">Female</option>
+        <option value="audi">Other</option>
+      </Form.Select>
       <div className="w-100 ps-2">
         <Button
-          className="p-2 px-4 br-3 mt-4 ms-5 text-white m-auto"
+          className="p-2 px-4 br-3 mt-4 text-white m-auto"
+          style={{ margin: "auto", display: "block" }}
           onClick={createPatient}
         >
-          GET OTP
+          Create Account
         </Button>
       </div>
     </div>

@@ -7,7 +7,7 @@ import type { Patient } from "../../definations/patients";
 import NewPatient from "./NewPatient";
 type Usertype = "Patient" | "Provider" | "SuperUser";
 type Props = {
-  setLoginType: React.Dispatch<React.SetStateAction<Usertype | undefined>>;
+  setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
 };
 
 type DataType = {
@@ -120,7 +120,10 @@ const PatientLogin = ({ setLoginType }: Props) => {
       {stage === "PATIENTS_LIST" ? (
         <div>
           {patientList.length === 0 ? (
-            <NewPatient mobile={number} />
+            <NewPatient
+              mobile={number}
+              setSelectedPatient={setSelectedPatient}
+            />
           ) : (
             <>
               <p className="b-500 my-1">Select the Patient</p>

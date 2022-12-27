@@ -89,12 +89,16 @@ const Login = () => {
               delay: 0.5,
               ease: [0, 0.71, 0.2, 1.01],
             }}
-            style={{ fontSize: "6rem" }}
+            style={{ fontSize: "6rem", fontWeight: "bolder" }}
           >
             Welcome to{" "}
             <h1
               className="text-primary"
-              style={{ fontSize: "7rem", textDecoration: "underline" }}
+              style={{
+                fontSize: "7rem",
+                textDecoration: "underline",
+                fontWeight: "bold",
+              }}
             >
               Sphecho
             </h1>
