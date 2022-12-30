@@ -63,9 +63,12 @@ const Course = () => {
         >
           <div>
             <h2 className="b-700 text-blue">My Courses</h2>
+            {getUsersCourses(userCourses).length === 0 ? (
+              <p>You have No Assigned to You yet</p>
+            ) : null}
             <div>
-              {getUsersCourses(userCourses).map((course) => {
-              return (
+              {(getUsersCourses(userCourses) || []).map((course) => {
+                return (
                   <CourseContainer
                     key={`course-${course.id}`}
                     no_of_topics={getNoOftopics(course.id)}
