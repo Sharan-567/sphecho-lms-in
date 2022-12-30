@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import OtpInput from "react-otp-input";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import authService from "../../services/auth.service";
 import type { Patient } from "../../definations/patients";
 import NewPatient from "./NewPatient";
+import { makeLogin } from "../../features/auth";
 type Usertype = "Patient" | "Provider" | "SuperUser";
 type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
@@ -23,11 +25,13 @@ const PatientLogin = ({ setLoginType }: Props) => {
   const [data, setData] = useState({ usertype: "", phone: "" });
   const [patientList, setPatientList] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient>();
-
+  const [otpError, setOtpError] = useState("");
+  const dispatch = useAppDispatch();
   const [error, setError] = useState("");
   const [hash, setHash] = useState("");
   const [token, setToken] = useState("");
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
     const verifyOtp = async () => {
       if (otp.length === 4) {
@@ -39,7 +43,12 @@ const PatientLogin = ({ setLoginType }: Props) => {
             otp,
           });
           setToken(token);
-          setStage("PATIENTS_LIST");
+          if (token) {
+            setOtpError("");
+            setStage("PATIENTS_LIST");
+          } else {
+            setOtpError("Invalid Otp");
+          }
           const { patients } = await authService.GetPatientList(number, token);
           setPatientList(patients);
         } catch (err) {
@@ -56,7 +65,12 @@ const PatientLogin = ({ setLoginType }: Props) => {
       try {
         if (selectedPatient) {
           const { token } = await authService.verifyPatient(selectedPatient);
-          await authService.AuthorizeLMS({ token, typeId: "1" });
+          if (token) {
+            dispatch(makeLogin());
+            localStorage.setItem("token", token);
+            localStorage.setItem("userState", "patient");
+            navigate("/");
+          }
         }
       } catch (err) {
         setError(err);
@@ -105,6 +119,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
       ) : null}
       {stage === "OTP" ? (
         <>
+          {token ? <p></p> : <p className="text-danger">{otpError}</p>}
           <p className="my-1 b-500">Please Enter the Otp</p>
           <OtpInput
             containerStyle={{ padding: "1rem" }}
@@ -119,12 +134,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
 
       {stage === "PATIENTS_LIST" ? (
         <div>
-          {patientList.length === 0 ? (
-            <NewPatient
-              mobile={number}
-              setSelectedPatient={setSelectedPatient}
-            />
-          ) : (
+          {patientList.length > 0 ? (
             <>
               <p className="b-500 my-1">Select the Patient</p>
               {(patientList || []).map((patient) => {
@@ -141,6 +151,11 @@ const PatientLogin = ({ setLoginType }: Props) => {
                 );
               })}
             </>
+          ) : (
+            <NewPatient
+              mobile={number}
+              setSelectedPatient={setSelectedPatient}
+            />
           )}
         </div>
       ) : null}

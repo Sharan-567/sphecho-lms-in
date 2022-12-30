@@ -149,6 +149,9 @@ const auth = createSlice({
       state.isLoggedIn = false;
       localStorage.clear();
     },
+    makeLogin: (state) => {
+      state.isLoggedIn = true;
+    },
     clearError: (state) => {
       state.err = "";
     },
@@ -182,5 +185,5 @@ const auth = createSlice({
   },
 });
 
-export const { logout, clearError } = auth.actions;
+export const { logout, clearError, makeLogin } = auth.actions;
 export default auth.reducer;
