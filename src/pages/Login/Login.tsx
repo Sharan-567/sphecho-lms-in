@@ -30,24 +30,28 @@ const Login = () => {
       userState: "Patient",
       user_type: "",
       type: "2",
+      lmsAuthorizeType: "1",
     },
     {
       title: "Provider",
       userState: "Provider",
       user_type: "Doctor",
       type: "1",
+      lmsAuthorizeType: "2",
     },
     {
       title: "Staff Member",
       userState: "staffMember",
       user_type: "SuperUser",
       type: "1",
+      lmsAuthorizeType: "3",
     },
     {
       title: "Super User",
       userState: "SuperUser",
       user_type: "SuperUser",
       type: "1",
+      lmsAuthorizeType: "3",
     },
   ];
 

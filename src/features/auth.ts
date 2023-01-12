@@ -34,6 +34,7 @@ export const login = createAsyncThunk<
     type: string;
     user_type: string;
     userState: UserState;
+    lmsAuthorizeType: string;
   },
   { rejectValue: string; serializedErrorType: string }
 >("/login", async (reqData, thunkAPI) => {
@@ -45,7 +46,7 @@ export const login = createAsyncThunk<
 
     const data = await authService.AuthorizeLMS({
       token: metaHosToken,
-      typeId: "2",
+      typeId: reqData.lmsAuthorizeType,
     });
 
     const token = data.token;

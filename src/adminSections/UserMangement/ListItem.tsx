@@ -33,13 +33,13 @@ const ListItem = ({
         >
           update user to course
         </Button>
-        {/* <Button
+        <Button
           className="text-white me-1 tiny"
           variant="adminteritory"
           onClick={addStudentToCourseHandler}
         >
           Update student to course
-        </Button> */}
+        </Button>
       </Col>
     </Row>
   );

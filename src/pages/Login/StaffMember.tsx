@@ -10,6 +10,7 @@ type Auth = {
   userState: UserState;
   user_type: string;
   type: string;
+  lmsAuthorizeType: string;
 };
 
 type Props = {
@@ -26,9 +27,19 @@ const StaffMember = ({ setLoginType, currentSelectedAuth }: Props) => {
 
   const handleProviderLogin = () => {
     if (currentSelectedAuth) {
-      const { type, userState, user_type } = currentSelectedAuth;
+      const { type, userState, user_type, lmsAuthorizeType } =
+        currentSelectedAuth;
 
-      dispatch(login({ username, password, type, userState, user_type }))
+      dispatch(
+        login({
+          username,
+          password,
+          type,
+          userState,
+          user_type,
+          lmsAuthorizeType,
+        })
+      )
         .unwrap()
         .then((res) => {
           navigate("/");

@@ -19,8 +19,18 @@ const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
 
   const handleProviderLogin = () => {
     if (currentSelectedAuth) {
-      const { type, userState, user_type } = currentSelectedAuth;
-      dispatch(login({ username, password, type, userState, user_type }))
+      const { type, userState, user_type, lmsAuthorizeType } =
+        currentSelectedAuth;
+      dispatch(
+        login({
+          username,
+          password,
+          type,
+          userState,
+          user_type,
+          lmsAuthorizeType,
+        })
+      )
         .unwrap()
         .then((res) => {
           navigate("/");

@@ -5,4 +5,5 @@ export type Auth = {
   userState: UserState;
   user_type: string;
   type: string;
+  lmsAuthorizeType: string;
 };
