@@ -6,6 +6,7 @@ import { BsCheckCircleFill, BsExclamationTriangle } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
 import type { Topic } from "../../definations/course";
 import type { Assessment } from "../../definations/assessment";
+import NotFound from "../NotFound";
 import TopicContainer from "./Topic";
 
 const TopicsList = () => {
@@ -49,11 +50,8 @@ const TopicsList = () => {
   if (err) {
     return (
       <div className="p-2 w-100 d-flex justify-content-center align-items-center">
-        <BsExclamationTriangle className="me-4" size={40} />
-        <div>
-          <h5 className="m-auto text-danger">{err}</h5>
-          <h2>Please try agian later.</h2>
-        </div>
+        <NotFound />
+        <h3 className="text-center text-bold">No Topics Found</h3>
       </div>
     );
   }
@@ -82,8 +80,9 @@ const TopicsList = () => {
                         key={id}
                         style={{ borderRadius: ".5rem" }}
                         className={`d-flex align-items-center p-2 mb-3 ${
-                          topic.customId === currentTopic?.customId ?
-                          "bg-primary text-white" : "bg-gray"
+                          topic.customId === currentTopic?.customId
+                            ? "bg-primary text-white"
+                            : "bg-gray"
                         }`}
                       >
                         <div className="me-2">

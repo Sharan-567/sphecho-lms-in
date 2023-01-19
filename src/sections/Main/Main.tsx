@@ -3,7 +3,6 @@ import { Row, Col, Badge, Container, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchLatestCourses } from "../../features/latestCourses";
-import { fetchAllCourses } from "../../features/courses";
 import { AiOutlineShopping, AiOutlineLogout } from "react-icons/ai";
 import GaugeChart from "react-gauge-chart";
 import AliceCarousel from "react-alice-carousel";
@@ -13,6 +12,9 @@ import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
 import { logout } from "../../features/auth";
+import { addAllCourses } from "../../features/courses";
+import { showToast } from "../../features/toast";
+import { customAxios } from "../../services/utils";
 
 const Main = () => {
   const {
@@ -21,11 +23,23 @@ const Main = () => {
     latestCourses,
   } = useAppSelector((state) => state.latestCourses);
   const { items } = useAppSelector((state) => state.cart);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const getAllCourses = () => {
+    customAxios
+      .get("student/course/")
+      .then((res) => {
+        dispatch(addAllCourses(res.data));
+      })
+      .catch((err) => {
+        dispatch(showToast({ type: "danger", message: err.message }));
+      });
+  };
+
   useEffect(() => {
-    dispatch(fetchAllCourses({}));
+    getAllCourses();
     dispatch(fetchLatestCourses({}));
   }, []);
 

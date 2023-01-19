@@ -14,14 +14,16 @@ interface Location extends Path {
 const CourseDetail = () => {
   const location: Location = useLocation() as Location;
   const [course, setCourse] = useState<Course>();
-  const { courses, err, loading } = useAppSelector((state) => state.courses);
+  const { courses } = useAppSelector((state) => state.courses);
 
   useEffect(() => {
     if (courses) {
       let selected = courses.filter((c) => c.id == location.state.id)[0];
-      setCourse(selected);
+      if (selected) {
+        setCourse(selected);
+      }
     }
-  }, [loading]);
+  }, []);
 
   const getPrice = (price) => {
     if (price) {
@@ -29,10 +31,6 @@ const CourseDetail = () => {
       else return `$${parseInt(price)}`;
     }
   };
-
-  if (err) {
-    return <h3>Something went wrong</h3>;
-  }
 
   return (
     <div className="container p-5 w-100 br-3">

@@ -23,9 +23,9 @@ const UserMangement = () => {
   const [currentSelectedUser, setCurrentSelectedUser] = React.useState<
     Patient | Doctor
   >({});
-  const [currentSelectedUserRole, setCurrentSelectedUserRole] = React.useState<
-    "1" | "2"
-  >();
+  // const [currentSelectedUserRole, setCurrentSelectedUserRole] = React.useState<
+  //   "1" | "2" | "3"
+  // >();
   let token = localStorage.getItem("token");
 
   const [error, setError] = React.useState("");
@@ -64,7 +64,7 @@ const UserMangement = () => {
           setState,
           currentSelectedUser,
           setError,
-          currentSelectedUserRole,
+       
         }}
       />
     );
@@ -74,7 +74,7 @@ const UserMangement = () => {
         {...{
           setState,
           currentSelectedUser,
-          currentSelectedUserRole,
+        
           courses,
         }}
       />
@@ -85,15 +85,17 @@ const UserMangement = () => {
         {...{
           setState,
           currentSelectedUser,
-          currentSelectedUserRole,
+
           courses,
         }}
       />
     );
   }
 
-  // 1 means patient/user
-  // 2 means doctor/staff
+  // user_type: 1 means patient/user
+  // user_type: 2 means doctor/staff/staffProvider
+
+  //send type 1 for update the user //send type 2 for update the user to course // send type 3 for adding user to the course.
   return (
     <div className="container w-75 py-5">
       <h1 className="mb-2">Users</h1>
@@ -105,17 +107,14 @@ const UserMangement = () => {
               update={() => {
                 setState("updateUser");
                 setCurrentSelectedUser(user);
-                setCurrentSelectedUserRole("1");
               }}
               addUserToCourseHandler={() => {
                 setState("addUserToCourse");
                 setCurrentSelectedUser(user);
-                setCurrentSelectedUserRole("1");
               }}
               addStudentToCourseHandler={() => {
                 setState("addStudentToCourse");
                 setCurrentSelectedUser(user);
-                setCurrentSelectedUserRole("1");
               }}
             />
           </div>
@@ -130,17 +129,14 @@ const UserMangement = () => {
               update={() => {
                 setState("updateUser");
                 setCurrentSelectedUser(user);
-                setCurrentSelectedUserRole("2");
               }}
               addUserToCourseHandler={() => {
                 setState("addUserToCourse");
                 setCurrentSelectedUser(user);
-                setCurrentSelectedUserRole("2");
               }}
               addStudentToCourseHandler={() => {
                 setState("addStudentToCourse");
                 setCurrentSelectedUser(user);
-                setCurrentSelectedUserRole("2");
               }}
             />
           </div>

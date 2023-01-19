@@ -8,6 +8,7 @@ import {
   latestCourses,
   progress,
   cart,
+  toast,
 } from "./features";
 
 export const store = configureStore({
@@ -19,6 +20,7 @@ export const store = configureStore({
     latestCourses,
     progress,
     cart,
+    toast,
   },
 });
 
