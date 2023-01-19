@@ -34,7 +34,12 @@ const Main = () => {
         dispatch(addAllCourses(res.data));
       })
       .catch((err) => {
-        dispatch(showToast({ type: "danger", message: err.message }));
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : main : while fetching all courses",
+          })
+        );
       });
   };
 

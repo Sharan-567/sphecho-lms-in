@@ -5,9 +5,11 @@ import { Button } from "react-bootstrap";
 import AssesmentComp from "../../sections/Assessment";
 import { Assessment } from "../../definations/assessment";
 import type { Topic as TopicType } from "../../definations/course";
-import { fetchAllProgress, updateProgress } from "../../features/progress";
+import { addAllprogress, updateProgress } from "../../features/progress";
 import { useAppDispatch, useAppSelector } from "../../store";
 import NotFound from "../NotFound";
+import { showToast } from "../../features/toast";
+import { customAxios, NormalizeProgressData } from "../../services/utils";
 
 type TopicProp = {
   topic?: Assessment | TopicType;
@@ -32,15 +34,33 @@ const Topic = ({ topic, courseId }: TopicProp) => {
     return () => setCompleted(false);
   }, [topic?.id, courseId]);
 
+  const getAllProgress = () => {
+    customAxios
+      .get(`student/student-progress/`)
+      .then((res) => {
+        let progresses = NormalizeProgressData(res.data.progress);
+        dispatch(addAllprogress(progresses));
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : Topic - While fetching all Progress",
+          })
+        );
+      });
+  };
+
   const updateProgressHanlder = () => {
     if (topic?.id && courseId) {
       dispatch(updateProgress({ course: courseId, topic: topic?.id }))
         .unwrap()
         .then((data) => {
           console.log(data);
-          dispatch(fetchAllProgress({}));
+          getAllProgress();
           setCompleted(true);
-        });
+        })
+        
     }
   };
 
@@ -96,12 +116,9 @@ const Topic = ({ topic, courseId }: TopicProp) => {
         {topic && <AssesmentComp assessmentId={topic.id} />}
       </div>
     );
+  } else {
+    <div className="p-3  br-1 bg-gray">something went wrong</div>;
   }
-  return (
-    <>
-      <h3 className="p-2 m-auto">No topics available to this course yet.</h3>
-    </>
-  );
 };
 
 export default Topic;

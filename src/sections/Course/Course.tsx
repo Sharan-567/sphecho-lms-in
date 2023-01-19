@@ -4,16 +4,14 @@ import {
   addUserCourses,
   addUserTopic,
 } from "../../features/courses";
-import { Spinner } from "react-bootstrap";
-import { BsExclamationTriangle } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
 import type { StudentCourse } from "../../definations/course";
-import { fetchAllProgress } from "../../features/progress";
 import CourseContainer from "./CourseContainer";
-import { customAxios } from "../../services/utils";
+import { customAxios, NormalizeProgressData } from "../../services/utils";
 import { showToast } from "../../features/toast";
 import Loading from "../Loading";
 import NotFound from "../NotFound";
+import { addAllprogress } from "../../features/progress";
 
 const Course = () => {
   const { courses, userCourses, userCoursesTopics } = useAppSelector(
@@ -72,7 +70,7 @@ const Course = () => {
               dispatch(
                 showToast({
                   type: "danger",
-                  message: err.message + ": While fetching topic detail",
+                  message: err.message + ": While fetching topic list",
                 })
               );
             });
@@ -89,9 +87,27 @@ const Course = () => {
       });
   };
 
+  const getAllProgress = () => {
+    customAxios
+      .get(`student/student-progress/`)
+      .then((res) => {
+        let progresses = NormalizeProgressData(res.data.progress);
+        dispatch(addAllprogress(progresses));
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : While fetching all Progress",
+          })
+        );
+      });
+  };
+
   useEffect(() => {
     getAllCourses();
     getAllUserCourses();
+    getAllProgress();
   }, []);
 
   const getUsersCourses = useCallback(
@@ -135,9 +151,10 @@ const Course = () => {
             {getUsersCourses(userCourses).length === 0 ? (
               <>
                 <NotFound />
-                <h5 className="text-center b-600">
+                <h3 className="text-center b-600">
                   No Courses Available At this Moment
-                </h5>
+                </h3>
+                <p className="text-center">Please Try again later</p>
               </>
             ) : null}
             <div>

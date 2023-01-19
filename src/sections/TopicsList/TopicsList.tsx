@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { fetchTopics } from "../../features/topics";
+import React, { useEffect, useState, useCallback } from "react";
+import { useParams } from "react-router-dom";
+import { addTopics, resetTopics } from "../../features/topics";
 import { ListGroup, Spinner, Row, Col, Container } from "react-bootstrap";
-import { BsCheckCircleFill, BsExclamationTriangle } from "react-icons/bs";
+import { BsCheckCircleFill } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
 import type { Topic } from "../../definations/course";
 import type { Assessment } from "../../definations/assessment";
 import NotFound from "../NotFound";
 import TopicContainer from "./Topic";
+import {
+  addUniqueIdsToList,
+  customAxios,
+  getOrderListFromTwoList,
+} from "../../services/utils";
+import { showToast } from "../../features/toast";
 
 const TopicsList = () => {
-  const {
-    loading,
-    orderTopics: topics,
-    err,
-  } = useAppSelector((state) => state.topics);
+  const { orderTopics: topics } = useAppSelector((state) => state.topics);
   const {
     loading: progressLoading,
     progress,
@@ -24,17 +26,50 @@ const TopicsList = () => {
   const { courseId } = useParams();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (typeof courseId === "string") {
-      dispatch(fetchTopics(courseId));
+  const getAllTopics = useCallback(() => {
+    if (courseId) {
+      customAxios
+        .get(`student/get-course-details/${courseId}/`)
+        .then((res) => {
+          const { topics, assesements } = res.data;
+          const orderTopics = getOrderListFromTwoList<Topic, Assessment>(
+            topics,
+            assesements
+          );
+          const orderTopicsWithCustomIds = addUniqueIdsToList<
+            Topic | Assessment
+          >(orderTopics);
+          dispatch(
+            addTopics({
+              topics,
+              assesements,
+              orderTopics: orderTopicsWithCustomIds,
+            })
+          );
+        })
+        .catch((err) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : while fetching all topics",
+            })
+          );
+        });
     }
+  }, [courseId]);
+
+  useEffect(() => {
+    getAllTopics();
+    return () => {
+      dispatch(resetTopics());
+    };
   }, [courseId]);
 
   useEffect(() => {
     if (topics && topics.length > 0) {
       setCurrentTopic(topics[0]);
     }
-  }, [loading, topics]);
+  }, [topics]);
 
   const isCompleted = (topic: Topic | Assessment): boolean => {
     if (courseId && `${courseId}` in progress) {
@@ -47,18 +82,21 @@ const TopicsList = () => {
     return false;
   };
 
-  if (err) {
+  if (topics.length === 0) {
     return (
-      <div className="p-2 w-100 d-flex justify-content-center align-items-center">
+      <div>
         <NotFound />
-        <h3 className="text-center text-bold">No Topics Found</h3>
+        <h3 className="b-600 text-center">
+          No Topics Available for this Course.
+        </h3>
+        <p className="text-center">Please Try again later</p>
       </div>
     );
   }
 
   return (
     <div className="container p-4 w-100">
-      {loading ? (
+      {false ? (
         <div className="w-100 d-flex justify-content-center mt-5">
           <Spinner animation="border" variant="green" />
         </div>
@@ -89,9 +127,7 @@ const TopicsList = () => {
                           <BsCheckCircleFill
                             size={20}
                             className={`${
-                              isCompleted(topic)
-                                ? "text-green"
-                                : "text-graydark"
+                              isCompleted(topic) ? "text-green" : "text-white"
                             }`}
                           />
                         </div>
@@ -106,6 +142,7 @@ const TopicsList = () => {
                             border: "none",
                             textAlign: "left",
                             width: "100%",
+                            fontWeight: "bold",
                           }}
                           onClick={() => setCurrentTopic(topic)}
                         >

@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useAppSelector, useAppDispatch } from "../../store";
 import { AiOutlineUser } from "react-icons/ai";
 import { HOST } from "../../features/settings";
 import { removeItem } from "../../features/cart";
 import Empty from "../Empty";
+import defaultImg from "../../assets/default.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const imageRef = useRef<HTMLImageElement | any>(null);
 
   const getPrice = (price?: string) => {
     if (price) {
@@ -16,6 +20,14 @@ const Cart = () => {
       else return `$${parseInt(price)}`;
     }
   };
+
+  useEffect(() => {
+    if (imageRef.current) {
+      imageRef.current.onerror = () => {
+        imageRef.current.src = defaultImg;
+      };
+    }
+  }, [defaultImg, imageRef]);
 
   return (
     <Container className="p-5" style={{ minHeight: "100vh" }}>
@@ -34,6 +46,7 @@ const Cart = () => {
                   <Col sm={2}>
                     <div className="round">
                       <img
+                        ref={imageRef}
                         className=" p-1"
                         style={{
                           height: "5rem",
@@ -67,7 +80,11 @@ const Cart = () => {
                         Remove
                       </Button>
                       <Button
-                        onClick={() => dispatch(removeItem(item.id))}
+                        onClick={() =>
+                          navigate(`/courses/detail/${item.id}`, {
+                            state: { id: item.id },
+                          })
+                        }
                         className="text-black py-2 b-600 ms-3 bg-white"
                         style={{ fontSize: ".8rem" }}
                       >

@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, ReactHTMLElement } from "react";
 import { useLocation, Link, Path } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../store";
 import { HOST } from "../../features/settings";
 import type { Course } from "../../definations/course";
+import defaultImag from "../../assets/default.jpg";
 
 interface Location extends Path {
   state: {
@@ -15,15 +16,31 @@ const CourseDetail = () => {
   const location: Location = useLocation() as Location;
   const [course, setCourse] = useState<Course>();
   const { courses } = useAppSelector((state) => state.courses);
+  const imageRef = useRef<HTMLImageElement | any>(null);
+  const imageRefAvathar = useRef<HTMLImageElement | any>(null);
 
   useEffect(() => {
     if (courses) {
       let selected = courses.filter((c) => c.id == location.state.id)[0];
+      console.log(selected);
       if (selected) {
         setCourse(selected);
       }
     }
   }, []);
+
+  useEffect(() => {
+    if (imageRef.current) {
+      imageRef.current.onerror = () => {
+        imageRef.current.src = defaultImag;
+      };
+    }
+    if (imageRefAvathar.current) {
+      imageRefAvathar.current.onerror = () => {
+        imageRefAvathar.current.src = defaultImag;
+      };
+    }
+  }, [defaultImag, imageRef, imageRefAvathar]);
 
   const getPrice = (price) => {
     if (price) {
@@ -41,6 +58,7 @@ const CourseDetail = () => {
             <div className="bg-2 bg-graydark br-2 p-3">
               <img
                 alt=""
+                ref={imageRef}
                 src={`https://${HOST}${course?.info_image}`}
                 style={{
                   width: "100%",
@@ -52,8 +70,9 @@ const CourseDetail = () => {
               />
               <div className="d-flex align-items-center mb-3">
                 <img
+                  ref={imageRefAvathar}
                   alt="traniner"
-                  src={`https://${HOST}${course?.trainer_image}`}
+                  src={`https://${HOST}${course?.trainer_imag}`}
                   className="round-50 obj-fit-cover me-2"
                   style={{
                     width: "3rem",
