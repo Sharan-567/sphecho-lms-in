@@ -15,6 +15,8 @@ import { logout } from "../../features/auth";
 import { addAllCourses } from "../../features/courses";
 import { showToast } from "../../features/toast";
 import { customAxios } from "../../services/utils";
+import Counter from "../../components/Counter/Counter";
+import { BiBookOpen, BiBookmarkAlt, BiBookmarkHeart } from "react-icons/bi";
 
 const Main = () => {
   const {
@@ -23,6 +25,9 @@ const Main = () => {
     latestCourses,
   } = useAppSelector((state) => state.latestCourses);
   const { items } = useAppSelector((state) => state.cart);
+  const [noOfCoursesEnrolled, setNoOfCourseEnrolled] = useState("--");
+  const [noOfBadgesEarned, setNoOfBadgesEarned] = useState("--");
+  const [noOfCertificatesEarned, setNoOfCertificatesEarned] = useState("--");
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -43,8 +48,50 @@ const Main = () => {
       });
   };
 
+  const getAllCoursesLength = () => {
+    customAxios
+      .get("student/student-course/")
+      .then((res) => {
+        setNoOfCourseEnrolled(`${res.data.length}`);
+      })
+
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + ": User Courses length",
+          })
+        );
+      });
+  };
+
+  const getCertificationAndBagesLength = () => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      const headers = {
+        Authorization: "token " + token,
+      };
+      customAxios
+        .get(`student/certificates-badges/`)
+        .then((res) => {
+          setNoOfCertificatesEarned(`${res.data.certs.length}`);
+          setNoOfBadgesEarned(`${res.data.badges.length}`);
+        })
+        .catch((err) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + ": Certificates/Badges Courses length",
+            })
+          );
+        });
+    }
+  };
+
   useEffect(() => {
     getAllCourses();
+    getAllCoursesLength();
+    getCertificationAndBagesLength();
     dispatch(fetchLatestCourses({}));
   }, []);
 
@@ -138,6 +185,36 @@ const Main = () => {
         </Col>
         <Col sm={8} className="p-3 px-4">
           <CalenderWithEvents />
+        </Col>
+      </Row>
+      <Row
+        style={{
+          marginTop: "1rem",
+          marginBottom: "1rem",
+          paddingLeft: "4rem",
+          paddingRight: "4rem",
+        }}
+      >
+        <Col sm={4}>
+          <Counter
+            Icon={BiBookOpen}
+            title="No Of Course Enrolled"
+            value={noOfCoursesEnrolled}
+          />
+        </Col>
+        <Col sm={4}>
+          <Counter
+            Icon={BiBookmarkAlt}
+            title="No Of Certificates Earned"
+            value={noOfBadgesEarned}
+          />
+        </Col>
+        <Col sm={4}>
+          <Counter
+            Icon={BiBookmarkHeart}
+            title="No Of Badges Earned"
+            value={noOfCertificatesEarned}
+          />
         </Col>
       </Row>
       <Container>

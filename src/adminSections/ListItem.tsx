@@ -4,7 +4,7 @@ import { BsPenFill, BsFileTextFill } from "react-icons/bs";
 import { AiTwotoneDelete } from "react-icons/ai";
 
 type ListItem<T> = {
-  title: string;
+  title?: string;
   subTitle?: String;
   item: T;
   openModel: (c: T, type: "update" | "delete" | "read") => void;
