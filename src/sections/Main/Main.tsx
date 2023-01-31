@@ -208,14 +208,14 @@ const Main = () => {
         <Col sm={4}>
           <Counter
             Icon={BiBookmarkAlt}
-            title="No Of Certificates Earned"
+            title="No Of Badges Earned"
             value={noOfBadgesEarned}
           />
         </Col>
         <Col sm={4}>
           <Counter
             Icon={BiBookmarkHeart}
-            title="No Of Badges Earned"
+            title="No Of Certificates Earned"
             value={noOfCertificatesEarned}
           />
         </Col>
