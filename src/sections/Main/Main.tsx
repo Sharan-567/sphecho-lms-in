@@ -3,7 +3,7 @@ import { Row, Col, Badge, Container, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchLatestCourses } from "../../features/latestCourses";
-import { AiOutlineShopping, AiOutlineLogout } from "react-icons/ai";
+import { AiOutlineShopping } from "react-icons/ai";
 import GaugeChart from "react-gauge-chart";
 import AliceCarousel from "react-alice-carousel";
 import Search from "../../components/Search";

@@ -1,17 +1,21 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import "./feature.css";
-import bannerImg from "./assets/feat-banner.png";
+import bannerImg from "./assets/features/feat-banner.png";
+import NavBar from "./Navbar";
 
 const Features = () => {
   return (
-    <div>
-      <Container>
-        <Banner />
-        <GridContainer />
-      </Container>
-      <Footer />
-    </div>
+    <>
+      <NavBar />
+      <div style={{ width: "100vw", overflowX: "hidden" }}>
+        <Container>
+          <Banner />
+          <GridContainer />
+        </Container>
+        <Footer />
+      </div>
+    </>
   );
 };
 

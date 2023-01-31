@@ -1,22 +1,27 @@
 import React from "react";
 import { Button, Row, Col, Container } from "react-bootstrap";
-import banner from "./assets/banner-webinar.png";
-import detail from "./assets/detail.jpg";
+import banner from "./assets/webinar/banner-webinar.png";
+import detail from "./assets/webinar/detail.png";
+import NavBar from "./Navbar";
+
 import "./webinar.css";
 
 const webinar = () => {
   return (
-    <div>
-      <Container>
-        <Banner />
-        <Member />
-      </Container>
-      <Detail />
-      <Container>
-        <OverView />
-      </Container>
-      <Footer />
-    </div>
+    <>
+      <NavBar />
+      <div style={{ width: "100vw", overflowX: "hidden" }}>
+        <Container>
+          <Banner />
+          <Member />
+        </Container>
+        <Detail />
+        <Container>
+          <OverView />
+        </Container>
+        <Footer />
+      </div>
+    </>
   );
 };
 
@@ -25,7 +30,9 @@ const Banner = () => {
     <Row style={{ height: "30rem", paddingTop: "10%" }}>
       <Col sm={6}>
         <div className="banner-txt">
-          <h5 style={{ color: "#A1D66B", fontSize: "2.3rem" }}>
+          <h5
+            style={{ color: "#97d25a", fontSize: "2.3rem", fontWeight: "bold" }}
+          >
             Collaborate with us and <br></br>
             contribute to allow discovery <br></br>
             of your range of expertise <br></br>
@@ -40,7 +47,7 @@ const Banner = () => {
           src={banner}
           style={{
             position: "absolute",
-            width: "38rem",
+            width: "45%",
             objectFit: "contain",
             top: 0,
             right: 0,
@@ -74,7 +81,7 @@ const Member = () => (
     </p>
     <Button
       style={{
-        background: "#A1D66B",
+        background: "#97d25a",
         color: "white",
         margin: "auto",
         border: "none",
@@ -97,7 +104,7 @@ const Detail = () => (
       paddingTop: "3rem",
       paddingBottom: "3rem",
       borderRadius: "0rem 40rem 40rem 0rem",
-      background: "#A1D66B",
+      background: "#97d25a",
       marginRight: "10rem",
     }}
   >
@@ -158,7 +165,7 @@ const OverView = () => (
     </ul>
     <Button
       style={{
-        background: "#A1D66B",
+        background: "#97d25a",
         color: "white",
         border: "none",
         fontSize: "1.4rem",
@@ -173,7 +180,7 @@ const OverView = () => (
       For more information or questions regarding webinar proposals, please
       contact <br></br>support@sphecho.com
     </p>
-    <p style={{ marginTop: "2rem", color: "#A1D66B", fontWeight: "bold" }}>
+    <p style={{ marginTop: "2rem", color: "#97d25a", fontWeight: "bold" }}>
       Come join the SPHECHO Family
     </p>
   </div>

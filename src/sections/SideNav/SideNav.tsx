@@ -74,12 +74,12 @@ const SideNav = () => {
           },
         ],
       },
-      {
-        id: 3,
-        Icon: AiOutlineNotification,
-        title: "Webinars",
-        to: "/webinars",
-      },
+      // {
+      //   id: 3,
+      //   Icon: AiOutlineNotification,
+      //   title: "Webinars",
+      //   to: "/webinars",
+      // },
 
       // {
       //   id: 4,
@@ -119,12 +119,12 @@ const SideNav = () => {
           },
         ],
       },
-      {
-        id: 3,
-        Icon: AiOutlineNotification,
-        title: "Webinars",
-        to: "/webinars",
-      },
+      // {
+      //   id: 3,
+      //   Icon: AiOutlineNotification,
+      //   title: "Webinars",
+      //   to: "/webinars",
+      // },
       {
         id: 5,
         Icon: AiOutlineUser,
