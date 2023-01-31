@@ -8,6 +8,10 @@ import AddStudentToCourse from "./AddStudentToCourse";
 
 import type { Patient, Doctor } from "./definations";
 import ListItem from "./ListItem";
+import { useAppDispatch } from "../../store";
+import Loading from "../../sections/Loading";
+import { showToast } from "../../features/toast";
+import NotFound from "../../sections/NotFound";
 
 type User = {
   users: Patient[];
@@ -27,10 +31,12 @@ const UserMangement = () => {
   //   "1" | "2" | "3"
   // >();
   let token = localStorage.getItem("token");
-
+  const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
+  const dispatch = useAppDispatch();
 
   const getListOfUser = React.useCallback(() => {
+    setLoading(true);
     if (token) {
       const headers = {
         Authorization: `token ${token}`,
@@ -40,15 +46,17 @@ const UserMangement = () => {
         .then((res) => {
           setUsers(res.data.users);
           setCourses(res.data.courses);
+          setLoading(false);
         })
         .catch((err) => {
-          if (err.response) {
-            setError(err.response.statusText);
-          } else if (err.request) {
-            setError(err.request);
-          } else {
-            setError(err);
-          }
+          setLoading(false);
+          setError(err.message);
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : admin : while fetching userslist",
+            })
+          );
         });
     }
   }, []);
@@ -64,7 +72,6 @@ const UserMangement = () => {
           setState,
           currentSelectedUser,
           setError,
-       
         }}
       />
     );
@@ -74,7 +81,7 @@ const UserMangement = () => {
         {...{
           setState,
           currentSelectedUser,
-        
+
           courses,
         }}
       />
@@ -98,7 +105,7 @@ const UserMangement = () => {
   //send type 1 for update the user //send type 2 for update the user to course // send type 3 for adding user to the course.
   return (
     <div className="container w-75 py-5">
-      <h1 className="mb-2">Users</h1>
+      {/* <h1 className="mb-2">Users</h1>
       <div className="mb-5">
         {(users?.users || []).map((user) => (
           <div key={user._id}>
@@ -119,28 +126,34 @@ const UserMangement = () => {
             />
           </div>
         ))}
-      </div>
-      <h1 className="mb-2">Doctors</h1>
+      </div> */}
+      <h1 className="mb-2">Providers</h1>
       <div>
-        {(users?.doctors || []).map((user) => (
-          <div key={user._id}>
-            <ListItem
-              title={user.Name || user?.Email}
-              update={() => {
-                setState("updateUser");
-                setCurrentSelectedUser(user);
-              }}
-              addUserToCourseHandler={() => {
-                setState("addUserToCourse");
-                setCurrentSelectedUser(user);
-              }}
-              addStudentToCourseHandler={() => {
-                setState("addStudentToCourse");
-                setCurrentSelectedUser(user);
-              }}
-            />
-          </div>
-        ))}
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            {(users?.doctors || []).map((user) => (
+              <div key={user._id}>
+                <ListItem
+                  title={user.Name || user?.Email}
+                  update={() => {
+                    setState("updateUser");
+                    setCurrentSelectedUser(user);
+                  }}
+                  addUserToCourseHandler={() => {
+                    setState("addUserToCourse");
+                    setCurrentSelectedUser(user);
+                  }}
+                  addStudentToCourseHandler={() => {
+                    setState("addStudentToCourse");
+                    setCurrentSelectedUser(user);
+                  }}
+                />
+              </div>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

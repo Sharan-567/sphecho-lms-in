@@ -18,27 +18,27 @@ const ListItem = ({
 }: Props) => {
   return (
     <Row className="d-flex px-3 py-3 bg-graydark br-2 mb-2">
-      <Col xs="8">
+      <Col xs="10">
         <p style={{ fontSize: "1.1rem" }}>{title}</p>
       </Col>
-      <Col xs={4} className="d-flex">
-        <Button variant="primary" className="text-white me-1" onClick={update}>
+      <Col xs={2} className="d-flex">
+        {/* <Button variant="primary" className="text-white me-1" onClick={update}>
           <BsFillPenFill className="text-white" size={15} />
-        </Button>
+        </Button> */}
 
-        <Button
+        {/* <Button
           className="text-white me-1 tiny"
           variant={"adminsecondary"}
           onClick={addUserToCourseHandler}
         >
           update user to course
-        </Button>
+        </Button> */}
         <Button
-          className="text-white me-1 tiny"
+          className="text-white me-1 tiny b-600"
           variant="adminteritory"
           onClick={addStudentToCourseHandler}
         >
-          Update student to course
+          Add Course to User
         </Button>
       </Col>
     </Row>

@@ -54,7 +54,7 @@ const SideNav = () => {
       {
         id: 1,
         Icon: AiOutlineUser,
-        title: "My Profile",
+        title: "Dashboard",
         to: "/",
       },
       {
@@ -93,7 +93,7 @@ const SideNav = () => {
       {
         id: 1,
         Icon: AiOutlineUser,
-        title: "My Profile",
+        title: "Dashboard",
         to: "/",
       },
       {

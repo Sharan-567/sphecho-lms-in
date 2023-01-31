@@ -102,10 +102,10 @@ const AddStudentToCourse = ({
       )}
       <Form className="bg-graydark p-5 br-2">
         <h3 className="mb-3">
-          Add student {currentSelectedUser.name || currentSelectedUser.Name} to
-          Course
+          Add Course to User{" "}
+          {currentSelectedUser.name || currentSelectedUser.Name}
         </h3>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
+        {/* <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>First Name</Form.Label>
           <Form.Control
             name="firstname"
@@ -114,9 +114,9 @@ const AddStudentToCourse = ({
             type="text"
             placeholder="Enter FirstName"
           />
-        </Form.Group>
+        </Form.Group> */}
 
-        <Form.Group className="mb-3" controlId="formBasicEmail">
+        {/* <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control
             name="email"
@@ -125,9 +125,9 @@ const AddStudentToCourse = ({
             type="email"
             placeholder="Enter email"
           />
-        </Form.Group>
+        </Form.Group> */}
 
-        <Form.Group className="mb-3">
+        {/* <Form.Group className="mb-3">
           <Form.Label>User Type</Form.Label>
           <Form.Select
             aria-label="user Type"
@@ -141,7 +141,7 @@ const AddStudentToCourse = ({
             <option value="3">StaffProvider</option>
             <option value="3">SuperUser</option>
           </Form.Select>
-        </Form.Group>
+        </Form.Group> */}
 
         <Form.Group className="mb-3">
           <Form.Label>Select the Course</Form.Label>
