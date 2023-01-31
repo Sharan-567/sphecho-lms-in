@@ -44,7 +44,7 @@ const Banner = () => {
           src={bannerImg}
           style={{
             position: "absolute",
-            width: "40rem",
+            width: "40%",
             objectFit: "contain",
             top: 0,
             right: 0,

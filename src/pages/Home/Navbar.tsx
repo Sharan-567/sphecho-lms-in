@@ -66,52 +66,60 @@ const NavBar = ({ isDark }) => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ms-auto">
           <Nav.Link
-            as={Link}
-            to="/"
             className="b-700 link-nav"
             style={{ color: isDark ? "#97d25a" : "white" }}
           >
-            BLACKBOARD
+            <Link
+              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              to="/login"
+            >
+              BLACKBOARD
+            </Link>
           </Nav.Link>
           <Nav.Link
-            as={Link}
-            to="/webinar"
             className=" b-700 link-nav"
             style={{ color: isDark ? "#97d25a" : "white" }}
           >
-            WEBINARS
+            <Link
+              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              to="/webinar"
+            >
+              WEBINAR
+            </Link>
           </Nav.Link>
           <Nav.Link
-            as={Link}
-            to="/features"
             className="b-700 link-nav"
             style={{ color: isDark ? "#97d25a" : "white" }}
           >
-            FEATURES
+            <Link
+              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              to="/features"
+            >
+              FEATURES
+            </Link>
           </Nav.Link>
+
           <Nav.Link
-            as={Link}
-            to="/"
             className="b-700 link-nav"
             style={{ color: isDark ? "#97d25a" : "white" }}
           >
-            SUPPORT
+            <Link
+              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              to="/privacy"
+            >
+              PRIVACY
+            </Link>
           </Nav.Link>
           <Nav.Link
-            as={Link}
-            to="/privacy"
             className="b-700 link-nav"
             style={{ color: isDark ? "#97d25a" : "white" }}
           >
-            PRIVACY
-          </Nav.Link>
-          <Nav.Link
-            as={Link}
-            to="login"
-            className="b-700 link-nav"
-            style={{ color: isDark ? "#97d25a" : "white" }}
-          >
-            LOGIN
+            <Link
+              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              to="/login"
+            >
+              LOGIN
+            </Link>
           </Nav.Link>
         </Nav>
       </Navbar.Collapse>
@@ -140,52 +148,38 @@ const SmallNavBar = ({ isDark }) => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ms-auto" style={{ padding: "1rem" }}>
           <Nav.Link
-            as={Link}
-            to="/"
             className="b-700 link-nav"
-            style={{ color: "#97d25a" }}
+            style={{ color: "#97d25a", textDecoration: "none" }}
           >
-            BLACKBOARD
+            <Link style={{ textDecoration: "none" }} to="/login">
+              BLACKBOARD
+            </Link>
           </Nav.Link>
           <Nav.Link
-            as={Link}
-            to="/webinar"
             className=" b-700 link-nav"
-            style={{ color: "#97d25a" }}
+            style={{ color: "#97d25a", textDecoration: "none" }}
           >
-            WEBINARS
+            <Link style={{ textDecoration: "none" }} to="/webinar">
+              WEBINAR
+            </Link>
           </Nav.Link>
           <Nav.Link
-            as={Link}
-            to="/features"
             className="b-700 link-nav"
-            style={{ color: "#97d25a" }}
+            style={{ color: "#97d25a", textDecoration: "none" }}
           >
-            FEATURES
+            <Link style={{ textDecoration: "none" }} to="/features">
+              FEATURES
+            </Link>
           </Nav.Link>
-          <Nav.Link
-            as={Link}
-            to="/"
-            className="b-700 link-nav"
-            style={{ color: "#97d25a" }}
-          >
-            SUPPORT
+          <Nav.Link className="b-700 link-nav" style={{ color: "#97d25a" }}>
+            <Link style={{ textDecoration: "none" }} to="/privacy">
+              PRIVACY
+            </Link>
           </Nav.Link>
-          <Nav.Link
-            as={Link}
-            to="/privacy"
-            className="b-700 link-nav"
-            style={{ color: "#97d25a" }}
-          >
-            SUPPORT
-          </Nav.Link>
-          <Nav.Link
-            as={Link}
-            to="login"
-            className="b-700 link-nav"
-            style={{ color: "#97d25a" }}
-          >
-            LOGIN
+          <Nav.Link className="b-700 link-nav" style={{ color: "#97d25a" }}>
+            <Link style={{ textDecoration: "none" }} to="/login">
+              LOGIN
+            </Link>
           </Nav.Link>
         </Nav>
       </Navbar.Collapse>
