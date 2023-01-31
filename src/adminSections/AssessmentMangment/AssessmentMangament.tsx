@@ -18,6 +18,10 @@ import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
+import Loading from "../../sections/Loading";
+import { useAppDispatch } from "../../store";
+import { showToast } from "../../features/toast";
+import NotFound from "../../sections/NotFound";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -98,6 +102,7 @@ const AssessmentMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Assessment>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const dispatch = useAppDispatch();
 
   const openModel = (
     assessment: Assessment,
@@ -148,15 +153,13 @@ const AssessmentMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("delete");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : while deleting Assessment",
+          })
+        );
       });
   };
 
@@ -176,15 +179,13 @@ const AssessmentMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : while fetching Assessment list",
+          })
+        );
       });
   };
 
@@ -200,13 +201,13 @@ const AssessmentMangement = () => {
         setCourses(res.data.courses);
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : while fetching Course list",
+          })
+        );
       });
   };
 
@@ -226,15 +227,13 @@ const AssessmentMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : while fetching Topics list",
+          })
+        );
       });
   };
 
@@ -266,16 +265,13 @@ const AssessmentMangement = () => {
         .catch((err) => {
           setShowSpinner("none");
           setErrorType("update");
-          if (err.response) {
-            setError(err.response.statusText);
-            console.log(err.response.status);
-          } else if (err.request) {
-            setError(err.request.statusText);
-            console.log(err.request);
-          } else {
-            setError(err);
-            console.log(err);
-          }
+          setError(err.message);
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : while Upading Assesment",
+            })
+          );
         });
     }
   };
@@ -305,18 +301,17 @@ const AssessmentMangement = () => {
         getAssessmentList();
         setErrorType("none");
       })
-      .catch((error) => {
+      .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
         setErrorType("create");
-        if (error.request) {
-          setError(error.response.statusText);
-          console.log(error.response.statusText);
-        } else if (error.request) {
-          setError(error.request.statusText);
-        } else {
-          setError(error);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : while Creating Assessment",
+          })
+        );
       });
   };
 
@@ -341,7 +336,7 @@ const AssessmentMangement = () => {
           </Button>
         </div>
         {showSpinner === "list" ? (
-          <Spinner />
+          <Loading />
         ) : (
           assements.map((item) => {
             return (
@@ -494,7 +489,7 @@ const AssessmentMangement = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "create" && <Spinner />}
+                    {showSpinner === "create" && <Loading />}
                     Create
                   </Button>
                 </Modal.Footer>
@@ -527,7 +522,7 @@ const AssessmentMangement = () => {
                   variant="danger text-white"
                   onClick={() => deleteAssessment()}
                 >
-                  {showSpinner === "delete" && <Spinner />}
+                  {showSpinner === "delete" && <Loading />}
                   Delete
                 </Button>
               )}
@@ -694,7 +689,7 @@ const AssessmentMangement = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "update" && <Spinner />}
+                    {showSpinner === "update" && <Loading />}
                     Update
                   </Button>
                 </Modal.Footer>

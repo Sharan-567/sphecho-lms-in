@@ -81,7 +81,6 @@ const UserMangement = () => {
         {...{
           setState,
           currentSelectedUser,
-
           courses,
         }}
       />
@@ -92,7 +91,6 @@ const UserMangement = () => {
         {...{
           setState,
           currentSelectedUser,
-
           courses,
         }}
       />

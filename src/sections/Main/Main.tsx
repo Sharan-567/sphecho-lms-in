@@ -17,6 +17,7 @@ import { showToast } from "../../features/toast";
 import { customAxios } from "../../services/utils";
 import Counter from "../../components/Counter/Counter";
 import { BiBookOpen, BiBookmarkAlt, BiBookmarkHeart } from "react-icons/bi";
+import { convertToObject } from "../Certfication/helpers";
 
 const Main = () => {
   const {
@@ -74,8 +75,10 @@ const Main = () => {
       customAxios
         .get(`student/certificates-badges/`)
         .then((res) => {
-          setNoOfCertificatesEarned(`${res.data.certs.length}`);
-          setNoOfBadgesEarned(`${res.data.badges.length}`);
+          const certs = convertToObject(res.data.certs);
+          const badges = convertToObject(res.data.badges);
+          setNoOfCertificatesEarned(`${certs.length}`);
+          setNoOfBadgesEarned(`${badges.length}`);
         })
         .catch((err) => {
           dispatch(

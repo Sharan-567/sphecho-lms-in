@@ -43,7 +43,7 @@ const Certification = () => {
         .then((res) => {
           setCertificationList(convertToObject(res.data.certs));
           setBadgeList(convertToObject(res.data.badges));
-          console.log(convertToObject(res.data.badges));
+         
         })
         .catch((err) => {
           if (err.response) {
