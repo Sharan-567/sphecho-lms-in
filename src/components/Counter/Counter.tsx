@@ -10,7 +10,7 @@ type Props = {
 
 const Counter = ({ Icon, value, title }: Props) => {
   return (
-    <div className="p-4 br-1 bg-primary color-white">
+    <div className="p-4 br-1 bg-primary color-white mb-3">
       <div>
         <Icon
           color="primary"

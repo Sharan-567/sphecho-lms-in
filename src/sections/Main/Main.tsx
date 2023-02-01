@@ -12,12 +12,17 @@ import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
 import { logout } from "../../features/auth";
-import { addAllCourses } from "../../features/courses";
+import {
+  addAllCourses,
+  addUserCourses,
+  addUserTopic,
+} from "../../features/courses";
 import { showToast } from "../../features/toast";
-import { customAxios } from "../../services/utils";
+import { customAxios, NormalizeProgressData } from "../../services/utils";
 import Counter from "../../components/Counter/Counter";
 import { BiBookOpen, BiBookmarkAlt, BiBookmarkHeart } from "react-icons/bi";
 import { convertToObject } from "../Certfication/helpers";
+import { addAllprogress } from "../../features/progress";
 
 const Main = () => {
   const {
@@ -29,6 +34,7 @@ const Main = () => {
   const [noOfCoursesEnrolled, setNoOfCourseEnrolled] = useState("--");
   const [noOfBadgesEarned, setNoOfBadgesEarned] = useState("--");
   const [noOfCertificatesEarned, setNoOfCertificatesEarned] = useState("--");
+  const [gaugePerformance, setGaugePerformance] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -91,6 +97,85 @@ const Main = () => {
     }
   };
 
+  const getAllUserTopicsCompletedCount = (cb: (arg) => void) => {
+    customAxios
+      .get(`student/student-progress/`)
+      .then((res) => {
+        let progresses = NormalizeProgressData(res.data.progress);
+        cb(progresses);
+        dispatch(addAllprogress(progresses));
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : count : While fetching all Progress",
+          })
+        );
+      });
+  };
+
+  const getAllUserCoursesTopicsCount = (cb: (arg) => void) => {
+    customAxios
+      .get("student/student-course/")
+      .then((res) => {
+        dispatch(addUserCourses(res.data));
+        return res;
+      })
+      .then((res) => {
+        let total = 0;
+        for (let i = 0; i < res.data.length; i++) {
+          const courseId = res.data[i].course;
+          customAxios
+            .get(`student/get-course-details/${courseId}`)
+            .then((topicRes) => {
+              let noOfTopics = 0;
+              let noOfAssessments = 0;
+              if (topicRes.data.topics) {
+                noOfTopics = topicRes.data.topics.length;
+              }
+              if (topicRes.data.assessments) {
+                noOfAssessments = topicRes.data.assessments.length;
+              }
+              total = total + noOfTopics + noOfAssessments;
+            })
+            .catch((err) => {
+              dispatch(
+                showToast({
+                  type: "danger",
+                  message: err.message + " : count : While fetching topic list",
+                })
+              );
+            });
+        }
+        console.log("toaltTopics: ", total);
+        cb(total);
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : count : While fetching all User Courses",
+          })
+        );
+      });
+  };
+
+  useEffect(() => {
+    getAllUserTopicsCompletedCount((progresses) => {
+      let totalCompletedTopics = 0;
+      for (const [key, value] of Object.entries(progresses)) {
+        totalCompletedTopics =
+          totalCompletedTopics + value.topics.length + value.assesments.length;
+      }
+      console.log("totalCompletedTopics: ", totalCompletedTopics);
+      getAllUserCoursesTopicsCount((totalTopics) => {
+        let perforamance = totalCompletedTopics / totalTopics;
+        setGaugePerformance(perforamance);
+      });
+    });
+  }, []);
+
   useEffect(() => {
     getAllCourses();
     getAllCoursesLength();
@@ -146,7 +231,10 @@ const Main = () => {
           </div>
         </Col>
       </Row>
-      <Row className="p-5 py-3">
+      <Row
+        className="main__row_1"
+        style={{ padding: "5rem", paddingTop: "3rem", paddingBottom: "3rem" }}
+      >
         {/* <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
         <p
           style={{ fontWeight: "500", lineHeight: ".8rem" }}
@@ -176,11 +264,13 @@ const Main = () => {
               arcWidth={0.5}
               arcsLength={[0.2, 0.5, 0.3]}
               colors={["#EA4228", "#F5CD19", "#0cae00"]}
-              percent={0.37}
+              percent={gaugePerformance}
               arcPadding={0.02}
               hideText
             />
-            <h5 className="text-center text-green mt-4">43% performace</h5>
+            <h5 className="text-center text-green mt-4">
+              {(gaugePerformance * 100).toFixed(0)}% performace
+            </h5>
             <p className="tiny text-center">
               completed courses per no.of courses taken up
             </p>
@@ -191,6 +281,7 @@ const Main = () => {
         </Col>
       </Row>
       <Row
+        className="main__row_1"
         style={{
           marginTop: "1rem",
           marginBottom: "1rem",
@@ -221,7 +312,10 @@ const Main = () => {
         </Col>
       </Row>
       <Container>
-        <Row className="p-5" style={{ minHeight: "16rem" }}>
+        <Row
+          className="main_row_3"
+          style={{ minHeight: "16rem", padding: "5rem" }}
+        >
           <Col className="p-4 br-2 bg-white  position-relative">
             <h4 className="b-700 text-blue">Latest Courses</h4>
             <div className="p-2">
