@@ -17,6 +17,7 @@ import {
   addUserCourses,
   addUserTopic,
 } from "../../features/courses";
+
 import { showToast } from "../../features/toast";
 import { customAxios, NormalizeProgressData } from "../../services/utils";
 import Counter from "../../components/Counter/Counter";
@@ -31,10 +32,12 @@ const Main = () => {
     latestCourses,
   } = useAppSelector((state) => state.latestCourses);
   const { items } = useAppSelector((state) => state.cart);
+  const { progress } = useAppSelector((state) => state.progress);
+  const { userCoursesTopics } = useAppSelector((state) => state.courses);
   const [noOfCoursesEnrolled, setNoOfCourseEnrolled] = useState("--");
   const [noOfBadgesEarned, setNoOfBadgesEarned] = useState("--");
   const [noOfCertificatesEarned, setNoOfCertificatesEarned] = useState("--");
-  const [gaugePerformance, setGaugePerformance] = useState(0);
+  const [performance, setPerformance] = useState(0);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -55,18 +58,45 @@ const Main = () => {
       });
   };
 
-  const getAllCoursesLength = () => {
+  const getAllUserCourses = () => {
     customAxios
       .get("student/student-course/")
       .then((res) => {
+        dispatch(addUserCourses(res.data));
         setNoOfCourseEnrolled(`${res.data.length}`);
+        return res;
       })
-
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          const courseId = res.data[i].course;
+          customAxios
+            .get(`student/get-course-details/${courseId}`)
+            .then((topicRes) => {
+              let noOfTopics = 0;
+              let noOfAssessments = 0;
+              if (topicRes.data.topics) {
+                noOfTopics = topicRes.data.topics.length;
+              }
+              if (topicRes.data.assessments) {
+                noOfAssessments = topicRes.data.assessments.length;
+              }
+              dispatch(addUserTopic({ courseId, noOfTopics, noOfAssessments }));
+            })
+            .catch((err) => {
+              dispatch(
+                showToast({
+                  type: "danger",
+                  message: err.message + ": While fetching topic list",
+                })
+              );
+            });
+        }
+      })
       .catch((err) => {
         dispatch(
           showToast({
             type: "danger",
-            message: err.message + ": User Courses length",
+            message: err.message + ": While fetching all User Courses",
           })
         );
       });
@@ -97,88 +127,47 @@ const Main = () => {
     }
   };
 
-  const getAllUserTopicsCompletedCount = (cb: (arg) => void) => {
+  const getAllProgress = () => {
     customAxios
       .get(`student/student-progress/`)
       .then((res) => {
         let progresses = NormalizeProgressData(res.data.progress);
-        cb(progresses);
         dispatch(addAllprogress(progresses));
       })
       .catch((err) => {
         dispatch(
           showToast({
             type: "danger",
-            message: err.message + " : count : While fetching all Progress",
-          })
-        );
-      });
-  };
-
-  const getAllUserCoursesTopicsCount = (cb: (arg) => void) => {
-    customAxios
-      .get("student/student-course/")
-      .then((res) => {
-        dispatch(addUserCourses(res.data));
-        return res;
-      })
-      .then((res) => {
-        let total = 0;
-        for (let i = 0; i < res.data.length; i++) {
-          const courseId = res.data[i].course;
-          customAxios
-            .get(`student/get-course-details/${courseId}`)
-            .then((topicRes) => {
-              let noOfTopics = 0;
-              let noOfAssessments = 0;
-              if (topicRes.data.topics) {
-                noOfTopics = topicRes.data.topics.length;
-              }
-              if (topicRes.data.assessments) {
-                noOfAssessments = topicRes.data.assessments.length;
-              }
-              total = total + noOfTopics + noOfAssessments;
-            })
-            .catch((err) => {
-              dispatch(
-                showToast({
-                  type: "danger",
-                  message: err.message + " : count : While fetching topic list",
-                })
-              );
-            });
-        }
-        console.log("toaltTopics: ", total);
-        cb(total);
-      })
-      .catch((err) => {
-        dispatch(
-          showToast({
-            type: "danger",
-            message: err.message + " : count : While fetching all User Courses",
+            message: err.message + " : While fetching all Progress",
           })
         );
       });
   };
 
   useEffect(() => {
-    getAllUserTopicsCompletedCount((progresses) => {
-      let totalCompletedTopics = 0;
-      for (const [key, value] of Object.entries(progresses)) {
-        totalCompletedTopics =
-          totalCompletedTopics + value.topics.length + value.assesments.length;
+    let totalTopics = 0;
+    let completedTopics = 0;
+    for (let courseObj of userCoursesTopics) {
+      if (progress[courseObj.courseId]) {
+        totalTopics =
+          totalTopics + courseObj.noOfTopics + courseObj.noOfAssessments;
+        completedTopics =
+          completedTopics +
+          progress[courseObj.courseId].assesments.length +
+          progress[courseObj.courseId].topics.length;
       }
-      console.log("totalCompletedTopics: ", totalCompletedTopics);
-      getAllUserCoursesTopicsCount((totalTopics) => {
-        let perforamance = totalCompletedTopics / totalTopics;
-        setGaugePerformance(perforamance);
-      });
-    });
-  }, []);
+    }
+    console.log("completedTopics: ", completedTopics);
+    console.log("totalTopics: ", totalTopics);
+    if (totalTopics !== 0) {
+      setPerformance(completedTopics / totalTopics);
+    }
+  }, [userCoursesTopics, progress]);
 
   useEffect(() => {
     getAllCourses();
-    getAllCoursesLength();
+    getAllUserCourses();
+    getAllProgress();
     getCertificationAndBagesLength();
     dispatch(fetchLatestCourses({}));
   }, []);
@@ -264,12 +253,12 @@ const Main = () => {
               arcWidth={0.5}
               arcsLength={[0.2, 0.5, 0.3]}
               colors={["#EA4228", "#F5CD19", "#0cae00"]}
-              percent={gaugePerformance}
+              percent={performance}
               arcPadding={0.02}
               hideText
             />
             <h5 className="text-center text-green mt-4">
-              {(gaugePerformance * 100).toFixed(0)}% performace
+              {(performance * 100).toFixed(0)}% performace
             </h5>
             <p className="tiny text-center">
               completed courses per no.of courses taken up
