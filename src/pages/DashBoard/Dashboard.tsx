@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div>
+      <div style={{ position: "relative" }}>
         <div className={`${width && "d-flex"} bg-graydark`}>
           {!width ? getTopNav() : getSideNav()}
           <div className={`${width && "w-100 bg-primary m-0 p-0"}`}>
@@ -51,7 +51,13 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <div style={{ position: "absolute", top: "5px", right: "6px" }}>
+        <div
+          style={{
+            position: "absolute",
+            top: "5px",
+            right: "6px",
+          }}
+        >
           <Toast
             className="d-inline-block m-1"
             bg={toast.type}
@@ -59,6 +65,7 @@ const Dashboard = () => {
             show={toast.showToast}
             delay={3000}
             autohide
+            style={{ zIndex: 200 }}
           >
             <Toast.Body
               className={`${toast.type}`}

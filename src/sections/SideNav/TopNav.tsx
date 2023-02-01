@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import {
   AiOutlineTool,
   AiOutlineLogout,
@@ -10,92 +10,296 @@ import {
   AiOutlineFire,
   AiOutlineFileProtect,
   AiOutlineCalculator,
+  AiOutlineClose,
+  AiOutlineNotification,
+  AiOutlinePercentage,
+  AiOutlineSafety,
+  AiOutlineMenu,
 } from "react-icons/ai";
-import {logout} from '../../features/auth'
-import { Link } from "react-router-dom";
+import { logout } from "../../features/auth";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../store";
+import logo from "../../assets/white-logo.png";
+
+import "./SideNav.scss";
+import { IconType } from "react-icons";
+
+interface MenuList {
+  id: number;
+  Icon: IconType;
+  title: string;
+  to?: string;
+  subNavItems?: {
+    Icon: IconType;
+    title: string;
+    to: string;
+  }[];
+}
 
 const TopNav = () => {
+  const [open, setOpen] = React.useState(false);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const [menuList, setMenuList] = React.useState<MenuList[]>();
+  const logoutHandler = () => {
+    dispatch(logout());
+  };
 
-const dispatch = useAppDispatch();
-const logoutHandler = () => {
-  dispatch(logout());
-};
+  const patientsMenu: MenuList[] = [
+    {
+      id: 1,
+      Icon: AiOutlineUser,
+      title: "Dashboard",
+      to: "/",
+    },
+    {
+      id: 2,
+      Icon: AiOutlineFire,
+      title: "Curriculum",
+      subNavItems: [
+        {
+          title: "Courses",
+          Icon: AiOutlineCalculator,
+          to: "/courses",
+        },
+        {
+          title: "Certification",
+          Icon: AiOutlineFileProtect,
+          to: "/certification",
+        },
+      ],
+    },
+    // {
+    //   id: 3,
+    //   Icon: AiOutlineNotification,
+    //   title: "Webinars",
+    //   to: "/webinars",
+    // },
 
-const isAdmin = () => {
-  const userType = localStorage.getItem("userType");
-  const typeId = localStorage.getItem("typeId");
-  if (userType && typeId) {
-    if (userType === "doctor" || typeId === "2") {
-      return true;
-    } else if (userType === "superadmin" || typeId === "4") {
-      return true;
+    // {
+    //   id: 4,
+    //   Icon: AiOutlineComment,
+    //   title: "Community",
+    //   to: "/Forum",
+    // },
+    {
+      id: 6,
+      Icon: AiOutlineShopping,
+      title: "Cart",
+      to: "/cart",
+    },
+  ];
+
+  const superUserMenu: MenuList[] = [
+    {
+      id: 1,
+      Icon: AiOutlineUser,
+      title: "Dashboard",
+      to: "/",
+    },
+    {
+      id: 13,
+      Icon: AiOutlineAccountBook,
+      title: "Analytics",
+      to: "/analytics",
+    },
+    {
+      id: 2,
+      Icon: AiOutlineFire,
+      title: "Curriculum",
+      subNavItems: [
+        {
+          title: "Courses",
+          Icon: AiOutlineCalculator,
+          to: "/courses",
+        },
+        {
+          title: "Certification",
+          Icon: AiOutlineFileProtect,
+          to: "/certification",
+        },
+      ],
+    },
+    // {
+    //   id: 3,
+    //   Icon: AiOutlineNotification,
+    //   title: "Webinars",
+    //   to: "/webinars",
+    // },
+    {
+      id: 4,
+      Icon: AiOutlineShopping,
+      title: "Cart",
+      to: "/cart",
+    },
+    {
+      id: 5,
+      Icon: AiOutlineUser,
+      title: "Users",
+      to: "/userMangement",
+    },
+    {
+      id: 6,
+      Icon: AiOutlineFire,
+      title: "Courses",
+      to: "/coursesMangement",
+    },
+    {
+      id: 7,
+      Icon: AiOutlineNotification,
+      title: "Topics",
+      to: "/topicsMangement",
+    },
+    {
+      id: 8,
+      Icon: AiOutlinePercentage,
+      title: "Assessment",
+      to: "/assessmentMangement",
+    },
+    {
+      id: 9,
+      Icon: AiOutlineTool,
+      title: "Questions",
+      to: "/questionMangement",
+    },
+    {
+      id: 10,
+      Icon: AiOutlineSafety,
+      title: "Badges",
+      to: "/badgeMangement",
+    },
+    {
+      id: 11,
+      Icon: AiOutlineComment,
+      title: "Certification",
+      to: "/certificationMangement",
+    },
+  ];
+
+  React.useEffect(() => {
+    const userState = localStorage.getItem("userState");
+    if (userState) {
+      if (userState === "SuperUser" || userState === "staffMember") {
+        setMenuList(superUserMenu);
+      } else {
+        setMenuList(patientsMenu);
+      }
     }
-  }
-  return false;
-};
+  }, []);
 
-  return (
-    <Navbar bg="primary" variant="dark" className="py-3" expand="lg">
-      <Container>
-        <Navbar.Brand href="/">
-          <h1 className="text-white b-700" style={{ fontSize: "2.2rem" }}>
-            Specho
-          </h1>
-        </Navbar.Brand>
-        <Navbar.Toggle
-          className="text-white"
-          aria-controls="basic-navbar-nav"
-        />
-        <Navbar.Collapse id="basic-navbar-nav text-white">
-          <Nav className="me-auto">
-            <Nav.Link as={Link} to="/">
-              <div className="d-flex py-2">
-                <AiOutlineFire color="white" size={22} />
-                <h5 className="ms-2 text-white">Home</h5>
-              </div>
-            </Nav.Link>
-            <Nav.Link as={Link} to="courses">
-              <div className="d-flex py-2">
-                <AiOutlineFileProtect color="white" size={22} />
-                <h5 className="ms-2 text-white">Courses</h5>
-              </div>
-            </Nav.Link>
-            <Nav.Link as={Link} to="certification">
-              <div className="d-flex py-2">
-                <AiOutlineAccountBook color="white" size={22} />
-                <h5 className="ms-2 text-white">certification</h5>
-              </div>
-            </Nav.Link>
-            <Nav.Link as={Link} to="webinars">
-              <div className="d-flex py-2">
-                <AiOutlineComment color="white" size={22} />
-                <h5 className="ms-2 text-white">Webinars</h5>
-              </div>
-            </Nav.Link>
-            <Nav.Link as={Link} to="cart">
-              <div className="d-flex py-2">
-                <AiOutlineShopping color="white" size={22} />
-                <h5 className="ms-2 text-white">Cart</h5>
-              </div>
-            </Nav.Link>
-            {isAdmin() ? <Nav.Link as={Link} to="admin">
-              <div className="d-flex py-2">
-                <AiOutlineTool color="white" size={22} />
-                <h5 className="ms-2 text-white">Go to Admin</h5>
-              </div>
-            </Nav.Link>: null}
-            <Nav.Link onClick={logoutHandler}>
-              <div className="d-flex py-2">
-                <AiOutlineLogout color="white" size={22} />
-                <h5 className="ms-2 text-white b-700">LOGOUT</h5>
-              </div>
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
-  );
+  if (!open) {
+    return (
+      <div
+        className="header bg-primary"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          position: "sticky",
+          top: 0,
+          left: 0,
+          right: 0,
+          padding: "2rem",
+          zIndex: "1",
+        }}
+      >
+        <img src={logo} width="100rem" />
+        <span onClick={() => setOpen(true)}>
+          <AiOutlineMenu color="white" style={{ fontSize: "2rem" }} />
+        </span>
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className="nav_container bg-primary"
+        style={{
+          padding: "1rem",
+          transform: open ? " translateX(0)" : " translateX(-200px)",
+          transition: "all 1s",
+          zIndex: "150",
+          position: "sticky",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      >
+        <div
+          className="header bg-primary"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            position: "sticky",
+            top: 0,
+            left: 0,
+            right: 0,
+            padding: "1rem",
+          }}
+        >
+          <img src={logo} width="150rem" />
+          <span onClick={() => setOpen(false)}>
+            <AiOutlineClose color="white" style={{ fontSize: "2rem" }} />
+          </span>
+        </div>
+        <div
+          style={{
+            height: "100%",
+            marginTop: "1rem",
+            padding: "1rem",
+            width: "100%",
+          }}
+        >
+          {menuList?.map((menu) => {
+            return (
+              <span
+                key={menu.id}
+                onClick={() => {
+                  navigate(menu.to || "/");
+                  setOpen(false);
+                }}
+                style={{
+                  width: "100%",
+                  marginBottom: "1rem",
+                  cursor: "pointer",
+                  color: "white",
+                  padding: ".5rem 0rem",
+                  fontWeight: "bold",
+
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <menu.Icon
+                  color="white"
+                  style={{
+                    fontSize: "2rem",
+                    marginRight: "1rem",
+                  }}
+                />
+                <h2 style={{ fontWeight: "bold" }}>{menu.title}</h2>
+              </span>
+            );
+          })}
+        </div>
+        <Button
+          onClick={logoutHandler}
+          style={{
+            width: "100%",
+            padding: "1rem",
+            background: "white",
+            color: "black",
+            fontWeight: "bold",
+            marginTop: "1rem",
+            fontSize: "1.2rem",
+          }}
+        >
+          Log Out
+        </Button>
+      </div>
+    );
+  }
 };
 
 export default TopNav;
