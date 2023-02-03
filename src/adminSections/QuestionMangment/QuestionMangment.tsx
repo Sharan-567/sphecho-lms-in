@@ -17,6 +17,10 @@ import { BASE_URL, HOST } from "../../features/settings";
 import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
+import Loading from "../../sections/Loading";
+import { useAppDispatch } from "../../store";
+import NotFound from "../../sections/NotFound";
+import { showToast } from "../../features/toast";
 import * as Yup from "yup";
 
 //create validation
@@ -109,6 +113,7 @@ const QuestionMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Question>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const dispatch = useAppDispatch();
 
   const openModel = (
     question: Question,
@@ -159,15 +164,13 @@ const QuestionMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("delete");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while deleting question",
+          })
+        );
       });
   };
 
@@ -183,15 +186,13 @@ const QuestionMangement = () => {
         console.log(res.data.topics);
       })
       .catch((err) => {
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching topicList",
+          })
+        );
       });
   };
 
@@ -211,15 +212,13 @@ const QuestionMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching questionList",
+          })
+        );
       });
   };
 
@@ -252,16 +251,13 @@ const QuestionMangement = () => {
         .catch((err) => {
           setShowSpinner("none");
           setErrorType("update");
-          if (err.response) {
-            setError(err.response.statusText);
-            console.log(err.response.status);
-          } else if (err.request) {
-            setError(err.request.statusText);
-            console.log(err.request);
-          } else {
-            setError(err);
-            console.log(err);
-          }
+          setError(err.message);
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : admin : while updating question",
+            })
+          );
         });
     }
   };
@@ -292,18 +288,17 @@ const QuestionMangement = () => {
         getQuestions();
         setErrorType("none");
       })
-      .catch((error) => {
+      .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
         setErrorType("create");
-        if (error.request) {
-          setError(error.response.statusText);
-          console.log(error.response.statusText);
-        } else if (error.request) {
-          setError(error.request.statusText);
-        } else {
-          setError(error);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while creating question",
+          })
+        );
       });
   };
 
@@ -328,7 +323,15 @@ const QuestionMangement = () => {
           </Button>
         </div>
         {showSpinner === "list" ? (
-          <Spinner />
+          <Loading />
+        ) : (questions || []).length === 0 ? (
+          <>
+            <NotFound />
+            <h3 className="text-center b-600">
+              No Questions Available At this Moment
+            </h3>
+            <p className="text-center">Please Try again later</p>
+          </>
         ) : (
           (questions || []).map((item) => (
             <ListItem
@@ -343,7 +346,7 @@ const QuestionMangement = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} size="xl" onHide={handleClose}>
         {currentModal === "create" && (
           <>
             {error && errorType === "create" && (

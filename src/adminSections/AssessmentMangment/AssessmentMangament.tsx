@@ -337,6 +337,14 @@ const AssessmentMangement = () => {
         </div>
         {showSpinner === "list" ? (
           <Loading />
+        ) : assements.length === 0 ? (
+          <>
+            <NotFound />
+            <h3 className="text-center b-600">
+              No Assessments Available At this Moment
+            </h3>
+            <p className="text-center">Please Try again later</p>
+          </>
         ) : (
           assements.map((item) => {
             return (
@@ -489,7 +497,7 @@ const AssessmentMangement = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "create" && <Loading />}
+                    {showSpinner === "create" && <Spinner />}
                     Create
                   </Button>
                 </Modal.Footer>
@@ -522,7 +530,7 @@ const AssessmentMangement = () => {
                   variant="danger text-white"
                   onClick={() => deleteAssessment()}
                 >
-                  {showSpinner === "delete" && <Loading />}
+                  {showSpinner === "delete" && <Spinner />}
                   Delete
                 </Button>
               )}
@@ -689,7 +697,7 @@ const AssessmentMangement = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "update" && <Loading />}
+                    {showSpinner === "update" && <Spinner />}
                     Update
                   </Button>
                 </Modal.Footer>

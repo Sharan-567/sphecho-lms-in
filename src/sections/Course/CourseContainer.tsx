@@ -31,7 +31,7 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
   };
   return (
     <div
-      className="my-5 bg-graydark br-3 p-5 item "
+      className="bg-graydark br-3 p-5 item "
       style={{
         borderRadius: "2rem !important",
         border: "none",

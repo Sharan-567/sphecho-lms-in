@@ -20,7 +20,7 @@ import Loading from "../../sections/Loading";
 import { useAppDispatch } from "../../store";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
-
+import Spinner from "../Spinner";
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -296,7 +296,7 @@ const CourseMangement = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} size="xl" onHide={handleClose}>
         {currentModal === "create" && (
           <>
             {error && errorType === "create" && (
@@ -459,7 +459,7 @@ const CourseMangement = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "create" && <Loading />}
+                    {showSpinner === "create" && <Spinner />}
                     Create
                   </Button>
                 </Modal.Footer>
@@ -684,7 +684,7 @@ const CourseMangement = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "update" && <Loading />}
+                    {showSpinner === "update" && <Spinner />}
                     Update
                   </Button>
                 </Modal.Footer>

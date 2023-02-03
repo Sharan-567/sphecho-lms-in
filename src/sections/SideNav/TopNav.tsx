@@ -55,20 +55,16 @@ const TopNav = () => {
     {
       id: 2,
       Icon: AiOutlineFire,
-      title: "Curriculum",
-      subNavItems: [
-        {
-          title: "Courses",
-          Icon: AiOutlineCalculator,
-          to: "/courses",
-        },
-        {
-          title: "Certification",
-          Icon: AiOutlineFileProtect,
-          to: "/certification",
-        },
-      ],
+      title: "Courses",
+      to: "/courses",
     },
+    {
+      id: 3,
+      title: "Certification",
+      Icon: AiOutlineFileProtect,
+      to: "/certification",
+    },
+
     // {
     //   id: 3,
     //   Icon: AiOutlineNotification,
@@ -106,19 +102,14 @@ const TopNav = () => {
     {
       id: 2,
       Icon: AiOutlineFire,
-      title: "Curriculum",
-      subNavItems: [
-        {
-          title: "Courses",
-          Icon: AiOutlineCalculator,
-          to: "/courses",
-        },
-        {
-          title: "Certification",
-          Icon: AiOutlineFileProtect,
-          to: "/certification",
-        },
-      ],
+      title: "Courses",
+      to: "/courses",
+    },
+    {
+      id: 3,
+      title: "Certification",
+      Icon: AiOutlineFileProtect,
+      to: "/certification",
     },
     // {
     //   id: 3,
@@ -215,13 +206,11 @@ const TopNav = () => {
         className="nav_container bg-primary"
         style={{
           padding: "1rem",
-          transform: open ? " translateX(0)" : " translateX(-200px)",
-          transition: "all 1s",
+          transition: "all .3s",
           zIndex: "150",
           position: "sticky",
           top: 0,
-          left: 0,
-          right: 0,
+          width: open ? "100%" : "0%",
           bottom: 0,
         }}
       >

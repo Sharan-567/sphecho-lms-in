@@ -12,6 +12,7 @@ import { showToast } from "../../features/toast";
 import Loading from "../Loading";
 import NotFound from "../NotFound";
 import { addAllprogress } from "../../features/progress";
+import "./course.scss"
 
 const Course = () => {
   const { courses, userCourses, userCoursesTopics } = useAppSelector(
@@ -134,7 +135,7 @@ const Course = () => {
   );
 
   return (
-    <div className="container px-5 py-5 mt-4 w-100">
+    <div className="container py-5 mt-4 w-100 course_container">
       {loading ? (
         <Loading />
       ) : (

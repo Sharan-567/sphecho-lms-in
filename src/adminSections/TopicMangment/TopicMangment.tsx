@@ -344,7 +344,7 @@ const TopicManagment = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal size="xl" show={show} onHide={handleClose}>
         {currentModal === "create" && (
           <>
             {error && errorType === "create" && (
@@ -543,7 +543,7 @@ const TopicManagment = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "create" && <Loading />}
+                    {showSpinner === "create" && <Spinner />}
                     Create
                   </Button>
                 </Modal.Footer>
@@ -571,7 +571,7 @@ const TopicManagment = () => {
                   variant="danger text-white"
                   onClick={() => deleteTopic()}
                 >
-                  {showSpinner === "delete" && <Loading />}
+                  {showSpinner === "delete" && <Spinner />}
                   Delete
                 </Button>
               )}
@@ -809,7 +809,7 @@ const TopicManagment = () => {
                     variant="admingreen text-white"
                     type="submit"
                   >
-                    {showSpinner === "create" && <Loading />}
+                    {showSpinner === "create" && <Spinner />}
                     Update
                   </Button>
                 </Modal.Footer>
