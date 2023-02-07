@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "react-bootstrap";
 import { HOST } from "../../features/settings";
 import { AiOutlineUser } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { addItem, removeItem } from "../../features/cart";
+import defaultImg from "../../assets/default.jpg";
 import "./card.scss";
 
 interface Course {
@@ -28,6 +29,7 @@ type Props = {
 const Card: React.FC<Props> = ({ course }) => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
+  const imageRef = useRef<HTMLImageElement | any>(null);
 
   const isItemAlreadingIncart = (id: number): boolean => {
     for (let item of items) {
@@ -35,6 +37,14 @@ const Card: React.FC<Props> = ({ course }) => {
     }
     return false;
   };
+
+  useEffect(() => {
+    if (imageRef.current) {
+      imageRef.current.onerror = () => {
+        imageRef.current.src = defaultImg;
+      };
+    }
+  }, [defaultImg, imageRef]);
 
   return (
     <div
@@ -51,6 +61,7 @@ const Card: React.FC<Props> = ({ course }) => {
           objectFit: "cover",
           borderRadius: "1rem",
         }}
+        ref={imageRef}
         src={`https://${HOST}${course.info_image}`}
       />
       <div>

@@ -13,11 +13,14 @@ import { useFormik } from "formik";
 import ListItem from "../ListItem";
 import type { Course } from "./../../definations/course";
 import { BASE_URL, HOST } from "../../features/settings";
-import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
-
+import Loading from "../../sections/Loading";
+import { useAppDispatch } from "../../store";
+import { showToast } from "../../features/toast";
+import NotFound from "../../sections/NotFound";
+import Spinner from "../Spinner";
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -101,6 +104,7 @@ const CourseMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Course>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const dispatch = useAppDispatch();
 
   const openModel = (
     course: Course,
@@ -134,7 +138,6 @@ const CourseMangement = () => {
   }, []);
 
   const deleteCourse = () => {
-    console.log("course deleted");
     handleClose();
   };
 
@@ -154,21 +157,18 @@ const CourseMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching courseList",
+          })
+        );
       });
   };
 
   // update
   const updateCourse = (data) => {
-    console.log(data);
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
@@ -190,21 +190,17 @@ const CourseMangement = () => {
           setShowSpinner("none");
           getCourseList();
           setSuccess("Course updated successfully.");
-          console.log(res.data);
         })
         .catch((err) => {
           setShowSpinner("none");
           setErrorType("update");
-          if (err.response) {
-            setError(err.response.statusText);
-            console.log(err.response.status);
-          } else if (err.request) {
-            setError(err.request.statusText);
-            console.log(err.request);
-          } else {
-            setError(err);
-            console.log(err);
-          }
+          setError(err.message);
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : admin : while update course",
+            })
+          );
         });
     }
   };
@@ -234,18 +230,17 @@ const CourseMangement = () => {
         getCourseList();
         setErrorType("none");
       })
-      .catch((error) => {
+      .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
         setErrorType("create");
-        if (error.request) {
-          setError(error.response.statusText);
-          console.log(error.response.statusText);
-        } else if (error.request) {
-          setError(error.request.statusText);
-        } else {
-          setError(error);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while update create",
+          })
+        );
       });
   };
 
@@ -277,7 +272,15 @@ const CourseMangement = () => {
           ) : null}
         </div>
         {showSpinner === "list" ? (
-          <Spinner />
+          <Loading />
+        ) : courses.length === 0 ? (
+          <>
+            <NotFound />
+            <h3 className="text-center b-600">
+              No Courses Available At this Moment
+            </h3>
+            <p className="text-center">Please Try again later</p>
+          </>
         ) : (
           courses.map((item) => {
             return (
@@ -293,7 +296,7 @@ const CourseMangement = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} size="xl" onHide={handleClose}>
         {currentModal === "create" && (
           <>
             {error && errorType === "create" && (

@@ -2,28 +2,30 @@ import { number } from "yup";
 
 export interface Course {
   id: number;
-  name: string;
-  tags: string;
-  info_image: string;
-  description: string;
-  trainer_name: string;
-  trainer_image: string;
+  name?: string;
+  tags?: string;
+  info_image?: string;
+  description?: string;
+  trainer_name?: string;
+  trainer_imag?: string;
   full_amount?: string;
   sample_ur?: string;
-  view_all: boolean;
-  enroll_all: boolean;
-  featured: boolean;
+  view_all?: boolean;
+  enroll_all?: boolean;
+  featured?: boolean;
+  owner?: number[];
+  sample_url?: string;
 }
 
 export interface StudentCourse {
-  id: number;
-  unique_code: string;
-  active_till: Date;
-  date: Date;
-  student: number;
-  course: number;
-  group: number;
-  no_of_topics: number;
+  id?: number;
+  unique_code?: string;
+  active_till?: Date;
+  date?: Date;
+  student?: number;
+  course?: number;
+  group?: number;
+  no_of_topics?: number;
 }
 
 export type Topic = {

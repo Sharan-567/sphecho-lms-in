@@ -3,7 +3,7 @@ import { Form, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import type { Course } from "../../definations/course";
 import { useAppSelector } from "../../store";
-import "./Search.scss"
+import "./Search.scss";
 
 const Search = () => {
   const [search, setSearch] = useState<Course[]>([]);
@@ -40,7 +40,12 @@ const Search = () => {
 
   return (
     <div className="position-relative ">
-      <Form className="me-2 ms-auto">
+      <Form
+        className="me-2 ms-auto"
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
         <Form.Control
           className="bg-white py-3 px-5 search-continer"
           style={{

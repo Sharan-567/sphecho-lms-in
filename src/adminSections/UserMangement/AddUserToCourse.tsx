@@ -22,23 +22,22 @@ type Props = {
     >
   >;
   currentSelectedUser: Patient | Doctor;
-  currentSelectedUserRole: "1" | "2" | undefined;
+
   courses: Course[];
 };
 
 const AddUserToCourse = ({
   setState,
   currentSelectedUser,
-  currentSelectedUserRole,
   courses,
 }: Props) => {
   const [data, setData] = useState({
     firstname:
-      currentSelectedUserRole === "1"
-        ? currentSelectedUser.firstname
-        : currentSelectedUser.name || currentSelectedUser.Name,
+      currentSelectedUser.firstname ||
+      currentSelectedUser.name ||
+      currentSelectedUser.Name,
     email: currentSelectedUser.Email || currentSelectedUser.email,
-    user_type: currentSelectedUserRole,
+    user_type: "",
     course: "",
   });
   const [message, setMessage] = useState<{
@@ -135,8 +134,11 @@ const AddUserToCourse = ({
             onChange={inputChangeHandler}
             placeholder="Select user type"
           >
+            <option>Open this UserType</option>
             <option value="1">Patient</option>
-            <option value="2">Doctor</option>
+            <option value="2">Staff</option>
+            <option value="3">StaffProvider</option>
+            <option value="3">SuperUser</option>
           </Form.Select>
         </Form.Group>
 

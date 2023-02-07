@@ -17,6 +17,10 @@ import Spinner from "../Spinner";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
+import { useAppDispatch } from "../../store";
+import Loading from "../../sections/Loading";
+import { showToast } from "../../features/toast";
+import NotFound from "../../sections/NotFound";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -103,6 +107,7 @@ const TopicManagment = () => {
   const [updatedItem, setUpdatedItem] = useState<Topic>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const dispatch = useAppDispatch();
 
   const openModel = (
     topic: Topic,
@@ -152,15 +157,13 @@ const TopicManagment = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("delete");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while topic delete",
+          })
+        );
       });
   };
 
@@ -180,15 +183,13 @@ const TopicManagment = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching course list",
+          })
+        );
       });
   };
 
@@ -208,15 +209,13 @@ const TopicManagment = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : fetching topic list",
+          })
+        );
       });
   };
 
@@ -248,16 +247,13 @@ const TopicManagment = () => {
         .catch((err) => {
           setShowSpinner("none");
           setErrorType("update");
-          if (err.response) {
-            setError(err.response.statusText);
-            console.log(err.response.status);
-          } else if (err.request) {
-            setError(err.request.statusText);
-            console.log(err.request);
-          } else {
-            setError(err);
-            console.log(err);
-          }
+          setError(err.message);
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : admin : while topic update",
+            })
+          );
         });
     }
   };
@@ -323,7 +319,15 @@ const TopicManagment = () => {
           </Button>
         </div>
         {showSpinner === "list" ? (
-          <Spinner />
+          <Loading />
+        ) : topics.length === 0 ? (
+          <>
+            <NotFound />
+            <h3 className="text-center b-600">
+              No Topics Available At this Moment
+            </h3>
+            <p className="text-center">Please Try again later</p>
+          </>
         ) : (
           topics.map((item) => {
             return (
@@ -340,7 +344,7 @@ const TopicManagment = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal size="xl" show={show} onHide={handleClose}>
         {currentModal === "create" && (
           <>
             {error && errorType === "create" && (

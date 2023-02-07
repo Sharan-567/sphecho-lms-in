@@ -30,6 +30,10 @@ import {
   Certification,
 } from "./sections";
 
+import Webinar from "./pages/Home/Webinar";
+import Features from "./pages/Home/Features";
+import Privacy from "./pages/Home/Privacy";
+
 function App() {
   const { isLoggedIn } = useAppSelector((state) => state.auth);
   const userType = localStorage.getItem("userType");
@@ -39,7 +43,10 @@ function App() {
         <Routes>
           {!isLoggedIn ? (
             <Route path="/">
-              <Route index element={<Home />} />s
+              <Route index element={<Home />} />
+              <Route path="webinar" element={<Webinar />} />
+              <Route path="features" element={<Features />} />
+              <Route path="privacy" element={<Privacy />} />
               <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />
               <Route path="curriculum" element={<Curriculum />} />

@@ -11,8 +11,10 @@ $primary: #67b045;
     url("../../assets/fonts/BwSeidoRoundDEMO-Black.ttf") format("truetype");
   src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
     url("../../assets/fonts/BwSeidoRoundDEMO-Bold.ttf") format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.ttf") format("truetype");
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.woff")
+      format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.ttf")
+      format("truetype");
   src: url("../../assets/fonts/BwSeidoRoundDEMO-Light.woff") format("woff"),
     url("../../assets/fonts/BwSeidoRoundDEMO-Light.ttf") format("truetype");
   src: url("../../assets/fonts/BwSeidoRoundDEMO-Medium.woff") format("woff"),
@@ -27,13 +29,12 @@ $primary: #67b045;
   font-family: bs;
   src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
     url("../../assets/fonts/BwSeidoRoundDEMO-Bold.ttf") format("truetype");
- font-weight: bold;
+  font-weight: bold;
 }
 
 * {
   // outline: 1px solid red;
   font-family: bs;
-
 }
 .banner-title {
   position: absolute;
@@ -55,9 +56,9 @@ $primary: #67b045;
 }
 
 @media only screen and (max-width: 768px) {
-  .coursel-img{
-  object-position: 69.3%;
- }
+  .coursel-img {
+    object-position: 69.3%;
+  }
 }
 
 .link-nav {
@@ -124,6 +125,7 @@ $primary: #67b045;
   border-left: none;
   border-right: none;
 }
+
 .accordion-button:not(.collapsed) {
   color: #ffffff;
   background-color: $primary;

@@ -3,8 +3,7 @@ import { Row, Col, Badge, Container, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { fetchLatestCourses } from "../../features/latestCourses";
-import { fetchAllCourses } from "../../features/courses";
-import { AiOutlineShopping, AiOutlineLogout } from "react-icons/ai";
+import { AiOutlineShopping } from "react-icons/ai";
 import GaugeChart from "react-gauge-chart";
 import AliceCarousel from "react-alice-carousel";
 import Search from "../../components/Search";
@@ -13,6 +12,18 @@ import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
 import { logout } from "../../features/auth";
+import {
+  addAllCourses,
+  addUserCourses,
+  addUserTopic,
+} from "../../features/courses";
+
+import { showToast } from "../../features/toast";
+import { customAxios, NormalizeProgressData } from "../../services/utils";
+import Counter from "../../components/Counter/Counter";
+import { BiBookOpen, BiBookmarkAlt, BiBookmarkHeart } from "react-icons/bi";
+import { convertToObject } from "../Certfication/helpers";
+import { addAllprogress } from "../../features/progress";
 
 const Main = () => {
   const {
@@ -21,11 +32,143 @@ const Main = () => {
     latestCourses,
   } = useAppSelector((state) => state.latestCourses);
   const { items } = useAppSelector((state) => state.cart);
+  const { progress } = useAppSelector((state) => state.progress);
+  const { userCoursesTopics } = useAppSelector((state) => state.courses);
+  const [noOfCoursesEnrolled, setNoOfCourseEnrolled] = useState("--");
+  const [noOfBadgesEarned, setNoOfBadgesEarned] = useState("--");
+  const [noOfCertificatesEarned, setNoOfCertificatesEarned] = useState("--");
+  const [performance, setPerformance] = useState(0);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const getAllCourses = () => {
+    customAxios
+      .get("student/course/")
+      .then((res) => {
+        dispatch(addAllCourses(res.data));
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : main : while fetching all courses",
+          })
+        );
+      });
+  };
+
+  const getAllUserCourses = () => {
+    customAxios
+      .get("student/student-course/")
+      .then((res) => {
+        dispatch(addUserCourses(res.data));
+        setNoOfCourseEnrolled(`${res.data.length}`);
+        return res;
+      })
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          const courseId = res.data[i].course;
+          customAxios
+            .get(`student/get-course-details/${courseId}`)
+            .then((topicRes) => {
+              let noOfTopics = 0;
+              let noOfAssessments = 0;
+              if (topicRes.data.topics) {
+                noOfTopics = topicRes.data.topics.length;
+              }
+              if (topicRes.data.assessments) {
+                noOfAssessments = topicRes.data.assessments.length;
+              }
+              dispatch(addUserTopic({ courseId, noOfTopics, noOfAssessments }));
+            })
+            .catch((err) => {
+              dispatch(
+                showToast({
+                  type: "danger",
+                  message: err.message + ": While fetching topic list",
+                })
+              );
+            });
+        }
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + ": While fetching all User Courses",
+          })
+        );
+      });
+  };
+
+  const getCertificationAndBagesLength = () => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      const headers = {
+        Authorization: "token " + token,
+      };
+      customAxios
+        .get(`student/certificates-badges/`)
+        .then((res) => {
+          const certs = convertToObject(res.data.certs);
+          const badges = convertToObject(res.data.badges);
+          setNoOfCertificatesEarned(`${certs.length}`);
+          setNoOfBadgesEarned(`${badges.length}`);
+        })
+        .catch((err) => {
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + ": Certificates/Badges Courses length",
+            })
+          );
+        });
+    }
+  };
+
+  const getAllProgress = () => {
+    customAxios
+      .get(`student/student-progress/`)
+      .then((res) => {
+        let progresses = NormalizeProgressData(res.data.progress);
+        dispatch(addAllprogress(progresses));
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : While fetching all Progress",
+          })
+        );
+      });
+  };
+
   useEffect(() => {
-    dispatch(fetchAllCourses({}));
+    let totalTopics = 0;
+    let completedTopics = 0;
+    for (let courseObj of userCoursesTopics) {
+      if (progress[courseObj.courseId]) {
+        totalTopics =
+          totalTopics + courseObj.noOfTopics + courseObj.noOfAssessments;
+        completedTopics =
+          completedTopics +
+          progress[courseObj.courseId].assesments.length +
+          progress[courseObj.courseId].topics.length;
+      }
+    }
+    console.log("completedTopics: ", completedTopics);
+    console.log("totalTopics: ", totalTopics);
+    if (totalTopics !== 0) {
+      setPerformance(completedTopics / totalTopics);
+    }
+  }, [userCoursesTopics, progress]);
+
+  useEffect(() => {
+    getAllCourses();
+    getAllUserCourses();
+    getAllProgress();
+    getCertificationAndBagesLength();
     dispatch(fetchLatestCourses({}));
   }, []);
 
@@ -77,7 +220,10 @@ const Main = () => {
           </div>
         </Col>
       </Row>
-      <Row className="p-5 py-3">
+      <Row
+        className="main__row_1"
+        style={{ padding: "5rem", paddingTop: "3rem", paddingBottom: "3rem" }}
+      >
         {/* <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
         <p
           style={{ fontWeight: "500", lineHeight: ".8rem" }}
@@ -107,11 +253,13 @@ const Main = () => {
               arcWidth={0.5}
               arcsLength={[0.2, 0.5, 0.3]}
               colors={["#EA4228", "#F5CD19", "#0cae00"]}
-              percent={0.37}
+              percent={performance}
               arcPadding={0.02}
               hideText
             />
-            <h5 className="text-center text-green mt-4">43% performace</h5>
+            <h5 className="text-center text-green mt-4">
+              {(performance * 100).toFixed(0)}% performace
+            </h5>
             <p className="tiny text-center">
               completed courses per no.of courses taken up
             </p>
@@ -121,8 +269,42 @@ const Main = () => {
           <CalenderWithEvents />
         </Col>
       </Row>
+      <Row
+        className="main__row_1"
+        style={{
+          marginTop: "1rem",
+          marginBottom: "1rem",
+          paddingLeft: "4rem",
+          paddingRight: "4rem",
+        }}
+      >
+        <Col sm={4}>
+          <Counter
+            Icon={BiBookOpen}
+            title="No Of Course Enrolled"
+            value={noOfCoursesEnrolled}
+          />
+        </Col>
+        <Col sm={4}>
+          <Counter
+            Icon={BiBookmarkAlt}
+            title="No Of Badges Earned"
+            value={noOfBadgesEarned}
+          />
+        </Col>
+        <Col sm={4}>
+          <Counter
+            Icon={BiBookmarkHeart}
+            title="No Of Certificates Earned"
+            value={noOfCertificatesEarned}
+          />
+        </Col>
+      </Row>
       <Container>
-        <Row className="p-5" style={{ minHeight: "16rem" }}>
+        <Row
+          className="main_row_3"
+          style={{ minHeight: "16rem", padding: "5rem" }}
+        >
           <Col className="p-4 br-2 bg-white  position-relative">
             <h4 className="b-700 text-blue">Latest Courses</h4>
             <div className="p-2">

@@ -1,5 +1,20 @@
-import { NormalizedProgress, Progress } from "../definations/course";
+import axios from "axios";
+import {
+  NormalizedProgress,
+  Progress,
+  StudentCourse,
+} from "../definations/course";
 import topicService from "./topic.service";
+import { BASE_URL } from "../features/settings";
+
+const token = localStorage.getItem("token");
+
+export const customAxios = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: `token ${token}`,
+  },
+});
 
 /**
  *
@@ -76,20 +91,22 @@ export const NormalizeProgressData = (arr: Progress[]): NormalizedProgress => {
  * @param id
  * @returns total_topics
  */
-export const getTotalTopicsOfCourse = async (
-  token: string,
-  id: number
-): Promise<number> => {
-  const { topics, assesements } = await topicService.fetchTopics(
-    token,
-    `${id}`
-  );
-  let total_topics = 0;
-  if (topics) {
-    total_topics += topics.length;
-  }
-  if (assesements) {
-    total_topics += assesements.length;
-  }
-  return total_topics;
+export const getTotalTopicsOfCourse = (courseId: number): Promise<number> => {
+  return new Promise((resolve, reject) => {
+    customAxios
+      .get(`student/get-course-details/${courseId}`)
+      .then((res) => {
+        let total_topics = 0;
+        if (res.data.topics) {
+          total_topics += res.data.topics.length;
+        }
+        if (res.data.assesements) {
+          total_topics += res.data.assesements.length;
+        }
+        return resolve(total_topics);
+      })
+      .catch((err) => {
+        reject(err.message);
+      });
+  });
 };

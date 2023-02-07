@@ -3,16 +3,20 @@ import { StudentCourse } from "../definations/course";
 import { BASE_URL } from "../features/settings";
 import { getErrorMessageWithCode, getTotalTopicsOfCourse } from "./utils";
 
+const token = localStorage.getItem("token");
+
 const customAxios = axios.create({
   baseURL: BASE_URL,
+  headers: {
+    Authorization: `token ${token}`,
+  },
 });
 
-const fetchAllCourse = async (token: string) => {
+const getAllCourse = async () => {
+  customAxios.get("student/course/")
   try {
-    const headers = {
-      Authorization: `token ${token}`,
-    };
-    const res = await customAxios("student/course/", { headers });
+    const headers = {};
+    const res = await customAxios("", { headers });
     return Promise.resolve(res.data);
   } catch (error) {
     return Promise.reject(getErrorMessageWithCode(error.response?.status));

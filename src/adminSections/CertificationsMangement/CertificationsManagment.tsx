@@ -22,6 +22,10 @@ import { EditorState, convertToRaw } from "draft-js";
 import draftToHtml from "draftjs-to-html";
 import { Editor } from "react-draft-wysiwyg";
 import "../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useAppDispatch } from "../../store";
+import { showToast } from "../../features/toast";
+import NotFound from "../../sections/NotFound";
+import Loading from "../../sections/Loading";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -89,6 +93,7 @@ const CertificationManagment = () => {
   const [updatedItem, setUpdatedItem] = useState<Certificate>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const dispatch = useAppDispatch();
 
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty()
@@ -146,15 +151,13 @@ const CertificationManagment = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("delete");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while deleting Certificate",
+          })
+        );
       });
   };
 
@@ -174,15 +177,13 @@ const CertificationManagment = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching certificates",
+          })
+        );
       });
   };
 
@@ -201,15 +202,14 @@ const CertificationManagment = () => {
       })
       .catch((err) => {
         setShowSpinner("none");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message:
+              err.message + " : admin : while fetcthing certificate tags",
+          })
+        );
       });
   };
 
@@ -239,18 +239,17 @@ const CertificationManagment = () => {
         getCertificationList();
         setErrorType("none");
       })
-      .catch((error) => {
+      .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
         setErrorType("create");
-        if (error.request) {
-          setError(error.response.statusText);
-          console.log(error.response.statusText);
-        } else if (error.request) {
-          setError(error.request.statusText);
-        } else {
-          setError(error);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while creating certificates",
+          })
+        );
       });
   };
 
@@ -265,15 +264,13 @@ const CertificationManagment = () => {
         setAssessments(res.data.Assements);
       })
       .catch((err) => {
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching assessment list",
+          })
+        );
       });
   };
 
@@ -289,15 +286,13 @@ const CertificationManagment = () => {
         console.log(res.data.topics);
       })
       .catch((err) => {
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching topic list",
+          })
+        );
       });
   };
 
@@ -328,7 +323,15 @@ const CertificationManagment = () => {
           </Button>
         </div>
         {showSpinner === "list" ? (
-          <Spinner />
+          <Loading />
+        ) : (certificates || []).length === 0 ? (
+          <>
+            <NotFound />
+            <h3 className="text-center b-600">
+              No Certificates Available At this Moment
+            </h3>
+            <p className="text-center">Please Try again later</p>
+          </>
         ) : (
           (certificates || []).map((item) => {
             return (
@@ -348,7 +351,7 @@ const CertificationManagment = () => {
       <Modal
         show={show}
         //@ts-ignore
-        size={currentModal === "create" ? "lg" : ""}
+        size={currentModal === "create" ? "xl" : ""}
         onHide={handleClose}
       >
         {currentModal === "create" && (

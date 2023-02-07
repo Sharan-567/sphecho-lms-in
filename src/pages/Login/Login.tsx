@@ -24,6 +24,9 @@ const Login = () => {
   // type -> 2 => patient
   // refer django lms code
 
+  // after authenticating with lms
+  // send lmsAUthizeTYpe(type) 1 -> patient, 2->staff/doctor, 3 -> staffMember/superUser
+
   const loginTypes: Auth[] = [
     {
       title: "Patient",

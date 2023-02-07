@@ -9,19 +9,12 @@ import { BsArrowLeft } from "react-icons/bs";
 // type 2
 //user_id,  email, firstname, course: id,  user_type : 1-pa, 2-staff
 
-const UpdateUser = ({
-  setState,
-  currentSelectedUser,
-  currentSelectedUserRole,
-}) => {
+const UpdateUser = ({ setState, currentSelectedUser }) => {
   const [data, setData] = useState({
-    firstname:
-      currentSelectedUserRole === "1"
-        ? currentSelectedUser.firstname
-        : currentSelectedUser.Name,
+    firstname: currentSelectedUser.firstname || currentSelectedUser.Name,
     email: currentSelectedUser.Email,
-    role: currentSelectedUserRole,
-    user_type: currentSelectedUserRole,
+    role: "",
+    user_type: "",
   });
   const [message, setMessage] = useState<{
     message: string;
@@ -42,7 +35,7 @@ const UpdateUser = ({
       formData.append("email", data.email);
       formData.append("role", data.role);
       formData.append("user_type", data.user_type);
-      formData.append("type", "1");
+      formData.append("type", "1"); //type 1 means update the user
       axios
         .post(`${BASE_URL}/master/user-course-update/`, formData, { headers })
         .then((res) => {
@@ -63,6 +56,7 @@ const UpdateUser = ({
   const inputChangeHandler = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
+  console.log(data);
 
   return (
     <div className="container w-50 py-5 px-2">
@@ -118,7 +112,9 @@ const UpdateUser = ({
           >
             <option>Open this select Role</option>
             <option value="1">Patient</option>
-            <option value="2">Doctor</option>
+            <option value="2">Staff</option>
+            <option value="3">StaffProvider</option>
+            <option value="3">SuperUser</option>
           </Form.Select>
         </Form.Group>
 
@@ -132,7 +128,9 @@ const UpdateUser = ({
           >
             <option>Open this select user_type</option>
             <option value="1">Patient</option>
-            <option value="2">Doctor</option>
+            <option value="2">Staff</option>
+            <option value="3">StaffProvider</option>
+            <option value="3">SuperUser</option>
           </Form.Select>
         </Form.Group>
         <Button className="px-3 py-2 text-white" onClick={updateUserHandler}>

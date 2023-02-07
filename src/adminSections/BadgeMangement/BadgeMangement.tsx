@@ -18,13 +18,17 @@ import type {
   Question,
   Badge,
 } from "./../../definations/assessment";
-import { BASE_URL, HOST } from "../../features/settings";
 import Spinner from "../Spinner";
+import { BASE_URL, HOST } from "../../features/settings";
 import ErrorMessage from "../ErrorMesage";
 import SuccessMessage from "../SuccessMessage";
 import * as Yup from "yup";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useAppDispatch } from "../../store";
+import { showToast } from "../../features/toast";
+import NotFound from "../../sections/NotFound";
+import Loading from "../../sections/Loading";
 
 function getMinDate() {
   return new Date(2000, 1, 1);
@@ -122,6 +126,7 @@ const BadgeMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Badge>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const dispatch = useAppDispatch();
 
   const openModel = (
     badge: Badge,
@@ -188,15 +193,13 @@ const BadgeMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("delete");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while deleting badge",
+          })
+        );
       });
   };
 
@@ -212,15 +215,13 @@ const BadgeMangement = () => {
         console.log(res.data.topics);
       })
       .catch((err) => {
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching topoic list",
+          })
+        );
       });
   };
 
@@ -236,15 +237,13 @@ const BadgeMangement = () => {
         console.log(res.data.topics);
       })
       .catch((err) => {
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching courseList",
+          })
+        );
       });
   };
 
@@ -259,15 +258,13 @@ const BadgeMangement = () => {
         setAssessments(res.data.Assements);
       })
       .catch((err) => {
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching assessmentList",
+          })
+        );
       });
   };
 
@@ -287,15 +284,13 @@ const BadgeMangement = () => {
       .catch((err) => {
         setShowSpinner("none");
         setErrorType("list");
-        if (err.response) {
-          setError(err.response.statusText);
-          console.log(err.response.statusText);
-        } else if (err.request) {
-          setError(err.response.statusText);
-          console.log(err.request.statusText);
-        } else {
-          console.log(err);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching badgeList",
+          })
+        );
       });
   };
 
@@ -334,16 +329,13 @@ const BadgeMangement = () => {
         .catch((err) => {
           setShowSpinner("none");
           setErrorType("update");
-          if (err.response) {
-            setError(err.response.statusText);
-            console.log(err.response.status);
-          } else if (err.request) {
-            setError(err.request.statusText);
-            console.log(err.request);
-          } else {
-            setError(err);
-            console.log(err);
-          }
+          setError(err.message);
+          dispatch(
+            showToast({
+              type: "danger",
+              message: err.message + " : admin : while updaging badge",
+            })
+          );
         });
     }
   };
@@ -381,18 +373,17 @@ const BadgeMangement = () => {
         getBadgeList();
         setErrorType("none");
       })
-      .catch((error) => {
+      .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
         setErrorType("create");
-        if (error.request) {
-          setError(error.response.statusText);
-          console.log(error.response.statusText);
-        } else if (error.request) {
-          setError(error.request.statusText);
-        } else {
-          setError(error);
-        }
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while creating badge",
+          })
+        );
       });
   };
 
@@ -409,7 +400,15 @@ const BadgeMangement = () => {
           </Button>
         </div>
         {showSpinner === "list" ? (
-          <Spinner />
+          <Loading />
+        ) : (badges || []).length === 0 ? (
+          <>
+            <NotFound />
+            <h3 className="text-center b-600">
+              No Badges Available At this Moment
+            </h3>
+            <p className="text-center">Please Try again later</p>
+          </>
         ) : (
           (badges || []).map((item) => (
             <ListItem
@@ -424,7 +423,7 @@ const BadgeMangement = () => {
         )}
       </div>
 
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} size="xl" onHide={handleClose}>
         {currentModal === "create" && (
           <>
             {error && errorType === "create" && (

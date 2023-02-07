@@ -1,17 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Container, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import Carousel from "react-bootstrap/Carousel";
 import Accordion from "react-bootstrap/Accordion";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import landing from "../../assets/landing.png";
 import career from "../../assets/career.png";
 import discover from "../../assets/discover.png";
 import enhance from "../../assets/enhance.png";
 import improve from "../../assets/improve.png";
 import noImage from "../../assets/no-img.png";
-import logo from "../../assets/sphechoLogo.png";
 import colorLogo from "../../assets/colorlogo.png";
 import lb1 from "../../assets/lb1.jpg";
 import lb2 from "../../assets/lb2.jpg";
@@ -24,9 +20,10 @@ import playstore from "../../assets/playstore.png";
 import tw from "../../assets/tw.png";
 import yt from "../../assets/yt.png";
 
-import wave from "../../assets/wave.png"
+import wave from "../../assets/wave.png";
 
 import "./home.scss";
+import Navbar from "./Navbar";
 
 // const Home = () => {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
@@ -34,77 +31,32 @@ import "./home.scss";
 
 const Home = () => {
   return (
-    <div style={{ position: "relative" }}>
-      <NavBar />
-      <Banner />
-      <TitleContainer />
-      <BenfitsOfCertification />
-      <Board />
-      <Committe />
-      <InternalCommitee />
-      <FAQS />
-      <RequestForm />
-      <NewLetter />
-      <Footer />
-    </div>
-  );
-};
-
-const NavBar = () => {
-  return (
-    <Navbar
-      className="nav-bar-container"
-      style={{
-        position: "absolute",
-        top: "0%",
-        left: 0,
-        right: 0,
-        zIndex: 100,
-      }}
-      bg="light"
-      expand="lg"
-    >
-      <Container>
-        <Navbar.Brand as={Link} to="/">
-          <img src={logo} width="170rem" />
-        </Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
-            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              BLACKBOARD
-            </Nav.Link>
-            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              WEBINARS
-            </Nav.Link>
-            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              FEATURES
-            </Nav.Link>
-            <Nav.Link as={Link} to="/" className="text-white b-700 link-nav">
-              SUPPORT
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="login"
-              className="text-white b-700 link-nav"
-            >
-              LOGIN
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+    <>
+      <Navbar />
+      <div style={{ width: "100vw", overflowX: "hidden" }}>
+        <Banner />
+        <TitleContainer />
+        <BenfitsOfCertification />
+        <Board />
+        <Committe />
+        <InternalCommitee />
+        <FAQS />
+        <RequestForm />
+        <NewLetter />
+        <Footer />
+      </div>
+    </>
   );
 };
 
 const Banner = () => {
   return (
     <div className="position-relative">
-    <div
-      className="banner-container"
-      style={{ height: "130vh", width: "100wh", position: "relative" }}
-    >
-      {/* <svg
+      <div
+        className="banner-container"
+        style={{ height: "130vh", width: "100wh", position: "relative" }}
+      >
+        {/* <svg
         id="svgPath"
         viewBox="0 0 1438 693"
         fill="none"
@@ -120,35 +72,41 @@ const Banner = () => {
           </clipPath>
         </defs>
       </svg> */}
-      <div className="clip-container position-relative">
-        <Carousel>
-          <Carousel.Item>
-            <img
-              className="d-block coursel-img"
-              src={lb1}
-              alt="First slide"
-            />
-          </Carousel.Item>
-          <Carousel.Item>
-            <img
-              className="d-block coursel-img"
-              src={lb2}
-              alt="First slide"
-            />
-          </Carousel.Item>
-        </Carousel>
-        <div className="banner-title">
-          <h1 className="container">
-            <h1 style={{fontWeight: "bold"}}>LEARN CONTINUALLY- THERE’S ALWAYS </h1>
-            <i>
-              <b style={{ fontSize: "3rem" }}>“ONE MORE THING” </b>
-            </i>{" "}
-            TO LEARN.
-          </h1>
+        <div className="clip-container position-relative">
+          <Carousel>
+            <Carousel.Item>
+              <img
+                className="d-block coursel-img"
+                src={lb1}
+                alt="First slide"
+              />
+            </Carousel.Item>
+            <Carousel.Item>
+              <img
+                className="d-block coursel-img"
+                src={lb2}
+                alt="First slide"
+              />
+            </Carousel.Item>
+          </Carousel>
+          <div className="banner-title">
+            <h1 className="container">
+              <h1 style={{ fontWeight: "bold" }}>
+                LEARN CONTINUALLY- THERE’S ALWAYS{" "}
+              </h1>
+              <i>
+                <b style={{ fontSize: "3rem" }}>“ONE MORE THING” </b>
+              </i>{" "}
+              TO LEARN.
+            </h1>
+          </div>
         </div>
       </div>
-    </div>
-      <img className="wave" src={wave} style={{width: "100%", position:"absolute", bottom: "0"}} />
+      <img
+        className="wave"
+        src={wave}
+        style={{ width: "100%", position: "absolute", bottom: "0" }}
+      />
     </div>
   );
 };
@@ -405,45 +363,52 @@ const FAQS = () => {
     {
       id: 1,
       header: "What is the SPHECHO Certification Program",
-      content: "The SPHECHO certification program is intended to assess the knowledge, talents, and skills needed to carry out a certain job, and, upon passing a certification exam, to serve as a testament to an individual's level of professional competence."
+      content:
+        "The SPHECHO certification program is intended to assess the knowledge, talents, and skills needed to carry out a certain job, and, upon passing a certification exam, to serve as a testament to an individual's level of professional competence.",
     },
     {
       id: 2,
       header: "Who verifies the SPHECHO credentials?",
-      content: "Our credentials are governed and approved by our professional board that frequently reviews all policies and procedures of SPHECHO. The board is composed of a variety of specialists and experts, including clinical experts, therapists, special education professionals etc."
+      content:
+        "Our credentials are governed and approved by our professional board that frequently reviews all policies and procedures of SPHECHO. The board is composed of a variety of specialists and experts, including clinical experts, therapists, special education professionals etc.",
     },
     {
       id: 3,
       header: "What is the value in becoming certified?",
       content: `Recognition for voluntarily meeting standards beyond professional and regional licensing requirements
-      Enhancement of reputation and credibility`
+      Enhancement of reputation and credibility`,
     },
     {
       id: 4,
       header: "What job can I get with this certification?",
-      content: "SPHECHO does not guarantee employment or specific job roles, however many professionals can utilize SPHECHO credentials on their professional resume to assist them in standing out among other applicants. All SPHECHO providers are certified."
+      content:
+        "SPHECHO does not guarantee employment or specific job roles, however many professionals can utilize SPHECHO credentials on their professional resume to assist them in standing out among other applicants. All SPHECHO providers are certified.",
     },
     {
       id: 5,
       header:
         "Once I register to begin my certification program, how long do I have to complete the training and exam?",
-        content: "You will have to complete the coursework and final exam within 30 days."
+      content:
+        "You will have to complete the coursework and final exam within 30 days.",
     },
     {
       id: 6,
       header: "Is the online learning available on demand?",
-      content: "Yes, the SPHECHO learning management system is available 24/7 and is accessible as long as you have internet access. Once you have registered as a provider on the SPHECHO platform and paid for your program, you will be able to access the training modules online."
+      content:
+        "Yes, the SPHECHO learning management system is available 24/7 and is accessible as long as you have internet access. Once you have registered as a provider on the SPHECHO platform and paid for your program, you will be able to access the training modules online.",
     },
     {
       id: 7,
       header: "When do the courses start?",
-      content: "Once you register and pay for your program, you will have access to your online profile and application. You then have 30 days to access the online training, complete your profile and application details, pass the exam, and submit for approval. "
+      content:
+        "Once you register and pay for your program, you will have access to your online profile and application. You then have 30 days to access the online training, complete your profile and application details, pass the exam, and submit for approval. ",
     },
     {
       id: 8,
       header:
         "After I complete my final exam and submit my application, how long will it be before I get my certification?",
-        content: "Upon board approval, your certification packet will be prepared within 2-3 weeks. Once approved, you will have immediate access to the digital copy of your certificate and badge."
+      content:
+        "Upon board approval, your certification packet will be prepared within 2-3 weeks. Once approved, you will have immediate access to the digital copy of your certificate and badge.",
     },
   ];
 
@@ -453,7 +418,9 @@ const FAQS = () => {
       style={{ marginBottom: "5rem" }}
     >
       <div className="w-75 m-auto ">
-        <h1 className="text-landingPrimary my-4 b-600">FREQUENTLY ASKED QUESTIONS</h1>
+        <h1 className="text-landingPrimary my-4 b-600">
+          FREQUENTLY ASKED QUESTIONS
+        </h1>
         <p style={{ fontSize: "1.2rem", marginBottom: "6rem" }}>
           Please click on a topic below to view common questions. Once you have
           chosen your topic simply click any question to reveal the answer.
@@ -466,14 +433,14 @@ const FAQS = () => {
               eventKey={`${faq.id}`}
               className="accordion-item"
             >
-              <Accordion.Header>
+              <Accordion.Header className="accordin-h">
                 <p className="accordin-title">{faq.header}</p>
               </Accordion.Header>
               <Accordion.Body
                 className="accordin-content"
                 style={{ fontSize: "1.2rem" }}
               >
-               {faq.content}
+                {faq.content}
               </Accordion.Body>
             </Accordion.Item>
           ))}
@@ -533,7 +500,10 @@ const RequestForm = () => {
               </Col>
             </Row>
             <Button className="bg-white text-black">Sumbit</Button>
-            <p className="tiny text-white pt-2">This site is protected by SPHECHO privacy policy and its terms and conditions</p>
+            <p className="tiny text-white pt-2">
+              This site is protected by SPHECHO privacy policy and its terms and
+              conditions
+            </p>
           </div>
         </div>
       </div>
@@ -564,7 +534,9 @@ const NewLetter = () => {
             </Col>
           </Row>
         </div>
-        <p className="text-center pt-2">By subscribing, you consent to us sharing updates with you.</p>
+        <p className="text-center pt-2">
+          By subscribing, you consent to us sharing updates with you.
+        </p>
       </div>
     </div>
   );

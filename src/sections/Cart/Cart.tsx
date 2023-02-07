@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import { useAppSelector, useAppDispatch } from "../../store";
 import { AiOutlineUser } from "react-icons/ai";
 import { HOST } from "../../features/settings";
 import { removeItem } from "../../features/cart";
+import Empty from "../Empty";
+import defaultImg from "../../assets/default.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const { items } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const imageRef = useRef<HTMLImageElement | any>(null);
 
   const getPrice = (price?: string) => {
     if (price) {
@@ -16,12 +21,23 @@ const Cart = () => {
     }
   };
 
+  useEffect(() => {
+    if (imageRef.current) {
+      imageRef.current.onerror = () => {
+        imageRef.current.src = defaultImg;
+      };
+    }
+  }, [defaultImg, imageRef]);
+
   return (
     <Container className="p-5" style={{ minHeight: "100vh" }}>
-      <div className="bg-gray br-2 p-5">
+      <div className=" br-2 p-5">
         <h3 className="b-700 text-blue">Cart</h3>
         {items.length === 0 ? (
-          <p>Cart is Empty</p>
+          <>
+            <p>Cart is Empty</p>
+            <Empty />
+          </>
         ) : (
           <div className="p-3">
             {items.map((item) => (
@@ -30,6 +46,7 @@ const Cart = () => {
                   <Col sm={2}>
                     <div className="round">
                       <img
+                        ref={imageRef}
                         className=" p-1"
                         style={{
                           height: "5rem",
@@ -39,7 +56,7 @@ const Cart = () => {
                       />
                     </div>
                   </Col>
-                  <Col sm={8}>
+                  <Col sm={7}>
                     <h5 className="mb-3 mt-3">{item.name}</h5>
                     <div
                       className="d-flex align-items-center"
@@ -49,18 +66,31 @@ const Cart = () => {
                       <p className="small b-600 w-100">{item?.trainer_name}</p>
                     </div>
                   </Col>
-                  <Col sm={2}>
+                  <Col sm={3}>
                     <h4 className="text-skyBlue">
                       {getPrice(item?.full_amount)}
                     </h4>
-                    <Button
-                      onClick={() => dispatch(removeItem(item.id))}
-                      variant="green"
-                      className="text-white"
-                      style={{ fontSize: ".8rem" }}
-                    >
-                      Remove
-                    </Button>
+                    <div className="d-flex align-items-center">
+                      <Button
+                        onClick={() => dispatch(removeItem(item.id))}
+                        variant="green"
+                        className="text-white py-2 b-600"
+                        style={{ fontSize: ".8rem" }}
+                      >
+                        Remove
+                      </Button>
+                      <Button
+                        onClick={() =>
+                          navigate(`/courses/detail/${item.id}`, {
+                            state: { id: item.id },
+                          })
+                        }
+                        className="text-black py-2 b-600 ms-3 bg-white"
+                        style={{ fontSize: ".8rem" }}
+                      >
+                        Enroll for Free
+                      </Button>
+                    </div>
                   </Col>
                 </Row>
               </div>

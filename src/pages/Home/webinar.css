@@ -1,0 +1,32 @@
+/* home */
+@media only screen and (max-width: 768px) {
+  .banner-img {
+    display: none;
+  }
+
+  .detail {
+    margin-right: 0rem !important;
+  }
+}
+
+/* detail */
+@media only screen and (max-width: 768px) {
+  .detail {
+    margin-right: 0rem !important;
+  }
+
+  .detail-image {
+    height: 14rem !important;
+    margin: auto;
+    margin-left: 0.5rem;
+  }
+}
+
+/* footer */
+.footer-webinar {
+  background-image: url("./assets/webinar/wab-webinar.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 19.8rem;
+  width: 100%;
+}
