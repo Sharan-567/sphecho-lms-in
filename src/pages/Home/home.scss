@@ -32,10 +32,18 @@ $primary: #67b045;
   font-weight: bold;
 }
 
-* {
-  // outline: 1px solid red;
-  font-family: bs;
+@font-face {
+  font-family: regular;
+  src: url("../../assets/fonts/BwSeidoRoundDEMO-Regular.woff") format("woff"),
+    url("../../assets/fonts/BwSeidoRoundDEMO-Regular.ttf") format("truetype");
+  font-weight: normal;
 }
+
+* {
+  font-family: regular;
+  font-weight: normal;
+}
+
 .banner-title {
   position: absolute;
   z-index: 80;

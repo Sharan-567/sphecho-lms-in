@@ -250,12 +250,11 @@ const TopNav = () => {
                 }}
                 style={{
                   width: "100%",
-                  marginBottom: "1rem",
+                  marginBottom: ".8rem",
                   cursor: "pointer",
                   color: "white",
                   padding: ".5rem 0rem",
                   fontWeight: "bold",
-
                   display: "flex",
                   alignItems: "center",
                 }}
@@ -263,11 +262,14 @@ const TopNav = () => {
                 <menu.Icon
                   color="white"
                   style={{
-                    fontSize: "2rem",
+                    fontSize: "1.6rem",
                     marginRight: "1rem",
+                    marginTop: "-1rem",
                   }}
                 />
-                <h2 style={{ fontWeight: "bold" }}>{menu.title}</h2>
+                <p style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+                  {menu.title}
+                </p>
               </span>
             );
           })}
@@ -281,7 +283,7 @@ const TopNav = () => {
             color: "black",
             fontWeight: "bold",
             marginTop: "1rem",
-            fontSize: "1.2rem",
+            fontSize: "1rem",
           }}
         >
           Log Out
