@@ -26,7 +26,7 @@ import NotFound from "../../sections/NotFound";
 const createSchema = Yup.object().shape({
   name: Yup.string()
     .required("Topic Name is required")
-    .max(25, "max Length 25 chars"),
+    .min(3, "Atleast 3 characters required"),
   video: Yup.string().required("video url is needed"),
   info_image: Yup.string().required("info image is required").nullable(),
   pdf: Yup.string().required("pdf url is required"),

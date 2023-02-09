@@ -5,6 +5,7 @@ import type { Patient, Doctor } from "./definations";
 
 type Props = {
   title?: string;
+  email?: string;
   update: () => void;
   addUserToCourseHandler: () => void;
   addStudentToCourseHandler: () => void;
@@ -12,6 +13,7 @@ type Props = {
 
 const ListItem = ({
   title,
+  email,
   update,
   addUserToCourseHandler,
   addStudentToCourseHandler,
@@ -20,8 +22,17 @@ const ListItem = ({
     <Row className="d-flex px-3 py-3 bg-graydark br-2 mb-2">
       <Col xs="10">
         <p style={{ fontSize: "1.1rem" }}>{title}</p>
+        <h4
+          style={{
+            fontSize: "1.1rem",
+            marginTop: "-0.4rem",
+            fontWeight: "light",
+          }}
+        >
+          {email ? email : "-----"}
+        </h4>
       </Col>
-      <Col xs={2} className="d-flex">
+      <Col xs={2} className="d-flex align-items-center justify-center">
         {/* <Button variant="primary" className="text-white me-1" onClick={update}>
           <BsFillPenFill className="text-white" size={15} />
         </Button> */}
@@ -37,6 +48,7 @@ const ListItem = ({
           className="text-white me-1 tiny b-600"
           variant="adminteritory"
           onClick={addStudentToCourseHandler}
+          style={{ minHeight: "3rem" }}
         >
           Add Course to User
         </Button>

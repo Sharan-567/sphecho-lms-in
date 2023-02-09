@@ -36,7 +36,7 @@ const AddStudentToCourse = ({
       currentSelectedUser.name ||
       currentSelectedUser.Name,
     email: currentSelectedUser.Email || currentSelectedUser.email,
-    user_type: "",
+    user_type: "2",
     course: "",
   });
   const [message, setMessage] = useState<{
@@ -84,6 +84,7 @@ const AddStudentToCourse = ({
     <div className="container w-50 py-5 px-2">
       <Button
         variant="white"
+        style={{ outline: "none" }}
         className="p-0 d-flex justify-content-center"
         onClick={() => setState(undefined)}
       >

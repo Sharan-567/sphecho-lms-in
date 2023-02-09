@@ -135,6 +135,7 @@ const UserMangement = () => {
               <div key={user._id}>
                 <ListItem
                   title={user.Name || user?.Email}
+                  email={user.Email}
                   update={() => {
                     setState("updateUser");
                     setCurrentSelectedUser(user);

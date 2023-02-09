@@ -27,7 +27,7 @@ type CourseCreateType = Record<string, string>;
 const createSchema = Yup.object().shape({
   name: Yup.string()
     .required("Course Name is required")
-    .max(30, "max Length 30 chars"),
+    .min(3, "Atleast the course must be length of 3"),
   tags: Yup.string()
     .required("tags are required")
     .nullable()
