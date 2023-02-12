@@ -351,7 +351,7 @@ const CertificationManagment = () => {
       <Modal
         show={show}
         //@ts-ignore
-        size={currentModal === "create" ? "xl" : ""}
+        size="xl"
         onHide={handleClose}
       >
         {currentModal === "create" && (
@@ -586,7 +586,9 @@ const CertificationManagment = () => {
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
                 <div key={k} className="d-flex">
                   <p className="b-700 me-2">{k}: </p>
-                  <p>{(v || "").toString()}</p>
+                  <p style={{ wordBreak: "break-word" }}>
+                    {(v || "").toString()}
+                  </p>
                 </div>
               ))}
             </Modal.Body>

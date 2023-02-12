@@ -14,3 +14,22 @@ body {
     color: unset;
   }
 }
+
+.form-control:focus {
+  border-color: #a1c927 !important;
+  box-shadow: inset 0 1px 1px rgb(129, 163, 27, 0.75), 0 0 6px #81a31b !important;
+}
+
+select option:hover,
+select option:focus,
+select option:active {
+  background: #81a31b !important;
+  background-color: #81a31b !important; /* for IE */
+  color: white !important;
+}
+
+select option:checked {
+  background: #81a31b !important;
+  background-color: #81a31b !important; /* for IE */
+  color: white !important;
+}

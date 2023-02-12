@@ -250,3 +250,41 @@ footer {
     border-radius: 0rem;
   }
 }
+
+.wave-container-banner {
+  height: 20rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0rem;
+  left: 0;
+  right: 0;
+}
+
+.wave {
+  background: url("./assets/b-wave.png") repeat-x;
+  position: absolute;
+  width: 6400px;
+  height: 258px;
+  bottom: 0;
+  animation: wave 40s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+
+  transform: translate3d(0, 0, 0);
+}
+
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+  100% {
+    margin-left: -250%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .wave-container-banner {
+    height: 0rem;
+  }
+  .wave {
+    height: 140px;
+  }
+}

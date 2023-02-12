@@ -102,11 +102,14 @@ const Banner = () => {
           </div>
         </div>
       </div>
-      <img
+      {/* <img
         className="wave"
         src={wave}
         style={{ width: "100%", position: "absolute", bottom: "0" }}
-      />
+      /> */}
+      <div className="wave-container-banner ">
+        <div className="wave"></div>
+      </div>
     </div>
   );
 };

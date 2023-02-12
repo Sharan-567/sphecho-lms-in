@@ -5,6 +5,8 @@ import { BsArrowLeft } from "react-icons/bs";
 import { BASE_URL, HOST } from "../../features/settings";
 import "./certificate.scss";
 import { convertToObject } from "./helpers";
+import Empty from "../Empty";
+import LoadingEl from "../Loading";
 
 type Certification = {
   id: number;
@@ -31,8 +33,10 @@ const Certification = () => {
   const [error, setError] = useState("");
   const [showCertificate, setShowCertificate] = useState(false);
   const [pdf, setPdf] = useState();
+  const [loading, setLoading] = useState(false);
 
   const getCertificationList = useCallback(() => {
+    setLoading(true);
     let token = localStorage.getItem("token");
     if (token) {
       const headers = {
@@ -43,9 +47,10 @@ const Certification = () => {
         .then((res) => {
           setCertificationList(convertToObject(res.data.certs));
           setBadgeList(convertToObject(res.data.badges));
-         
+          setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
           if (err.response) {
             setError(err.response.statusText);
           } else if (err.request) {
@@ -105,6 +110,14 @@ const Certification = () => {
     setShowCertificate(false);
   };
 
+  if (loading) {
+    return (
+      <div>
+        <LoadingEl />
+      </div>
+    );
+  }
+
   if (showCertificate) {
     return (
       <div
@@ -133,8 +146,10 @@ const Certification = () => {
     <div className="container w-75 p-3">
       <div className="p-2">
         <h2 className="b-700">Certifications</h2>
-        <p>You earned</p>
-        {error && <h2 className="text-danger text-center">{error}</h2>}
+        {(certificationList || []).length > 0 && <p>Certificates you earned</p>}
+        {(certificationList || []).length === 0 && (
+          <p>You Have No Certificates Available Now.</p>
+        )}
       </div>
       {(certificationList || []).map((certficate) => (
         <div
@@ -151,18 +166,31 @@ const Certification = () => {
       ))}
       <div className="p-2">
         <h2 className="b-700">Badges</h2>
-        <p>Badges you earned</p>
+        {(badgeList || []).length > 0 && <p>Badges you earned</p>}
+        {(badgeList || []).length === 0 && (
+          <>
+            <Empty />{" "}
+            <p style={{ textAlign: "center" }}>You Have No Badges Yet</p>
+          </>
+        )}
       </div>
-      <div className="d-flex flex-wrap">
+
+      <div className="d-flex flex-wrap justify-content-around">
         {(badgeList || []).map((badge) => (
           <div
             key={badge.id}
-            className="br-1 px-4 py-2 mb-2 text-center m-5"
-            style={{ cursor: "pointer" }}
+            className="br-1 mb-2 text-center m-5"
+            style={{
+              cursor: "pointer",
+              borderRadius: "1rem",
+              border: "2.5px solid #81A31B",
+              padding: "2rem 4rem",
+            }}
           >
             <img
               src={`https://${HOST}/open_api_v_0_0_1/shared_data/media/${badge.badge__image}`}
               width={100}
+              style={{ marginBottom: "1rem" }}
             />
             <p>
               {badge.badge__title}
