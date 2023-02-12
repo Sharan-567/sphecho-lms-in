@@ -59,8 +59,7 @@ const Topic = ({ topic, courseId }: TopicProp) => {
           console.log(data);
           getAllProgress();
           setCompleted(true);
-        })
-        
+        });
     }
   };
 
@@ -86,7 +85,7 @@ const Topic = ({ topic, courseId }: TopicProp) => {
         </div>
 
         <div className="py-4 px-5 margin-auto">
-          {topic?.video ? (
+          {topic?.video && topic?.video.toLowerCase() !== "n/a" ? (
             <ReactPlayer
               width={"100%"}
               controls
@@ -95,8 +94,16 @@ const Topic = ({ topic, courseId }: TopicProp) => {
             />
           ) : null}
         </div>
-        <p className="p-3 my-1">{topic?.content}</p>
-        {topic?.pdf && (
+        {topic?.description?.toLowerCase() !== "n/a" ||
+        topic?.description?.toLowerCase() !== "."
+          ? topic?.description
+          : null}
+        {topic?.content?.toLowerCase() !== "n/a" ||
+        topic?.content?.toLowerCase() !== "." ? (
+          <p className="p-3 my-1">{topic?.content}</p>
+        ) : null}
+
+        {topic?.pdf && topic?.pdf.toLowerCase() !== "n/a" && (
           // <a
           //   target="_blank"
           //   rel="noreferrer"
