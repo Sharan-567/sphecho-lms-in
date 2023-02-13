@@ -119,7 +119,7 @@ const TopicsList = () => {
                         key={id}
                         style={{
                           borderRadius: "1rem",
-                          padding: "1.5rem 3rem",
+                          padding: ".8rem 3rem",
                           border: "none",
                           outline: "none",
                         }}
@@ -149,7 +149,7 @@ const TopicsList = () => {
                             textAlign: "left",
                             width: "100%",
                             fontWeight: "bold",
-                            fontSize: "1.2rem"
+                            fontSize: "1.25rem",
                           }}
                         >
                           {topic.name}
