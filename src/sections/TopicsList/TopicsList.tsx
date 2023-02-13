@@ -116,8 +116,13 @@ const TopicsList = () => {
                     return (
                       <ListGroup.Item
                         key={id}
-                        style={{ borderRadius: ".5rem" }}
-                        className={`d-flex align-items-center p-2 mb-3 ${
+                        style={{
+                          borderRadius: "1rem",
+                          padding: "3rem",
+                          border: "none",
+                          outline: "none",
+                        }}
+                        className={`d-flex align-items-center mb-3 ${
                           topic.customId === currentTopic?.customId
                             ? "bg-primary text-white"
                             : "bg-gray"

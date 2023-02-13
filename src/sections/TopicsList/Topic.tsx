@@ -94,15 +94,12 @@ const Topic = ({ topic, courseId }: TopicProp) => {
             />
           ) : null}
         </div>
-        {topic?.description?.toLowerCase() !== "n/a" ||
-        topic?.description?.toLowerCase() !== "."
-          ? topic?.description
-          : null}
-        {topic?.content?.toLowerCase() !== "n/a" ||
-        topic?.content?.toLowerCase() !== "." ? (
+        {topic?.description?.toLowerCase() !== "n/a" ? (
+          <p className="p-3 my-1">{topic?.description}</p>
+        ) : null}
+        {topic?.content?.toLowerCase() !== "n/a" ? (
           <p className="p-3 my-1">{topic?.content}</p>
         ) : null}
-
         {topic?.pdf && topic?.pdf.toLowerCase() !== "n/a" && (
           // <a
           //   target="_blank"
