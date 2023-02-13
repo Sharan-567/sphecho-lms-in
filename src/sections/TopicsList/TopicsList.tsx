@@ -119,7 +119,7 @@ const TopicsList = () => {
                         key={id}
                         style={{
                           borderRadius: "1rem",
-                          padding: ".8rem 3rem",
+                          padding: "1.012rem 3rem",
                           border: "none",
                           outline: "none",
                         }}
