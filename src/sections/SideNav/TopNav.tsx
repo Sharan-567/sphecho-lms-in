@@ -102,7 +102,7 @@ const TopNav = () => {
     {
       id: 2,
       Icon: AiOutlineFire,
-      title: "Courses",
+      title: "Curriculum",
       to: "/courses",
     },
     {

@@ -6,6 +6,7 @@ import type { Patient, Doctor } from "./definations";
 type Props = {
   title?: string;
   email?: string;
+  contact?: string;
   update: () => void;
   addUserToCourseHandler: () => void;
   addStudentToCourseHandler: () => void;
@@ -14,6 +15,7 @@ type Props = {
 const ListItem = ({
   title,
   email,
+  contact,
   update,
   addUserToCourseHandler,
   addStudentToCourseHandler,
@@ -21,7 +23,7 @@ const ListItem = ({
   return (
     <Row className="d-flex px-3 py-3 bg-graydark br-2 mb-2">
       <Col xs="10">
-        <p style={{ fontSize: "1.1rem" }}>{title}</p>
+        <p style={{ fontSize: "1.1rem", fontWeight: "bold" }}>Name: {title}</p>
         <h4
           style={{
             fontSize: "1.1rem",
@@ -29,7 +31,16 @@ const ListItem = ({
             fontWeight: "light",
           }}
         >
-          {email ? email : "-----"}
+          <b>Email: </b> {email ? email : "-----"}
+        </h4>
+        <h4
+          style={{
+            fontSize: "1.1rem",
+            fontWeight: "light",
+          }}
+        >
+          <b>Contact: </b>
+          {contact ? contact : "-----"}
         </h4>
       </Col>
       <Col xs={2} className="d-flex align-items-center justify-center">
