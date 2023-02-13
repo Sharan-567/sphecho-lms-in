@@ -115,10 +115,11 @@ const TopicsList = () => {
                   {(topics || []).map((topic, id) => {
                     return (
                       <ListGroup.Item
+                        onClick={() => setCurrentTopic(topic)}
                         key={id}
                         style={{
                           borderRadius: "1rem",
-                          padding: "3rem",
+                          padding: "1.5rem 3rem",
                           border: "none",
                           outline: "none",
                         }}
@@ -148,8 +149,8 @@ const TopicsList = () => {
                             textAlign: "left",
                             width: "100%",
                             fontWeight: "bold",
+                            fontSize: "1.2rem"
                           }}
-                          onClick={() => setCurrentTopic(topic)}
                         >
                           {topic.name}
                         </button>
