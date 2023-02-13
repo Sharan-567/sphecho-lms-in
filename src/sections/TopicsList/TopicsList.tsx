@@ -131,7 +131,7 @@ const TopicsList = () => {
                       >
                         <div className="me-2">
                           <BsCheckCircleFill
-                            size={23}
+                            size={28}
                             className={`${
                               isCompleted(topic) ? "text-green" : "text-white"
                             }`}
@@ -148,7 +148,8 @@ const TopicsList = () => {
                             border: "none",
                             textAlign: "left",
                             width: "100%",
-                            fontSize: "1.2rem",
+                            fontSize: "1rem",
+                            fontWeight: "normal",
                           }}
                         >
                           {topic.name}
