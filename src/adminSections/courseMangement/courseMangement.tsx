@@ -267,7 +267,7 @@ const CourseMangement = () => {
               className="bg-adminteritory text-white br-2"
               onClick={createCourseOpenModal}
             >
-              Create Course
+              Create course
             </Button>
           ) : null}
         </div>
@@ -277,9 +277,9 @@ const CourseMangement = () => {
           <>
             <NotFound />
             <h3 className="text-center b-600">
-              No Courses Available At this Moment
+              No courses available at this moment
             </h3>
-            <p className="text-center">Please Try again later</p>
+            <p className="text-center">Please try again later</p>
           </>
         ) : (
           courses.map((item) => {
@@ -306,13 +306,13 @@ const CourseMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Course</Modal.Title>
+              <Modal.Title>Create course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Course Name</Form.Label>
+                    <Form.Label>Course name</Form.Label>
                     <Form.Control
                       name="name"
                       value={creatFormik.values.name}
@@ -347,7 +347,7 @@ const CourseMangement = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Info Image</Form.Label>
+                  <Form.Label>Info image</Form.Label>
                   <Form.Control
                     name="info_image"
                     type="file"
@@ -389,7 +389,7 @@ const CourseMangement = () => {
                   ) : null}
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Trainer Name</Form.Label>
+                  <Form.Label>Trainer name</Form.Label>
                   <Form.Control
                     name="trainer_name"
                     required
@@ -406,7 +406,7 @@ const CourseMangement = () => {
                 </Form.Group>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>View All</Form.Label>
+                    <Form.Label>View all</Form.Label>
                     <Form.Select
                       required
                       name="view_all"
@@ -425,7 +425,7 @@ const CourseMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Enroll All</Form.Label>
+                    <Form.Label>Enroll all</Form.Label>
                     <Form.Select
                       name="enroll_all"
                       required
@@ -470,7 +470,7 @@ const CourseMangement = () => {
         {currentModal === "delete" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Delete Course</Modal.Title>
+              <Modal.Title>Delete course</Modal.Title>
             </Modal.Header>
             <Modal.Body></Modal.Body>
             <Modal.Footer>
@@ -486,7 +486,7 @@ const CourseMangement = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Course</Modal.Title>
+              <Modal.Title>Detail of course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -516,13 +516,13 @@ const CourseMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Update Course</Modal.Title>
+              <Modal.Title>Update course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Course Name</Form.Label>
+                    <Form.Label>Course name</Form.Label>
                     <Form.Control
                       name="name"
                       value={updateFormik.values.name}
@@ -557,7 +557,7 @@ const CourseMangement = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Info Image</Form.Label>
+                  <Form.Label>Info image</Form.Label>
                   <Form.Control
                     name="info_image"
                     type="file"
@@ -614,7 +614,7 @@ const CourseMangement = () => {
                   ) : null}
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Trainer Name</Form.Label>
+                  <Form.Label>Trainer name</Form.Label>
                   <Form.Control
                     name="trainer_name"
                     required
@@ -631,7 +631,7 @@ const CourseMangement = () => {
                 </Form.Group>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>View All</Form.Label>
+                    <Form.Label>View all</Form.Label>
                     <Form.Select
                       required
                       name="view_all"
@@ -650,7 +650,7 @@ const CourseMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Enroll All</Form.Label>
+                    <Form.Label>Enroll all</Form.Label>
                     <Form.Select
                       name="enroll_all"
                       required

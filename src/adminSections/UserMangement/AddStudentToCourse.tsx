@@ -103,7 +103,7 @@ const AddStudentToCourse = ({
       )}
       <Form className="bg-graydark p-5 br-2">
         <h3 className="mb-3">
-          Add Course to User{" "}
+          Add course to user{" "}
           {currentSelectedUser.name || currentSelectedUser.Name}
         </h3>
         {/* <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -145,14 +145,14 @@ const AddStudentToCourse = ({
         </Form.Group> */}
 
         <Form.Group className="mb-3">
-          <Form.Label>Select the Course</Form.Label>
+          <Form.Label>Select the course</Form.Label>
           <Form.Select
             aria-label="Course"
             name="course"
             value={data.course}
             onChange={inputChangeHandler}
           >
-            <option>Open this select Course</option>
+            <option>Open this select course</option>
             {(courses || []).map((course) => (
               <option key={course.id} value={course.id}>
                 {course.name}
@@ -164,7 +164,7 @@ const AddStudentToCourse = ({
           className="px-3 py-2 text-white"
           onClick={AddStudentToCourseHandler}
         >
-          Update User to Course
+          Update user to course
         </Button>
       </Form>
     </div>

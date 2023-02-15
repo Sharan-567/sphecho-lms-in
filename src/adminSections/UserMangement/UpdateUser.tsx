@@ -79,7 +79,7 @@ const UpdateUser = ({ setState, currentSelectedUser }) => {
         </div>
       )}
       <Form className="bg-graydark p-5 br-2">
-        <h3 className="mb-3">Update User {currentSelectedUser.name}</h3>
+        <h3 className="mb-3">Update user {currentSelectedUser.name}</h3>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>First Name</Form.Label>
           <Form.Control
@@ -110,7 +110,7 @@ const UpdateUser = ({ setState, currentSelectedUser }) => {
             value={data.role}
             onChange={inputChangeHandler}
           >
-            <option>Open this select Role</option>
+            <option>Open this select role</option>
             <option value="1">Patient</option>
             <option value="2">Staff</option>
             <option value="3">StaffProvider</option>
@@ -134,7 +134,7 @@ const UpdateUser = ({ setState, currentSelectedUser }) => {
           </Form.Select>
         </Form.Group>
         <Button className="px-3 py-2 text-white" onClick={updateUserHandler}>
-          Update User
+          Update user
         </Button>
       </Form>
     </div>

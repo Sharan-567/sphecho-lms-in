@@ -56,7 +56,7 @@ const Search = () => {
           }}
           type="search"
           onChange={(e) => handleSearch(e.target.value)}
-          placeholder="What do you want to learn Today"
+          placeholder="What do you want to learn today"
         ></Form.Control>
       </Form>
       {search && search.length > 0 ? (

@@ -319,7 +319,7 @@ const QuestionMangement = () => {
             className="bg-adminteritory text-white br-2"
             onClick={createCourseOpenModal}
           >
-            Create Question
+            Create question
           </Button>
         </div>
         {showSpinner === "list" ? (
@@ -328,9 +328,9 @@ const QuestionMangement = () => {
           <>
             <NotFound />
             <h3 className="text-center b-600">
-              No Questions Available At this Moment
+              No questions available at this moment
             </h3>
-            <p className="text-center">Please Try again later</p>
+            <p className="text-center">Please try again later</p>
           </>
         ) : (
           (questions || []).map((item) => (
@@ -356,7 +356,7 @@ const QuestionMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Question</Modal.Title>
+              <Modal.Title>Create question</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
@@ -368,7 +368,7 @@ const QuestionMangement = () => {
                     onChange={creatFormik.handleChange}
                     type="text"
                     required
-                    placeholder="Enter Topic question"
+                    placeholder="Enter topic question"
                   />
                   {creatFormik.touched.question &&
                   creatFormik.errors.question ? (
@@ -471,7 +471,7 @@ const QuestionMangement = () => {
 
                 <Row className="mb-2">
                   <Form.Group as={Col}>
-                    <Form.Label>Correct Option</Form.Label>
+                    <Form.Label>Correct option</Form.Label>
                     <Form.Control
                       name="correct_option"
                       onChange={creatFormik.handleChange}
@@ -527,7 +527,7 @@ const QuestionMangement = () => {
                     name="topic"
                     onChange={creatFormik.handleChange}
                   >
-                    <option>select the Topic</option>
+                    <option>select the topic</option>
                     {(topics || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -587,7 +587,7 @@ const QuestionMangement = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Question</Modal.Title>
+              <Modal.Title>Detail of question</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -618,7 +618,7 @@ const QuestionMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Edit Question</Modal.Title>
+              <Modal.Title>Edit question</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
@@ -733,7 +733,7 @@ const QuestionMangement = () => {
 
                 <Row className="mb-2">
                   <Form.Group as={Col}>
-                    <Form.Label>Correct Option</Form.Label>
+                    <Form.Label>Correct option</Form.Label>
                     <Form.Control
                       name="correct_option"
                       onChange={updateFormik.handleChange}

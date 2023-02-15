@@ -281,21 +281,21 @@ const Main = () => {
         <Col sm={4}>
           <Counter
             Icon={BiBookOpen}
-            title="No Of Course Enrolled"
+            title="Number of courses enrolled"
             value={noOfCoursesEnrolled}
           />
         </Col>
         <Col sm={4}>
           <Counter
             Icon={BiBookmarkAlt}
-            title="No Of Badges Earned"
+            title="Number of badges earned"
             value={noOfBadgesEarned}
           />
         </Col>
         <Col sm={4}>
           <Counter
             Icon={BiBookmarkHeart}
-            title="No Of Certificates Earned"
+            title="Number of certificates earned"
             value={noOfCertificatesEarned}
           />
         </Col>

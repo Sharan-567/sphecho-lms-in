@@ -396,7 +396,7 @@ const BadgeMangement = () => {
             className="bg-adminteritory text-white br-2"
             onClick={createCourseOpenModal}
           >
-            Create Badge
+            Create badge
           </Button>
         </div>
         {showSpinner === "list" ? (
@@ -405,9 +405,9 @@ const BadgeMangement = () => {
           <>
             <NotFound />
             <h3 className="text-center b-600">
-              No Badges Available At this Moment
+              No badges available at this moment
             </h3>
-            <p className="text-center">Please Try again later</p>
+            <p className="text-center">Please try again later</p>
           </>
         ) : (
           (badges || []).map((item) => (
@@ -433,7 +433,7 @@ const BadgeMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Badge</Modal.Title>
+              <Modal.Title>Create badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
@@ -445,7 +445,7 @@ const BadgeMangement = () => {
                     onChange={creatFormik.handleChange}
                     type="text"
                     required
-                    placeholder="Enter Topic title"
+                    placeholder="Enter topic title"
                   />
                   {creatFormik.touched.title && creatFormik.errors.title ? (
                     <div className="text-danger">
@@ -479,7 +479,7 @@ const BadgeMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>On Complition</Form.Label>
+                    <Form.Label>On complition</Form.Label>
                     <Form.Select
                       required
                       name="on_complition"
@@ -498,7 +498,7 @@ const BadgeMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>On Attend</Form.Label>
+                    <Form.Label>On attend</Form.Label>
                     <Form.Select
                       required
                       name="on_attend"
@@ -519,7 +519,7 @@ const BadgeMangement = () => {
 
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Number of Badges</Form.Label>
+                    <Form.Label>Number of badges</Form.Label>
                     <Form.Control
                       name="numbers"
                       onChange={creatFormik.handleChange}
@@ -536,7 +536,7 @@ const BadgeMangement = () => {
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>Start Date</Form.Label>
+                    <Form.Label>Start date</Form.Label>
                     <DatePicker
                       style={{ background: "red" }}
                       name="start_date"
@@ -555,7 +555,7 @@ const BadgeMangement = () => {
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>End Date</Form.Label>
+                    <Form.Label>End date</Form.Label>
                     <DatePicker
                       name="end_date"
                       customInput={<CustomInput />}
@@ -581,7 +581,7 @@ const BadgeMangement = () => {
                     name="course"
                     onChange={creatFormik.handleChange}
                   >
-                    <option>select the Course</option>
+                    <option>select the course</option>
                     {(courses || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -596,7 +596,7 @@ const BadgeMangement = () => {
                     name="topic"
                     onChange={creatFormik.handleChange}
                   >
-                    <option>select the Topic</option>
+                    <option>select the topic</option>
                     {(topics || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -647,10 +647,10 @@ const BadgeMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Delete Badge</Modal.Title>
+              <Modal.Title>Delete badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Are you sure want to delete this Badge
+              Are you sure want to delete this badge
               <h5>{currentSelectedItem?.title}</h5>
             </Modal.Body>
             <Modal.Footer>
@@ -673,7 +673,7 @@ const BadgeMangement = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Badge</Modal.Title>
+              <Modal.Title>Details of badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -704,7 +704,7 @@ const BadgeMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Edit Badge</Modal.Title>
+              <Modal.Title>Edit badge</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
@@ -765,7 +765,7 @@ const BadgeMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>On Complition</Form.Label>
+                    <Form.Label>On complition</Form.Label>
                     <Form.Select
                       required
                       name="on_complition"
@@ -784,7 +784,7 @@ const BadgeMangement = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>On Attend</Form.Label>
+                    <Form.Label>On attend</Form.Label>
                     <Form.Select
                       required
                       name="on_attend"
@@ -805,7 +805,7 @@ const BadgeMangement = () => {
 
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Number of Badges</Form.Label>
+                    <Form.Label>Number of badges</Form.Label>
                     <Form.Control
                       name="numbers"
                       onChange={updateFormik.handleChange}
@@ -822,7 +822,7 @@ const BadgeMangement = () => {
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>Start Date</Form.Label>
+                    <Form.Label>Start date</Form.Label>
                     <DatePicker
                       style={{ background: "red" }}
                       name="start_date"
@@ -841,7 +841,7 @@ const BadgeMangement = () => {
                     ) : null}
                   </Form.Group>
                   <Form.Group as={Col}>
-                    <Form.Label>End Date</Form.Label>
+                    <Form.Label>End date</Form.Label>
                     <DatePicker
                       name="end_date"
                       customInput={<CustomInput />}
@@ -867,7 +867,7 @@ const BadgeMangement = () => {
                     name="course"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>select the Course</option>
+                    <option>Select the course</option>
                     {(courses || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -882,7 +882,7 @@ const BadgeMangement = () => {
                     name="topic"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>select the Topic</option>
+                    <option>Select the Topic</option>
                     {(topics || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -898,7 +898,7 @@ const BadgeMangement = () => {
                     name="assesment"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>select the assesment</option>
+                    <option>Select the assesment</option>
                     {(assessments || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}

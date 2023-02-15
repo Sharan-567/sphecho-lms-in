@@ -148,7 +148,7 @@ const Certification = () => {
         <h2 className="b-700">Certifications</h2>
         {(certificationList || []).length > 0 && <p>Certificates you earned</p>}
         {(certificationList || []).length === 0 && (
-          <p>You Have No Certificates Available Now.</p>
+          <p>You have no certificates available at this moment.</p>
         )}
       </div>
       {(certificationList || []).map((certficate) => (
@@ -159,7 +159,7 @@ const Certification = () => {
           style={{ cursor: "pointer" }}
         >
           <h3 style={{ fontSize: "1.1rem" }}>
-            Certificate Title: {certficate.certificate__title}
+            Certificate title: {certficate.certificate__title}
           </h3>
           <p>{certficate.date}</p>
         </div>
@@ -170,7 +170,7 @@ const Certification = () => {
         {(badgeList || []).length === 0 && (
           <>
             <Empty />{" "}
-            <p style={{ textAlign: "center" }}>You Have No Badges Yet</p>
+            <p style={{ textAlign: "center" }}>You have no badges yet</p>
           </>
         )}
       </div>

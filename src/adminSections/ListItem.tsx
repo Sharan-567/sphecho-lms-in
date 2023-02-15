@@ -4,7 +4,7 @@ import { BsPenFill, BsFileTextFill } from "react-icons/bs";
 import { AiTwotoneDelete } from "react-icons/ai";
 
 type ListItem<T> = {
-  title?: string;
+  title: string;
   subTitle?: String;
   item: T;
   openModel: (c: T, type: "update" | "delete" | "read") => void;
@@ -18,8 +18,14 @@ const ListItem = <T extends {}>(props: ListItem<T>) => {
     <div className="br-1 p-2 bg-graydark my-2">
       <Row className="d-flex justify-content-between  p-3">
         <Col sm={props.sm || 8}>
-          <p style={{ fontSize: "1.1rem" }}>{props.title}</p>
-          {props.subTitle && <p className="tiny">{props.subTitle}</p>}
+          <p style={{ fontSize: "1.1rem" }}>
+            {props.title.charAt(0).toUpperCase() + props.title.slice(1)}
+          </p>
+          {props.subTitle && (
+            <p className="tiny">
+              {props.subTitle.charAt(0).toUpperCase() + props.subTitle.slice(1)}
+            </p>
+          )}
         </Col>
         <Col>
           {!props.NoDelete && (

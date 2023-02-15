@@ -10,19 +10,19 @@ type Props = {
 
 const Counter = ({ Icon, value, title }: Props) => {
   return (
-    <div className="p-4 br-1 bg-primary color-white mb-3">
+    <div className="p-4 br-1 bg-graydark color-black mb-3">
       <div>
         <Icon
-          color="primary"
-          style={{ fontSize: "2rem", marginRight: ".5em", color: "white" }}
+          color="primary text-primary"
+          style={{ fontSize: "2rem", marginRight: ".5em", color: "#6ab447" }}
         />
-        <b style={{ color: "white" }}>{title}</b>
+        <b style={{ color: "black" }}>{title}</b>
       </div>
       <h1
         style={{
           fontWeight: "bold",
           textAlign: "center",
-          color: "white",
+          color: "black",
           fontSize: "2.5rem",
           marginTop: "1.2rem",
         }}

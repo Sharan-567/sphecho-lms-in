@@ -159,9 +159,9 @@ const Course = () => {
               <>
                 <NotFound />
                 <h3 className="text-center b-600">
-                  No Courses Available At this Moment
+                  No courses available at this moment
                 </h3>
-                <p className="text-center">Please Try again later</p>
+                <p className="text-center">Please try again later</p>
               </>
             ) : null}
             <div>

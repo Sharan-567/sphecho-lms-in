@@ -315,7 +315,7 @@ const TopicManagment = () => {
             className="bg-adminteritory text-white br-2"
             onClick={createCourseOpenModal}
           >
-            Create Topic
+            Create topic
           </Button>
         </div>
         {showSpinner === "list" ? (
@@ -324,9 +324,9 @@ const TopicManagment = () => {
           <>
             <NotFound />
             <h3 className="text-center b-600">
-              No Topics Available At this Moment
+              No Topics available at this moment
             </h3>
-            <p className="text-center">Please Try again later</p>
+            <p className="text-center">Please try again later</p>
           </>
         ) : (
           topics.map((item) => {
@@ -354,13 +354,13 @@ const TopicManagment = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Topics</Modal.Title>
+              <Modal.Title>Create topics</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Topic Name</Form.Label>
+                    <Form.Label>Topic name</Form.Label>
                     <Form.Control
                       name="name"
                       value={creatFormik.values.name}
@@ -377,7 +377,7 @@ const TopicManagment = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Video Url</Form.Label>
+                    <Form.Label>Video url</Form.Label>
                     <Form.Control
                       name="video"
                       onChange={creatFormik.handleChange}
@@ -395,7 +395,7 @@ const TopicManagment = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Info Image</Form.Label>
+                  <Form.Label>Info image</Form.Label>
                   <Form.Control
                     name="info_image"
                     type="file"
@@ -427,7 +427,7 @@ const TopicManagment = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>pdf Url</Form.Label>
+                  <Form.Label>pdf url</Form.Label>
                   <Form.Control
                     name="pdf"
                     required
@@ -440,7 +440,7 @@ const TopicManagment = () => {
                   ) : null}
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Image Url</Form.Label>
+                  <Form.Label>Image url</Form.Label>
                   <Form.Control
                     name="image"
                     required
@@ -507,7 +507,7 @@ const TopicManagment = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Assessment Required</Form.Label>
+                    <Form.Label>Assessment required</Form.Label>
                     <Form.Select
                       name="assement_required"
                       required
@@ -555,7 +555,7 @@ const TopicManagment = () => {
           <>
             c
             <Modal.Header closeButton>
-              <Modal.Title>Delete Topic</Modal.Title>
+              <Modal.Title>Delete topic</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               Are you sure want to delete this topic
@@ -581,7 +581,7 @@ const TopicManagment = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Topic</Modal.Title>
+              <Modal.Title>Detail of topic</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -612,13 +612,13 @@ const TopicManagment = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Update Topics</Modal.Title>
+              <Modal.Title>Update topics</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Topic Name</Form.Label>
+                    <Form.Label>Topic name</Form.Label>
                     <Form.Control
                       name="name"
                       value={updateFormik.values.name}
@@ -635,7 +635,7 @@ const TopicManagment = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Video Url</Form.Label>
+                    <Form.Label>Video url</Form.Label>
                     <Form.Control
                       name="video"
                       onChange={updateFormik.handleChange}
@@ -653,7 +653,7 @@ const TopicManagment = () => {
                 </Row>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>Info Image</Form.Label>
+                  <Form.Label>Info image</Form.Label>
                   <Form.Control
                     name="info_image"
                     type="file"
@@ -692,7 +692,7 @@ const TopicManagment = () => {
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                  <Form.Label>pdf Url</Form.Label>
+                  <Form.Label>pdf url</Form.Label>
                   <Form.Control
                     name="pdf"
                     required
@@ -705,7 +705,7 @@ const TopicManagment = () => {
                   ) : null}
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Image Url</Form.Label>
+                  <Form.Label>Image url</Form.Label>
                   <Form.Control
                     name="image"
                     required
@@ -773,7 +773,7 @@ const TopicManagment = () => {
                   </Form.Group>
 
                   <Form.Group as={Col}>
-                    <Form.Label>Assessment Required</Form.Label>
+                    <Form.Label>Assessment required</Form.Label>
                     <Form.Select
                       name="assement_required"
                       required

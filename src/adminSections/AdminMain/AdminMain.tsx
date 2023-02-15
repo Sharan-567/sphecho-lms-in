@@ -14,7 +14,7 @@ const AdminMain = () => {
   const navigate = useNavigate();
 
   const usersOptions: ApexOptions = {
-    labels: ["Authors", "students"],
+    labels: ["Authors", "Students"],
     colors: ["#D6AF14", "#18B3A7"],
     chart: {
       width: 380,
@@ -44,7 +44,7 @@ const AdminMain = () => {
     },
   };
   const coursesOPtions: ApexOptions = {
-    labels: ["Authors", "students"],
+    labels: ["Authors", "Students"],
     colors: ["#425C5A", "#D6AF14"],
     chart: {
       width: 380,
@@ -60,7 +60,7 @@ const AdminMain = () => {
     },
   };
   const webinarsOptions: ApexOptions = {
-    labels: ["Authors", "students"],
+    labels: ["Authors", "Students"],
     colors: ["#D6AF14", "#1890B3"],
     chart: {
       width: 380,
@@ -88,7 +88,7 @@ const AdminMain = () => {
       curve: "smooth",
       width: 2,
     },
-    colors: ["#D6AF14"],
+    colors: ["#808080"],
     xaxis: {
       type: "datetime",
       categories: ["1", "2", "3", "4", "5", "6"],
@@ -118,7 +118,7 @@ const AdminMain = () => {
       <Row>
         <Col sm={4}>
           <div className="p-1 br-2 bg-white">
-            <h5 className="b-700 px-3 py-2">Total Users</h5>
+            <h5 className="b-700 px-3 py-2">Total users</h5>
             <ReactAPexChart
               options={usersOptions}
               type="donut"
@@ -129,7 +129,7 @@ const AdminMain = () => {
         </Col>
         <Col sm={4}>
           <div className="p-1 br-2 bg-white">
-            <h5 className="b-700 px-3 py-2">No of Courses</h5>
+            <h5 className="b-700 px-3 py-2">Number of courses</h5>
             <ReactAPexChart
               options={coursesOPtions}
               type="donut"
@@ -140,7 +140,7 @@ const AdminMain = () => {
         </Col>
         <Col sm={4}>
           <div className="p-1 br-2 bg-white">
-            <h5 className="b-700 px-3 py-2">No of Webinars</h5>
+            <h5 className="b-700 px-3 py-2">Number of webinars</h5>
             <ReactAPexChart
               options={webinarsOptions}
               type="donut"
@@ -153,7 +153,7 @@ const AdminMain = () => {
       <Row style={{ display: "block" }}>
         <Col className="p-3" sm={12}>
           <div className="br-2 p-1 bg-white">
-            <h5 className="px-3 b-700 py-1">Monthly active Users</h5>
+            <h5 className="px-3 b-700 py-1">Monthly active users</h5>
             <ReactAPexChart
               options={GraphOptions}
               type="area"

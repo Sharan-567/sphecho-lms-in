@@ -26,11 +26,7 @@ type Props = {
   courses: Course[];
 };
 
-const AddUserToCourse = ({
-  setState,
-  currentSelectedUser,
-  courses,
-}: Props) => {
+const AddUserToCourse = ({ setState, currentSelectedUser, courses }: Props) => {
   const [data, setData] = useState({
     firstname:
       currentSelectedUser.firstname ||
@@ -143,14 +139,14 @@ const AddUserToCourse = ({
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Select the Course</Form.Label>
+          <Form.Label>Select the course</Form.Label>
           <Form.Select
             aria-label="Course"
             name="course"
             value={data.course}
             onChange={inputChangeHandler}
           >
-            <option>Open this select Course</option>
+            <option>Open this select course</option>
             {(courses || []).map((course) => (
               <option key={course.id} value={course.id}>
                 {course.name}
@@ -162,7 +158,7 @@ const AddUserToCourse = ({
           className="px-3 py-2 text-white"
           onClick={AddUserToCourseHandler}
         >
-          Update User to Course
+          Update user to course
         </Button>
       </Form>
     </div>

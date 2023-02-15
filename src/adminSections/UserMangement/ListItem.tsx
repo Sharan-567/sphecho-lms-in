@@ -61,7 +61,7 @@ const ListItem = ({
           onClick={addStudentToCourseHandler}
           style={{ minHeight: "3rem" }}
         >
-          Add Course to User
+          Add course to user
         </Button>
       </Col>
     </Row>

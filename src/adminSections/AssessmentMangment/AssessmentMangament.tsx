@@ -332,7 +332,7 @@ const AssessmentMangement = () => {
             className="bg-adminteritory text-white br-2"
             onClick={createCourseOpenModal}
           >
-            Create Assessment
+            Create assessment
           </Button>
         </div>
         {showSpinner === "list" ? (
@@ -341,9 +341,9 @@ const AssessmentMangement = () => {
           <>
             <NotFound />
             <h3 className="text-center b-600">
-              No Assessments Available At this Moment
+              No assessments available at this moment
             </h3>
-            <p className="text-center">Please Try again later</p>
+            <p className="text-center">Please try again later</p>
           </>
         ) : (
           assements.map((item) => {
@@ -371,13 +371,13 @@ const AssessmentMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Assessment</Modal.Title>
+              <Modal.Title>Create assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Assessment Name</Form.Label>
+                    <Form.Label>Assessment name</Form.Label>
                     <Form.Control
                       name="name"
                       value={creatFormik.values.name}
@@ -395,7 +395,7 @@ const AssessmentMangement = () => {
                 </Row>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Pre Assessment Required</Form.Label>
+                    <Form.Label>Pre assessment required</Form.Label>
                     <Form.Select
                       name="pre_assesment"
                       required
@@ -440,7 +440,7 @@ const AssessmentMangement = () => {
                   ) : null}
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Min Marks to Qualify</Form.Label>
+                  <Form.Label>Min marks to qualify</Form.Label>
                   <Form.Control
                     name="min_marks_to_qualify"
                     required
@@ -463,7 +463,7 @@ const AssessmentMangement = () => {
                     name="course"
                     onChange={creatFormik.handleChange}
                   >
-                    <option>select the course</option>
+                    <option>Select the course</option>
                     {(courses || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -479,7 +479,7 @@ const AssessmentMangement = () => {
                     name="topic"
                     onChange={creatFormik.handleChange}
                   >
-                    <option>select the Topic</option>
+                    <option>Select the Topic</option>
                     {(topics || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -514,10 +514,10 @@ const AssessmentMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Delete Assessment</Modal.Title>
+              <Modal.Title>Delete assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              Are you sure want to delete this Assessment
+              Are you sure want to delete this assessment
               <h5>{currentSelectedItem?.name}</h5>
             </Modal.Body>
             <Modal.Footer>
@@ -540,7 +540,7 @@ const AssessmentMangement = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Assessment</Modal.Title>
+              <Modal.Title>Detail of assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
@@ -571,20 +571,20 @@ const AssessmentMangement = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Update Assessment</Modal.Title>
+              <Modal.Title>Update assessment</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={updateFormik.handleSubmit}>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Assessment Name</Form.Label>
+                    <Form.Label>Assessment name</Form.Label>
                     <Form.Control
                       name="name"
                       value={updateFormik.values.name}
                       onChange={updateFormik.handleChange}
                       type="text"
                       required
-                      placeholder="Enter Topic Name"
+                      placeholder="Enter topic name"
                     />
                     {updateFormik.touched.name && updateFormik.errors.name ? (
                       <div className="text-danger">
@@ -595,7 +595,7 @@ const AssessmentMangement = () => {
                 </Row>
                 <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>Pre Assessment Required</Form.Label>
+                    <Form.Label>Pre assessment required</Form.Label>
                     <Form.Select
                       name="pre_assesment"
                       required
@@ -640,7 +640,7 @@ const AssessmentMangement = () => {
                   ) : null}
                 </Form.Group>
                 <Form.Group as={Col}>
-                  <Form.Label>Min Marks to Qualify</Form.Label>
+                  <Form.Label>Min marks to qualify</Form.Label>
                   <Form.Control
                     name="min_marks_to_qualify"
                     required
@@ -679,7 +679,7 @@ const AssessmentMangement = () => {
                     name="topic"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>select the Topic</option>
+                    <option>select the topic</option>
                     {(topics || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}

@@ -319,7 +319,7 @@ const CertificationManagment = () => {
             className="bg-adminteritory text-white br-2"
             onClick={createCourseOpenModal}
           >
-            Create Certificate
+            Create certificate
           </Button>
         </div>
         {showSpinner === "list" ? (
@@ -328,9 +328,9 @@ const CertificationManagment = () => {
           <>
             <NotFound />
             <h3 className="text-center b-600">
-              No Certificates Available At this Moment
+              No certificates available At this moment
             </h3>
-            <p className="text-center">Please Try again later</p>
+            <p className="text-center">Please try again later</p>
           </>
         ) : (
           (certificates || []).map((item) => {
@@ -363,7 +363,7 @@ const CertificationManagment = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Create Certificate</Modal.Title>
+              <Modal.Title>Create certificate</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <Form noValidate onSubmit={creatFormik.handleSubmit}>
@@ -377,7 +377,7 @@ const CertificationManagment = () => {
                         onChange={creatFormik.handleChange}
                         type="text"
                         required
-                        placeholder="Enter Certificate title"
+                        placeholder="Enter certificate title"
                       />
                       {creatFormik.touched.title && creatFormik.errors.title ? (
                         <div className="text-danger">
@@ -392,7 +392,7 @@ const CertificationManagment = () => {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                      <Form.Label>Background Image</Form.Label>
+                      <Form.Label>Background image</Form.Label>
                       <Form.Control
                         name="background_image"
                         type="file"
@@ -422,7 +422,7 @@ const CertificationManagment = () => {
 
                     <Row className="mb-3">
                       <Form.Group as={Col}>
-                        <Form.Label>On Completion</Form.Label>
+                        <Form.Label>On completion</Form.Label>
                         <Form.Select
                           required
                           name="on_complition"
@@ -441,7 +441,7 @@ const CertificationManagment = () => {
                       </Form.Group>
 
                       <Form.Group as={Col}>
-                        <Form.Label>On Attend</Form.Label>
+                        <Form.Label>On attend</Form.Label>
                         <Form.Select
                           name="on_attend"
                           required
@@ -469,13 +469,13 @@ const CertificationManagment = () => {
                       </Form.Select>
                     </Form.Group>
                     <Form.Group>
-                      <Form.Label>select the Topic</Form.Label>
+                      <Form.Label>select the topic</Form.Label>
                       <Form.Select
                         required
                         name="topic"
                         onChange={creatFormik.handleChange}
                       >
-                        <option>select the Topic</option>
+                        <option>select the topic</option>
                         {(topics || []).map((c) => (
                           <option key={c.id} value={c.id}>
                             {c.name}
@@ -559,12 +559,12 @@ const CertificationManagment = () => {
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
             <Modal.Header closeButton>
-              <Modal.Title>Delete Certificate</Modal.Title>
+              <Modal.Title>Delete certificate</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <p>
                 Are you sure to delete this {currentSelectedItem?.title}{" "}
-                Certificate{" "}
+                certificate{" "}
               </p>
             </Modal.Body>
             <Modal.Footer>
@@ -580,7 +580,7 @@ const CertificationManagment = () => {
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of Certification</Modal.Title>
+              <Modal.Title>Detail of certification</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
