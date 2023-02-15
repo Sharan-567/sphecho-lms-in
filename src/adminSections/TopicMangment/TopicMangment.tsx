@@ -307,9 +307,9 @@ const TopicManagment = () => {
   };
 
   return (
-    <Container className="p-4 w-75">
-      <div className="bg-white p-5 br-2">
-        <div className="d-flex justify-content-between mb-3">
+    <Container style={{ maxWidth: "820px" }}>
+      <div className="bg-white py-2 px-1 br-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
           <h3 className="b-700">Topics</h3>
           <Button
             className="bg-adminteritory text-white br-2"

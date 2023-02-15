@@ -255,12 +255,12 @@ const CourseMangement = () => {
   const userState = localStorage.getItem("userState");
 
   return (
-    <Container className="p-4 w-75">
+    <Container style={{ maxWidth: "820px" }}>
       {error && errorType === "list" && (
         <ErrorMessage setError={setError}>{error}</ErrorMessage>
       )}
-      <div className="bg-white p-5 br-2">
-        <div className="d-flex justify-content-between mb-3">
+      <div className="bg-white py-2 px-1 br-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
           <h3 className="b-700">Courses</h3>
           {userState === "staffMember" || userState === "SuperUser" ? (
             <Button
