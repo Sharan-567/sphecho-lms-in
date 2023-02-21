@@ -1,4 +1,5 @@
 import { number } from "yup";
+import { Assessment } from "./assessment";
 
 export interface Course {
   id: number;
@@ -48,6 +49,7 @@ export type Topic = {
   course: number;
   parent?: number;
   volume_parent: number;
+  module_title?: string;
 };
 
 export interface Progress {
@@ -78,3 +80,10 @@ export type Certificate = {
   course: number;
   assesment: number;
 };
+
+
+export type Module = {
+  module_name: string;
+  completed: boolean;
+  topics: (Assessment | Topic)[];
+}

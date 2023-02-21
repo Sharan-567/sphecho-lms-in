@@ -260,7 +260,7 @@ const AssessmentMangement = () => {
           setShowSpinner("none");
           setSuccess("Assessment updated successfully.");
           getAssessmentList();
-          console.log(res.data);
+         
         })
         .catch((err) => {
           setShowSpinner("none");
@@ -286,7 +286,7 @@ const AssessmentMangement = () => {
     });
     axios
       .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/assement-create/",
+        `${BASE_URL}/master/assement-create/`,
         formData,
         {
           headers: {

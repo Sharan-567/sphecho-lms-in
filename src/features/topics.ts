@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import type { Topic } from "./../definations/course";
+import type { Module, Topic } from "./../definations/course";
 import type { Assessment } from "../definations/assessment";
 import topicService from "./../services/topic.service";
 import { getOrderListFromTwoList, addUniqueIdsToList } from "../services/utils";
@@ -8,7 +8,7 @@ import { getOrderListFromTwoList, addUniqueIdsToList } from "../services/utils";
 type InitialState = {
   topics: Topic[];
   assesements: Assessment[];
-  orderTopics: (Topic | Assessment)[];
+  orderTopics: Module[];
 };
 
 const initialState: InitialState = {
@@ -20,7 +20,7 @@ const initialState: InitialState = {
 type ResponseType = {
   topics: Topic[];
   assesements: Assessment[];
-  orderTopics: (Topic | Assessment)[];
+  orderTopics: Module[];
 };
 
 const topics = createSlice({

@@ -3,9 +3,12 @@ import {
   NormalizedProgress,
   Progress,
   StudentCourse,
+  Topic,
+  Module
 } from "../definations/course";
 import topicService from "./topic.service";
 import { BASE_URL } from "../features/settings";
+import { Assessment } from "../definations/assessment";
 
 const token = localStorage.getItem("token");
 
@@ -110,3 +113,24 @@ export const getTotalTopicsOfCourse = (courseId: number): Promise<number> => {
       });
   });
 };
+
+
+export const normalizeTopics = (topics: (Topic | Assessment)[]) => {
+  const result: Module[] = [];
+  
+  topics.forEach(topic => {
+   if(topic?.module_title) {
+    let obj: Module = {
+      module_name: topic.module_title,
+      completed: false,
+      topics: [topic]
+    }
+    result.push(obj)
+   } else {
+    let obj = result.pop();
+    obj?.topics.push(topic);
+    result.push(obj)
+  }
+  }) 
+  return result;
+}

@@ -27,12 +27,12 @@ const createSchema = Yup.object().shape({
   name: Yup.string()
     .required("Topic Name is required")
     .min(3, "Atleast 3 characters required"),
-  video: Yup.string().required("video url is needed"),
-  info_image: Yup.string().required("info image is required").nullable(),
-  pdf: Yup.string().required("pdf url is required"),
-  image: Yup.string().required("image url is required"),
-  content: Yup.string().required("content is required"),
-  description: Yup.string().required("description is required").max(500),
+  video: Yup.string(),
+  info_image: Yup.string(),
+  pdf: Yup.string(),
+  image: Yup.string(),
+  content: Yup.string(),
+  description: Yup.string(),
   order: Yup.number().required("order is required"),
 });
 
@@ -221,7 +221,7 @@ const TopicManagment = () => {
 
   // update
   const updateTopic = (data) => {
-    console.log(data);
+  
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
@@ -242,7 +242,7 @@ const TopicManagment = () => {
           setErrorType("none");
           setShowSpinner("none");
           setSuccess("Topic updated successfully.");
-          console.log(res.data);
+         
         })
         .catch((err) => {
           setShowSpinner("none");
@@ -268,7 +268,7 @@ const TopicManagment = () => {
     });
     axios
       .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/topic-create/",
+        `${BASE_URL}/master/topic-create/`,
         formData,
         {
           headers: {
@@ -289,7 +289,7 @@ const TopicManagment = () => {
         setErrorType("create");
         if (error.request) {
           setError(error.response.statusText);
-          console.log(error.response.statusText);
+         
         } else if (error.request) {
           setError(error.request.statusText);
         } else {

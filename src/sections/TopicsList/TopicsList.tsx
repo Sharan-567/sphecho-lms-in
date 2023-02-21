@@ -2,9 +2,9 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { addTopics, resetTopics } from "../../features/topics";
 import { ListGroup, Spinner, Row, Col, Container } from "react-bootstrap";
-import { BsCheckCircleFill } from "react-icons/bs";
+import { BsCheckCircleFill, BsChevronDown, BsChevronUp, BsCircleFill } from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
-import type { Topic } from "../../definations/course";
+import type { Topic,Module } from "../../definations/course";
 import type { Assessment } from "../../definations/assessment";
 import NotFound from "../NotFound";
 import TopicContainer from "./Topic";
@@ -12,11 +12,13 @@ import {
   addUniqueIdsToList,
   customAxios,
   getOrderListFromTwoList,
+  normalizeTopics
 } from "../../services/utils";
+import {motion} from "framer-motion"
 import { showToast } from "../../features/toast";
 
 const TopicsList = () => {
-  const { orderTopics: topics } = useAppSelector((state) => state.topics);
+  const { orderTopics: modules } = useAppSelector((state) => state.topics);
   const {
     loading: progressLoading,
     progress,
@@ -25,6 +27,7 @@ const TopicsList = () => {
   const [currentTopic, setCurrentTopic] = useState<Topic | Assessment>();
   const { courseId } = useParams();
   const dispatch = useAppDispatch();
+  const [dropDownId, setDropDownId] = useState<string>();
 
   const getAllTopics = useCallback(() => {
     if (courseId) {
@@ -39,11 +42,13 @@ const TopicsList = () => {
           const orderTopicsWithCustomIds = addUniqueIdsToList<
             Topic | Assessment
           >(orderTopics);
+          const normalizedTopics = normalizeTopics(orderTopicsWithCustomIds)
+          
           dispatch(
             addTopics({
               topics,
               assesements,
-              orderTopics: orderTopicsWithCustomIds,
+              orderTopics: normalizedTopics,
             })
           );
         })
@@ -66,10 +71,19 @@ const TopicsList = () => {
   }, [courseId]);
 
   useEffect(() => {
-    if (topics && topics.length > 0) {
-      setCurrentTopic(topics[0]);
+    let added = false
+    if (modules && modules.length > 0) {
+      modules.forEach(module => {
+          module.topics.forEach(topic => {
+            if(!added && !isCompleted(topic)) {
+              added = true;
+              setDropDownId(module.module_name)
+              setCurrentTopic(topic)
+            } 
+          })
+      })
     }
-  }, [topics]);
+  }, [modules]);
 
   const isCompleted = (topic: Topic | Assessment): boolean => {
     if (courseId && `${courseId}` in progress) {
@@ -82,7 +96,18 @@ const TopicsList = () => {
     return false;
   };
 
-  if (topics.length === 0) {
+
+  const isModuleCompleted = (module: Module): boolean => {
+   for(let i=0; i < module.topics.length; i++) {
+    let completed = isCompleted(module.topics[i])
+    if(!completed) {
+      return false
+    }
+   }
+   return true
+  }
+
+  if (modules.length === 0) {
     return (
       <div>
         <NotFound />
@@ -93,6 +118,8 @@ const TopicsList = () => {
       </div>
     );
   }
+
+
 
   return (
     <div className="container p-4 w-100">
@@ -112,9 +139,71 @@ const TopicsList = () => {
                   Topics
                 </h4>
                 <ListGroup className="p-2 ">
-                  {(topics || []).map((topic, id) => {
+                  {(modules || []).map((module, id) => {
                     return (
-                      <ListGroup.Item
+                      <div key={module.module_name}>
+                       <ListGroup.Item
+                        onClick={() => {
+                          if(dropDownId === module.module_name) {
+                            setDropDownId("")
+                          } else {
+                            setDropDownId(module.module_name)
+                          }
+                        }}
+                        key={id}
+                        style={{
+                          borderRadius: "1rem",
+                          padding: "2rem 3rem",
+                          border: "none",
+                          outline: "none",
+                          cursor: "pointer",
+                          fontWeight: "bold",
+                        
+                        }}
+                        className={`d-flex align-items-center mb-3                           
+                           bg-primary text-white
+                        `}
+                      >
+                        <div className="me-2">
+                          {isModuleCompleted(module) ?
+                           <BsCheckCircleFill
+                            size={28}
+                            className={`text-white`}
+                          />: <BsCircleFill
+                          size={7}
+                          style={{marginTop: "-.4rem"}}
+                          className="text-white"
+                        />}
+                          
+                        </div>
+                        <button
+                          className={`small
+                            bg-primary text-white
+                          `}
+                          style={{
+                            background: "none",
+                            outline: "none",
+                            border: "none",
+                            textAlign: "left",
+                            width: "100%",
+                            fontSize: "1rem",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {module.module_name}
+                        </button>
+                        <div className="ms-1">
+                         {dropDownId === module.module_name ?  <BsChevronUp
+                            size={20}
+                            className={`b-600 text-white`}
+                          /> :   <BsChevronDown
+                          size={20}
+                          className={`b-600 text-white`}
+                        />}
+                        </div>
+                      </ListGroup.Item>
+                        <motion.div animate={{height: dropDownId !== module.module_name ? "0px": "100%"}} style={{overflow: "hidden"}}>
+                        {(module.topics || []).map((topic, id) => <ListGroup.Item
                         onClick={() => setCurrentTopic(topic)}
                         key={id}
                         style={{
@@ -125,8 +214,8 @@ const TopicsList = () => {
                         }}
                         className={`d-flex align-items-center mb-3 ${
                           topic.customId === currentTopic?.customId
-                            ? "bg-primary text-white"
-                            : "bg-gray"
+                            ? "bg-black text-white"
+                            : "bg-graydark"
                         }`}
                       >
                         <div className="me-2">
@@ -140,7 +229,7 @@ const TopicsList = () => {
                         <button
                           className={`small ${
                             topic.customId === currentTopic?.customId &&
-                            "bg-primary text-white"
+                            "bg-black text-white"
                           }`}
                           style={{
                             background: "none",
@@ -154,8 +243,10 @@ const TopicsList = () => {
                         >
                           {topic.name}
                         </button>
-                      </ListGroup.Item>
-                    );
+                      </ListGroup.Item>)}
+                        </motion.div>
+                      </div> 
+                    )
                   })}
                 </ListGroup>
               </div>

@@ -215,7 +215,7 @@ const CourseMangement = () => {
     });
     axios
       .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/course-create/",
+        `${BASE_URL}/master/course-create/`,
         formData,
         {
           headers: {
