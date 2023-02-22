@@ -55,12 +55,12 @@ const TopNav = () => {
     {
       id: 2,
       Icon: AiOutlineFire,
-      title: "Courses",
+      title: "My courses",
       to: "/courses",
     },
     {
       id: 3,
-      title: "Certification",
+      title: "My certification",
       Icon: AiOutlineFileProtect,
       to: "/certification",
     },

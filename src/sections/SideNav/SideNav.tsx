@@ -57,22 +57,34 @@ const SideNav = () => {
         title: "Dashboard",
         to: "/",
       },
+      // {
+      //   id: 2,
+      //   Icon: AiOutlineFire,
+      //   title: "Curriculum",
+      //   subNavItems: [
+      //     {
+      //       title: "Courses",
+      //       Icon: AiOutlineCalculator,
+      //       to: "/courses",
+      //     },
+      //     {
+      //       title: "Certification",
+      //       Icon: AiOutlineFileProtect,
+      //       to: "/certification",
+      //     },
+      //   ],
+      // },
       {
         id: 2,
-        Icon: AiOutlineFire,
-        title: "Curriculum",
-        subNavItems: [
-          {
-            title: "Courses",
-            Icon: AiOutlineCalculator,
-            to: "/courses",
-          },
-          {
-            title: "Certification",
-            Icon: AiOutlineFileProtect,
-            to: "/certification",
-          },
-        ],
+        title: "My Courses",
+        Icon: AiOutlineCalculator,
+        to: "/courses",
+      },
+      {
+        id: 3,
+        title: "certification",
+        Icon: AiOutlineFileProtect,
+        to: "/certification",
       },
       // {
       //   id: 3,
@@ -102,22 +114,34 @@ const SideNav = () => {
         title: "Analytics",
         to: "/analytics",
       },
+      // {
+      //   id: 2,
+      //   Icon: AiOutlineFire,
+      //   title: "Curriculum",
+      //   subNavItems: [
+      //     {
+      //       title: "Courses",
+      //       Icon: AiOutlineCalculator,
+      //       to: "/courses",
+      //     },
+      //     {
+      //       title: "Certification",
+      //       Icon: AiOutlineFileProtect,
+      //       to: "/certification",
+      //     },
+      //   ],
+      // },
       {
-        id: 2,
-        Icon: AiOutlineFire,
-        title: "Curriculum",
-        subNavItems: [
-          {
-            title: "Courses",
-            Icon: AiOutlineCalculator,
-            to: "/courses",
-          },
-          {
-            title: "Certification",
-            Icon: AiOutlineFileProtect,
-            to: "/certification",
-          },
-        ],
+        id: 100,
+        title: "My courses",
+        Icon: AiOutlineCalculator,
+        to: "/courses",
+      },
+      {
+        id: 101,
+        title: "Certification",
+        Icon: AiOutlineFileProtect,
+        to: "/certification",
       },
       // {
       //   id: 3,
@@ -214,7 +238,7 @@ const SideNav = () => {
                 closeNav ? { width: "1.5rem", marginLeft: "-1.7rem" } : {}
               }
               transition={{ damping: "1000", bounce: 0 }}
-              onClick={() => setCloseNav((p) => !p)}
+              // onClick={() => setCloseNav((p) => !p)}
               style={{
                 outline: "none",
                 border: "none",
@@ -225,12 +249,19 @@ const SideNav = () => {
             >
               <motion.img
                 src={whiteLogo}
-                animate={closeNav ? { width: "4.7rem" } : { width: "10rem" }}
+                animate={
+                  closeNav
+                    ? { width: "4.7rem" }
+                    : { width: "10rem", marginTop: ".3rem" }
+                }
               />
             </motion.button>
           </div>
         </div>
-        <div ref={parentRef} style={{ height: "80vh", overflowY: "scroll" }}>
+        <div
+          ref={parentRef}
+          style={{ height: "80vh", overflowY: "scroll", paddingTop: ".6rem" }}
+        >
           <div style={{ height: 0, display: "hidden" }}>
             <svg
               viewBox="0 0 230 107"
