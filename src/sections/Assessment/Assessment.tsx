@@ -1,81 +1,76 @@
 import React, { useEffect, useState } from "react";
-import { BsExclamationTriangle } from "react-icons/bs";
-import { useParams } from "react-router-dom";
+import { BsExclamationTriangle, BsFillInfoCircleFill } from "react-icons/bs";
 import { Spinner, Row, Col, Button } from "react-bootstrap";
 import { getAssessment } from "../../features/assessment";
 import Question from "./Question";
 import { useAppDispatch, useAppSelector } from "../../store";
-import { updateProgress } from "../../features/progress";
+
+import { Assessment } from "../../definations/assessment";
+import AssessementPanel from "./AssessmentPanel";
 
 type Props = {
-  assessmentId: number;
+  assessment: Assessment;
+  isCompleted: (topic: TopicType | Assessment) => boolean;
 };
-const Assessment = ({ assessmentId }: Props) => {
-  const { loading, questions, err } = useAppSelector(
-    (state) => state.assessment
-  );
-  const dispatch = useAppDispatch();
-  const [correctAnswers, setCorrectAnswers] = useState(0);
-  const [isFailed, setIsFailed] = useState(false);
-  const [isAttempted, setIsAttempted] = useState(false);
+const AssessmentComp = ({ assessment, isCompleted }: Props) => {
+  const [showAssessmentPanel, setShowAssessmentPanel] = useState(false);
 
-  const { courseId } = useParams();
-  useEffect(() => {
-    dispatch(getAssessment(assessmentId));
-  }, []);
-
-  const submitAnswers = () => {
-    setIsAttempted(true);
-    if (correctAnswers === questions?.length) {
-      if (courseId)
-        dispatch(
-          updateProgress({ course: courseId, assessment: assessmentId })
-        );
-      setIsFailed(false);
-    } else {
-      setIsFailed(true);
-    }
+  const hideAssessmentPanel = () => {
+    setShowAssessmentPanel(false);
   };
 
-  if (err) {
-    return (
-      <div className="container p-2 w-100 d-flex justify-content-center align-items-center">
-        <BsExclamationTriangle className="me-4" size={40} />
-        <div>
-          <h5 className="m-auto text-danger">{err}</h5>
-          <h2>Please try agian later.</h2>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="p-3">
-      {loading ? (
-        <div className="w-100 d-flex justify-content-center mt-5">
-          <Spinner animation="border" variant="green" />
+    <div className="p-3 bg-graydark">
+      <div className="p-3">
+        <div className="mt-3">
+          <h3 style={{ fontWeight: "bold" }}>Assessment: {assessment.name}</h3>
+          <p>Questions: {assessment.question.length}</p>
         </div>
-      ) : (
-        <Row className="p-3">
-          <Row>
-            <Col sm={9}>
-              <h2 className="b-700 text-blue">Assessment</h2>
-              {isFailed ? (
-                <h5 className="text-danger">
-                  Failed the Assessment Please re attempt later.
-                </h5>
-              ) : (
-                isAttempted && (
-                  <h5 className="text-green">You passed the assessment...</h5>
-                )
-              )}
-            </Col>
-            <Col sm={3}>
-              <p className="small b-700">Total Questions: {questions?.length}</p>
-              <p className="small b-700 lh-0 text-green"></p>
-            </Col>
-          </Row>
-          <Col className="p-3 bg-graydark round">
+
+        <div className="mt-3">
+          <h4>Quiz</h4>
+          <p>{assessment.question.length * 5} min</p>
+        </div>
+
+        <div className="mt-2">
+          <h4>Receive grade</h4>
+          <p>To Pass 80% or higher</p>
+        </div>
+
+        <div
+          className="mt-4 pt-3 px-3 text-dark"
+          style={{ borderTop: "1px solid gray" }}
+        >
+          <p className="text Primary">
+            {" "}
+            <>
+              <BsFillInfoCircleFill
+                style={{
+                  color: "black",
+                  fontSize: "1.6rem",
+                  marginTop: "-.8rem",
+                  marginRight: ".5rem",
+                }}
+              />
+            </>{" "}
+            Please note that if you stop your assessment session in the middle,
+            it will be lost, and you will have to start again from the beginning
+          </p>
+        </div>
+        {assessment.question.length > 0 ? (
+          <Button
+            variant="green"
+            className="text-white py-3 px-4 w-100 mt-5 b-600"
+            onClick={() => setShowAssessmentPanel(true)}
+          >
+            {isCompleted(assessment) ? "Try again" : "Start assessment"}
+          </Button>
+        ) : (
+          <p className="p-3 b-600">
+            No Question available for this assessment.
+          </p>
+        )}
+        {/* <Col className="p-3 bg-graydark round">
             {(questions || []).map((q, id) => {
               return (
                 <Question
@@ -93,11 +88,21 @@ const Assessment = ({ assessmentId }: Props) => {
             >
               Submit Answers
             </Button>
-          </Col>
-        </Row>
-      )}
+          </Col> */}
+      </div>
+
+      <div>
+        {showAssessmentPanel && (
+          <div>
+            <AssessementPanel
+              assessment={assessment}
+              hideAssessmentPanel={hideAssessmentPanel}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
-export default Assessment;
+export default AssessmentComp;

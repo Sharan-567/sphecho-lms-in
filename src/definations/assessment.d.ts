@@ -37,7 +37,7 @@ export type Assessment = {
   course: number;
   topic: number;
   parent: number;
-  question: Question[];
+  question: number[];
 };
 
 export type Badge = {

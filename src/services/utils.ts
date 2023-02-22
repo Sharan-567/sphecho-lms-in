@@ -117,7 +117,6 @@ export const getTotalTopicsOfCourse = (courseId: number): Promise<number> => {
 
 export const normalizeTopics = (topics: (Topic | Assessment)[]) => {
   const result: Module[] = [];
-  
   topics.forEach(topic => {
    if(topic?.module_title) {
     let obj: Module = {

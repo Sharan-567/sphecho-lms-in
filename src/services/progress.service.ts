@@ -31,7 +31,7 @@ const updateProgress = async (
     const formData = new FormData();
     formData.append("course", data.course);
     if (data.topic) formData.append("topic", `${data.topic}`);
-    if (data.assessment) formData.append("assesment", `${data.assessment}`);
+    if (data.assessment) formData.append("assessment", `${data.assessment}`);
     const res = await customAxios.post("student/save-progress/", formData, {
       headers,
     });

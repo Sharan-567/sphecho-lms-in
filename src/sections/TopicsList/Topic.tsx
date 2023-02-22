@@ -10,13 +10,15 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import NotFound from "../NotFound";
 import { showToast } from "../../features/toast";
 import { customAxios, NormalizeProgressData } from "../../services/utils";
+import "./topics.scss";
 
 type TopicProp = {
   topic?: Assessment | TopicType;
   courseId?: string;
+  isCompleted: (topic: TopicType | Assessment) => boolean;
 };
 
-const Topic = ({ topic, courseId }: TopicProp) => {
+const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
   const [videoCompleted, setVideoCompleted] = useState(false);
   const [completed, setCompleted] = useState(false);
   const dispatch = useAppDispatch();
@@ -65,16 +67,16 @@ const Topic = ({ topic, courseId }: TopicProp) => {
 
   if (topic && "content" in topic) {
     return (
-      <div className="p-3 br-2 bg-gray">
+      <div className="p-3 br-2 bg-graydark">
         <div className="d-flex justify-content-between align-items-center">
           <h4 className="b-700 px-3 pt-4">{topic.name}</h4>
           {!completed ? (
             <Button
-              className="bg-white text-black"
-              style={{ height: "3rem" }}
+              className="bg-white text-black btn-complete"
+              style={{ height: "3rem", border: "none" }}
               onClick={updateProgressHanlder}
             >
-              Mark as Completed
+              Mark as completed
             </Button>
           ) : (
             <Button className="bg-white text-black">
@@ -116,8 +118,10 @@ const Topic = ({ topic, courseId }: TopicProp) => {
     );
   } else if (topic && "max_marks" in topic) {
     return (
-      <div className="p-3  br-1 bg-gray">
-        {topic && <AssesmentComp assessmentId={topic.id} />}
+      <div className="p-3  br-2 mt-5 bg-graydark">
+        {topic && (
+          <AssesmentComp isCompleted={isCompleted} assessment={topic} />
+        )}
       </div>
     );
   } else {

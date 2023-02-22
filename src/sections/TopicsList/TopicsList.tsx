@@ -2,9 +2,14 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams } from "react-router-dom";
 import { addTopics, resetTopics } from "../../features/topics";
 import { ListGroup, Spinner, Row, Col, Container } from "react-bootstrap";
-import { BsCheckCircleFill, BsChevronDown, BsChevronUp, BsCircleFill } from "react-icons/bs";
+import {
+  BsCheckCircleFill,
+  BsChevronDown,
+  BsChevronUp,
+  BsCircleFill,
+} from "react-icons/bs";
 import { useAppDispatch, useAppSelector } from "../../store";
-import type { Topic,Module } from "../../definations/course";
+import type { Topic, Module } from "../../definations/course";
 import type { Assessment } from "../../definations/assessment";
 import NotFound from "../NotFound";
 import TopicContainer from "./Topic";
@@ -12,10 +17,12 @@ import {
   addUniqueIdsToList,
   customAxios,
   getOrderListFromTwoList,
-  normalizeTopics
+  NormalizeProgressData,
+  normalizeTopics,
 } from "../../services/utils";
-import {motion} from "framer-motion"
+import { motion } from "framer-motion";
 import { showToast } from "../../features/toast";
+import { addAllprogress } from "../../features/progress";
 
 const TopicsList = () => {
   const { orderTopics: modules } = useAppSelector((state) => state.topics);
@@ -42,8 +49,8 @@ const TopicsList = () => {
           const orderTopicsWithCustomIds = addUniqueIdsToList<
             Topic | Assessment
           >(orderTopics);
-          const normalizedTopics = normalizeTopics(orderTopicsWithCustomIds)
-          
+          const normalizedTopics = normalizeTopics(orderTopicsWithCustomIds);
+
           dispatch(
             addTopics({
               topics,
@@ -65,23 +72,41 @@ const TopicsList = () => {
 
   useEffect(() => {
     getAllTopics();
+    getAllProgress();
     return () => {
       dispatch(resetTopics());
     };
   }, [courseId]);
 
-  useEffect(() => {
-    let added = false
-    if (modules && modules.length > 0) {
-      modules.forEach(module => {
-          module.topics.forEach(topic => {
-            if(!added && !isCompleted(topic)) {
-              added = true;
-              setDropDownId(module.module_name)
-              setCurrentTopic(topic)
-            } 
-          })
+  const getAllProgress = () => {
+    customAxios
+      .get(`student/student-progress/`)
+      .then((res) => {
+        let progresses = NormalizeProgressData(res.data.progress);
+        dispatch(addAllprogress(progresses));
       })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : Topic - While fetching all Progress",
+          })
+        );
+      });
+  };
+
+  useEffect(() => {
+    let added = false;
+    if (modules && modules.length > 0) {
+      modules.forEach((module) => {
+        module.topics.forEach((topic) => {
+          if (!added && !isCompleted(topic)) {
+            added = true;
+            setDropDownId(module.module_name);
+            setCurrentTopic(topic);
+          }
+        });
+      });
     }
   }, [modules]);
 
@@ -96,16 +121,15 @@ const TopicsList = () => {
     return false;
   };
 
-
   const isModuleCompleted = (module: Module): boolean => {
-   for(let i=0; i < module.topics.length; i++) {
-    let completed = isCompleted(module.topics[i])
-    if(!completed) {
-      return false
+    for (let i = 0; i < module.topics.length; i++) {
+      let completed = isCompleted(module.topics[i]);
+      if (!completed) {
+        return false;
+      }
     }
-   }
-   return true
-  }
+    return true;
+  };
 
   if (modules.length === 0) {
     return (
@@ -118,8 +142,6 @@ const TopicsList = () => {
       </div>
     );
   }
-
-
 
   return (
     <div className="container p-4 w-100">
@@ -142,117 +164,138 @@ const TopicsList = () => {
                   {(modules || []).map((module, id) => {
                     return (
                       <div key={module.module_name}>
-                       <ListGroup.Item
-                        onClick={() => {
-                          if(dropDownId === module.module_name) {
-                            setDropDownId("")
-                          } else {
-                            setDropDownId(module.module_name)
-                          }
-                        }}
-                        key={id}
-                        style={{
-                          borderRadius: "1rem",
-                          padding: "2rem 3rem",
-                          border: "none",
-                          outline: "none",
-                          cursor: "pointer",
-                          fontWeight: "bold",
-                        
-                        }}
-                        className={`d-flex align-items-center mb-3                           
-                           bg-primary text-white
-                        `}
-                      >
-                        <div className="me-2">
-                          {isModuleCompleted(module) ?
-                           <BsCheckCircleFill
-                            size={28}
-                            className={`text-white`}
-                          />: <BsCircleFill
-                          size={7}
-                          style={{marginTop: "-.4rem"}}
-                          className="text-white"
-                        />}
-                          
-                        </div>
-                        <button
-                          className={`small
-                            bg-primary text-white
-                          `}
+                        <ListGroup.Item
+                          onClick={() => {
+                            if (dropDownId === module.module_name) {
+                              setDropDownId("");
+                            } else {
+                              setDropDownId(module.module_name);
+                            }
+                          }}
+                          key={id}
                           style={{
-                            background: "none",
-                            outline: "none",
+                            borderRadius: "1rem",
+                            padding: "2rem 3rem",
                             border: "none",
-                            textAlign: "left",
-                            width: "100%",
-                            fontSize: "1rem",
+                            outline: "none",
+                            cursor: "pointer",
                             fontWeight: "bold",
                           }}
+                          className={`d-flex align-items-center mb-3                           
+                           bg-primary text-white
+                        `}
                         >
-                          {module.module_name}
-                        </button>
-                        <div className="ms-1">
-                         {dropDownId === module.module_name ?  <BsChevronUp
-                            size={20}
-                            className={`b-600 text-white`}
-                          /> :   <BsChevronDown
-                          size={20}
-                          className={`b-600 text-white`}
-                        />}
-                        </div>
-                      </ListGroup.Item>
-                        <motion.div animate={{height: dropDownId !== module.module_name ? "0px": "100%"}} style={{overflow: "hidden"}}>
-                        {(module.topics || []).map((topic, id) => <ListGroup.Item
-                        onClick={() => setCurrentTopic(topic)}
-                        key={id}
-                        style={{
-                          borderRadius: "1rem",
-                          padding: "1.012rem 3rem",
-                          border: "none",
-                          outline: "none",
-                        }}
-                        className={`d-flex align-items-center mb-3 ${
-                          topic.customId === currentTopic?.customId
-                            ? "bg-black text-white"
-                            : "bg-graydark"
-                        }`}
-                      >
-                        <div className="me-2">
-                          <BsCheckCircleFill
-                            size={28}
-                            className={`${
-                              isCompleted(topic) ? "text-green" : "text-white"
-                            }`}
-                          />
-                        </div>
-                        <button
-                          className={`small ${
-                            topic.customId === currentTopic?.customId &&
-                            "bg-black text-white"
-                          }`}
-                          style={{
-                            background: "none",
-                            outline: "none",
-                            border: "none",
-                            textAlign: "left",
-                            width: "100%",
-                            fontSize: "1rem",
-                            fontWeight: "normal",
+                          <div className="me-2">
+                            {isModuleCompleted(module) ? (
+                              <BsCheckCircleFill
+                                size={28}
+                                className={`text-white`}
+                              />
+                            ) : (
+                              <BsCircleFill
+                                size={7}
+                                style={{ marginTop: "-.4rem" }}
+                                className="text-white"
+                              />
+                            )}
+                          </div>
+                          <button
+                            className={`small
+                            bg-primary text-white
+                          `}
+                            style={{
+                              background: "none",
+                              outline: "none",
+                              border: "none",
+                              textAlign: "left",
+                              width: "100%",
+                              fontSize: "1rem",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            {module.module_name}
+                          </button>
+                          <div className="ms-1">
+                            {dropDownId === module.module_name ? (
+                              <BsChevronUp
+                                size={20}
+                                className={`b-600 text-white`}
+                              />
+                            ) : (
+                              <BsChevronDown
+                                size={20}
+                                className={`b-600 text-white`}
+                              />
+                            )}
+                          </div>
+                        </ListGroup.Item>
+                        <motion.div
+                          animate={{
+                            height:
+                              dropDownId !== module.module_name
+                                ? "0px"
+                                : "100%",
                           }}
+                          style={{ overflow: "hidden" }}
                         >
-                          {topic.name}
-                        </button>
-                      </ListGroup.Item>)}
+                          {(module.topics || []).map((topic, id) => (
+                            <ListGroup.Item
+                              onClick={() => setCurrentTopic(topic)}
+                              key={id}
+                              style={{
+                                borderRadius: "1rem",
+                                padding: "1.012rem 3rem",
+                                border: "none",
+                                outline: "none",
+                              }}
+                              className={`d-flex align-items-center mb-3 ${
+                                topic.customId === currentTopic?.customId
+                                  ? "bg-black text-white"
+                                  : "bg-graydark"
+                              }`}
+                            >
+                              <div className="me-2">
+                                <BsCheckCircleFill
+                                  size={28}
+                                  className={`${
+                                    isCompleted(topic)
+                                      ? "text-green"
+                                      : "text-white"
+                                  }`}
+                                />
+                              </div>
+                              <button
+                                className={`small ${
+                                  topic.customId === currentTopic?.customId &&
+                                  "bg-black text-white"
+                                }`}
+                                style={{
+                                  background: "none",
+                                  outline: "none",
+                                  border: "none",
+                                  textAlign: "left",
+                                  width: "100%",
+                                  fontSize: "1rem",
+                                  fontWeight: "normal",
+                                }}
+                              >
+                                {topic.name}
+                              </button>
+                            </ListGroup.Item>
+                          ))}
                         </motion.div>
-                      </div> 
-                    )
+                      </div>
+                    );
                   })}
                 </ListGroup>
               </div>
             </Col>
             <Col sm={9} className="px-5 py-2">
-              <TopicContainer topic={currentTopic} courseId={courseId} />
+              <TopicContainer
+                isCompleted={isCompleted}
+                topic={currentTopic}
+                courseId={courseId}
+              />
             </Col>
           </Row>
         </Container>
