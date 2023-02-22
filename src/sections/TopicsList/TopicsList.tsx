@@ -175,7 +175,7 @@ const TopicsList = () => {
                           key={id}
                           style={{
                             borderRadius: "1rem",
-                            padding: "2rem 3rem",
+                            padding: "1.6rem 3rem",
                             border: "none",
                             outline: "none",
                             cursor: "pointer",
@@ -247,11 +247,19 @@ const TopicsList = () => {
                                 padding: "1.012rem 3rem",
                                 border: "none",
                                 outline: "none",
+                                cursor: "pointer",
+                                background:
+                                  topic.customId === currentTopic?.customId
+                                    ? "#000000"
+                                    : "#eeeeee",
+                                color:
+                                  topic.customId === currentTopic?.customId
+                                    ? "white"
+                                    : "black",
                               }}
                               className={`d-flex align-items-center mb-3 ${
-                                topic.customId === currentTopic?.customId
-                                  ? "bg-black text-white"
-                                  : "bg-graydark"
+                                topic.customId !== currentTopic?.customId &&
+                                "topic-container"
                               }`}
                             >
                               <div className="me-2">
@@ -265,10 +273,7 @@ const TopicsList = () => {
                                 />
                               </div>
                               <button
-                                className={`small ${
-                                  topic.customId === currentTopic?.customId &&
-                                  "bg-black text-white"
-                                }`}
+                                className={"small"}
                                 style={{
                                   background: "none",
                                   outline: "none",
@@ -277,6 +282,10 @@ const TopicsList = () => {
                                   width: "100%",
                                   fontSize: "1rem",
                                   fontWeight: "normal",
+                                  color:
+                                    topic.customId === currentTopic?.customId
+                                      ? "white"
+                                      : "black",
                                 }}
                               >
                                 {topic.name}

@@ -11,6 +11,7 @@ import NotFound from "../NotFound";
 import { showToast } from "../../features/toast";
 import { customAxios, NormalizeProgressData } from "../../services/utils";
 import "./topics.scss";
+import { motion, AnimatePresence } from "framer-motion";
 
 type TopicProp = {
   topic?: Assessment | TopicType;
@@ -67,26 +68,45 @@ const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
 
   if (topic && "content" in topic) {
     return (
-      <div className="p-3 br-2 bg-graydark">
-        <div className="d-flex justify-content-between align-items-center">
-          <h4 className="b-700 px-3 pt-4">{topic.name}</h4>
+      <motion.div
+        key={`topic-${topic.id}`}
+        initial={{ y: 55, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -55, opacity: 0 }}
+        transition={{ duration: 0.4 }}
+        className="p-3 br-2 bg-graydark mt-5"
+      >
+        <div
+          className="d-flex justify-content-between align-items-center pb-4"
+          style={{ borderBottom: "1px solid black" }}
+        >
+          <h4 className="b-700 px-3 pt-4 topic-name">
+            {topic.name.charAt(0).toUpperCase() + topic.name.slice(1)}
+          </h4>
           {!completed ? (
             <Button
-              className="bg-white text-black btn-complete"
-              style={{ height: "3rem", border: "none" }}
+              className="bg-black br-0.5  text-white btn-complete"
+              style={{ border: "none", padding: ".7rem" }}
               onClick={updateProgressHanlder}
             >
               Mark as completed
             </Button>
           ) : (
-            <Button className="bg-white text-black">
+            <Button
+              className="bg-black br-0.5 px-4 text-white"
+              style={{
+                border: "none",
+                padding: ".7rem",
+                borderRadius: ".7rem",
+              }}
+            >
               <BsCheckCircleFill className="me-2" size="20" />
               Completed
             </Button>
           )}
         </div>
 
-        <div className="py-4 px-5 margin-auto">
+        <div className="py-4 pt-0 px-5 margin-auto">
           {topic?.video && topic?.video.toLowerCase() !== "n/a" ? (
             <ReactPlayer
               width={"100%"}
@@ -114,7 +134,7 @@ const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
           // </a>
           <iframe src={topic?.pdf} width="100%" height="580"></iframe>
         )}
-      </div>
+      </motion.div>
     );
   } else if (topic && "max_marks" in topic) {
     return (

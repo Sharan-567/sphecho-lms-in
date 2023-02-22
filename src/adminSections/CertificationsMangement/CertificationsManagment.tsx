@@ -72,7 +72,6 @@ const CertificationManagment = () => {
       title: "",
       topic: "",
       background_image: "",
-      assesment: "",
       on_complition: "True",
       on_attend: "True",
       // text: "",
@@ -222,16 +221,13 @@ const CertificationManagment = () => {
       // @ts-ignore
       formData.append(key, val);
     });
+    formData.append("course", "1");
     axios
-      .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/certificate-create/",
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
+      .post(`${BASE_URL}/master/certificate-create/`, formData, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
       .then((res) => {
         setShowSpinner("none");
         resetForm();
@@ -453,21 +449,7 @@ const CertificationManagment = () => {
                         </Form.Select>
                       </Form.Group>
                     </Row>
-                    <Form.Group>
-                      <Form.Label>Assessment</Form.Label>
-                      <Form.Select
-                        required
-                        name="assesment"
-                        onChange={creatFormik.handleChange}
-                      >
-                        <option>select the assessment</option>
-                        {(assesments || []).map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
+
                     <Form.Group>
                       <Form.Label>select the topic</Form.Label>
                       <Form.Select

@@ -1,0 +1,19 @@
+.btn-complete {
+  &:hover {
+    background-color: #6ab447 !important;
+    color: white !important;
+    // border-radius: 1rem !important;
+  }
+  border-radius: 0.6rem !important;
+  font-size: 0.9rem !important;
+}
+
+.topic-name {
+  text-transform: uppercase I !important;
+}
+
+.topic-container {
+  &:hover {
+    background-color: #cccccc !important;
+  }
+}

@@ -214,15 +214,11 @@ const CourseMangement = () => {
       formData.append(key, val);
     });
     axios
-      .post(
-        `${BASE_URL}/master/course-create/`,
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
+      .post(`${BASE_URL}/master/course-create/`, formData, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
       .then((res) => {
         setShowSpinner("none");
         resetForm();
