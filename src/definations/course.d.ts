@@ -81,9 +81,16 @@ export type Certificate = {
   assesment: number;
 };
 
-
 export type Module = {
   module_name: string;
   completed: boolean;
   topics: (Assessment | Topic)[];
-}
+};
+
+export type Event = {
+  id: number;
+  title: string;
+  description: string;
+  date: string;
+  users: string;
+};

@@ -34,6 +34,7 @@ import Webinar from "./pages/Home/Webinar";
 import Features from "./pages/Home/Features";
 import Privacy from "./pages/Home/Privacy";
 import CourseContainer from "./adminSections/courseMangement/CourseContainer";
+import EventManagment from "./adminSections/EventsMangement/EventMangement";
 
 function App() {
   const { isLoggedIn } = useAppSelector((state) => state.auth);
@@ -67,6 +68,7 @@ function App() {
               <Route path="analytics" element={<AdminMain />} />
               <Route path="userMangement" element={<UserMangement />} />
               <Route path="coursesMangement" element={<CousreMangement />} />
+              <Route path="eventMangement" element={<EventManagment />} />
               <Route
                 path="coursesMangement/:courseId/:courseName/"
                 element={<CourseContainer />}

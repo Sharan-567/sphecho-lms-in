@@ -14,7 +14,8 @@ import {
   AiOutlineFileProtect,
   AiOutlineCalculator,
   AiOutlineTool,
-  AiOutlineHome,
+  AiOutlineSend,
+  AiFillMinusSquare,
   AiOutlinePercentage,
   AiOutlineSafety,
 } from "react-icons/ai";
@@ -190,6 +191,12 @@ const SideNav = () => {
         Icon: AiOutlineComment,
         title: "Certification",
         to: "/certificationMangement",
+      },
+      {
+        id: 12,
+        Icon: AiOutlineSend,
+        title: "Events",
+        to: "/eventMangement",
       },
     ];
     const userState = localStorage.getItem("userState");

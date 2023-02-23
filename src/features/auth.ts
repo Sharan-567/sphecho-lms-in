@@ -49,6 +49,14 @@ export const login = createAsyncThunk<
       typeId: reqData.lmsAuthorizeType,
     });
 
+    if (data.user) {
+      localStorage.setItem("email", data.user.email);
+      localStorage.setItem("is_superuser", data.user.is_superuser);
+      localStorage.setItem("m16_id", data.user.m16_id);
+      localStorage.setItem("name", data.user.name);
+      localStorage.setItem("lms_id", data.user.id);
+    }
+
     const token = data.token;
 
     if (token) {

@@ -10,6 +10,7 @@ import {
   AiOutlineFire,
   AiOutlineFileProtect,
   AiOutlineCalculator,
+  AiOutlineSend,
   AiOutlineClose,
   AiOutlineNotification,
   AiOutlinePercentage,
@@ -164,6 +165,12 @@ const TopNav = () => {
       Icon: AiOutlineComment,
       title: "Certification",
       to: "/certificationMangement",
+    },
+    {
+      id: 12,
+      Icon: AiOutlineSend,
+      title: "Events",
+      to: "/eventMangement",
     },
   ];
 

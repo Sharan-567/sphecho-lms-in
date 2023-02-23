@@ -2,9 +2,12 @@ import React, { useEffect, useState, useRef, ReactHTMLElement } from "react";
 import { useLocation, Link, Path } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
 import { useAppSelector } from "../../store";
+import { useAppDispatch } from "../../store";
 import { HOST } from "../../features/settings";
 import type { Course } from "../../definations/course";
+import { showToast } from "../../features/toast";
 import defaultImag from "../../assets/default.jpg";
+import { customAxios } from "../../services/utils";
 
 interface Location extends Path {
   state: {
@@ -18,6 +21,7 @@ const CourseDetail = () => {
   const { courses } = useAppSelector((state) => state.courses);
   const imageRef = useRef<HTMLImageElement | any>(null);
   const imageRefAvathar = useRef<HTMLImageElement | any>(null);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (courses) {
@@ -47,6 +51,24 @@ const CourseDetail = () => {
       if (parseInt(price) == 0) return "Free";
       else return `$${parseInt(price)}`;
     }
+  };
+
+  const enroll = () => {
+    const formData = new FormData();
+    formData.append("course", course.id);
+    customAxios
+      .post(`/student/enrol-course/`, formData)
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : enroll : while enrolling course",
+          })
+        );
+      });
   };
 
   return (
@@ -94,11 +116,17 @@ const CourseDetail = () => {
                 <h3 className="text-skyBlue b-800">
                   {getPrice(course?.full_amount)}
                 </h3>
-                <Link to={`/courses/${course?.id}`}>
+                {/* <Link to={`/courses/${course?.id}`}>
                   <Button className="bg-green text-white px-5">
                     Enroll Now
                   </Button>
-                </Link>
+                </Link> */}
+                <Button
+                  className="bg-green text-white px-5"
+                  onClick={() => enroll()}
+                >
+                  Enroll Now
+                </Button>
               </div>
             </div>
           </Col>
