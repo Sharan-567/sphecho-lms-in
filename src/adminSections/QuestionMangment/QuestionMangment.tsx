@@ -54,20 +54,22 @@ const QuestionMangement = () => {
   //success
   const [success, setSuccess] = useState("");
 
+  const createInitialValues = {
+    question: "",
+    option_01: "",
+    option_02: "",
+    option_03: "",
+    option_04: "",
+    answer: "",
+    correct_option: "",
+    marks: "0",
+    topic: "",
+    cnt: "",
+    type: "1",
+  };
+
   const creatFormik = useFormik({
-    initialValues: {
-      question: "",
-      option_01: "",
-      option_02: "",
-      option_03: "",
-      option_04: "",
-      answer: "",
-      correct_option: "",
-      marks: "0",
-      topic: "",
-      cnt: "",
-      type: "1",
-    },
+    initialValues: createInitialValues,
     enableReinitialize: true,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => createQuestion(data, resetForm),
@@ -134,6 +136,7 @@ const QuestionMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);

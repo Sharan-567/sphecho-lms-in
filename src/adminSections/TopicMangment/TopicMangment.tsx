@@ -56,19 +56,21 @@ const TopicManagment = () => {
   //success
   const [success, setSuccess] = useState("");
 
+  const createInitialValues = {
+    name: "",
+    video: "",
+    info_image: "",
+    pdf: "",
+    image: "",
+    content: "",
+    description: "",
+    assement_required: "False",
+    course: "",
+    order: "",
+  };
+
   const creatFormik = useFormik({
-    initialValues: {
-      name: "",
-      video: "",
-      info_image: "",
-      pdf: "",
-      image: "",
-      content: "",
-      description: "",
-      assement_required: "False",
-      course: "",
-      order: "",
-    },
+    initialValues: createInitialValues,
     enableReinitialize: true,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => createTopic(data, resetForm),
@@ -128,6 +130,7 @@ const TopicManagment = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);

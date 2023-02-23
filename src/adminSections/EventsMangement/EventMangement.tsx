@@ -54,13 +54,15 @@ const EventManagment = () => {
   //success
   const [success, setSuccess] = useState("");
 
+  const createInitialValues = {
+    title: "",
+    description: "",
+    date: "",
+    users: "",
+  };
+
   const creatFormik = useFormik({
-    initialValues: {
-      title: "",
-      description: "",
-      date: "",
-      users: "",
-    },
+    initialValues: createInitialValues,
     enableReinitialize: true,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => createEvent(data, resetForm),
@@ -113,6 +115,7 @@ const EventManagment = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);

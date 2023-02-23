@@ -54,16 +54,18 @@ const AssessmentMangement = () => {
   //success
   const [success, setSuccess] = useState("");
 
+  const createInitialValues = {
+    name: "",
+    pre_assesment: "False",
+    order: "",
+    max_marks: "",
+    min_marks_to_qualify: "",
+    course: "",
+    topic: "",
+  };
+
   const creatFormik = useFormik({
-    initialValues: {
-      name: "",
-      pre_assesment: "False",
-      order: "",
-      max_marks: "",
-      min_marks_to_qualify: "",
-      course: "",
-      topic: "",
-    },
+    initialValues: createInitialValues,
     enableReinitialize: true,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => createAsssessment(data, resetForm),
@@ -123,6 +125,7 @@ const AssessmentMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);
@@ -260,7 +263,6 @@ const AssessmentMangement = () => {
           setShowSpinner("none");
           setSuccess("Assessment updated successfully.");
           getAssessmentList();
-         
         })
         .catch((err) => {
           setShowSpinner("none");
@@ -285,15 +287,11 @@ const AssessmentMangement = () => {
       formData.append(key, val);
     });
     axios
-      .post(
-        `${BASE_URL}/master/assement-create/`,
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
+      .post(`${BASE_URL}/master/assement-create/`, formData, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
       .then((res) => {
         setShowSpinner("none");
         resetForm();

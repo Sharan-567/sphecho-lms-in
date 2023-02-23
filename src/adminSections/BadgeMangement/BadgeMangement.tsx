@@ -29,6 +29,7 @@ import { useAppDispatch } from "../../store";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import Loading from "../../sections/Loading";
+import { customAxios } from "../../services/utils";
 
 function getMinDate() {
   return new Date(2000, 1, 1);
@@ -79,19 +80,21 @@ const BadgeMangement = () => {
   //success
   const [success, setSuccess] = useState("");
 
+  const createInitialValues = {
+    title: "",
+    image: "",
+    on_complition: "True",
+    on_attend: "True",
+    numbers: "",
+    start_date: "",
+    end_date: "",
+    course: "",
+    assesment: "",
+    topic: "",
+  };
+
   const creatFormik = useFormik({
-    initialValues: {
-      title: "",
-      image: "",
-      on_complition: "True",
-      on_attend: "True",
-      numbers: "",
-      start_date: "",
-      end_date: "",
-      course: "",
-      assesment: "",
-      topic: "",
-    },
+    initialValues: createInitialValues,
     enableReinitialize: true,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => createBadge(data, resetForm),
@@ -147,6 +150,7 @@ const BadgeMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);
@@ -356,16 +360,8 @@ const BadgeMangement = () => {
         formData.append(key, val);
       }
     });
-    axios
-      .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/badge-create/",
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
+    customAxios
+      .post("/master/badge-create/", formData)
       .then((res) => {
         setShowSpinner("none");
         resetForm();

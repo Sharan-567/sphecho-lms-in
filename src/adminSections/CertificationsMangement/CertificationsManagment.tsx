@@ -26,6 +26,7 @@ import { useAppDispatch } from "../../store";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import Loading from "../../sections/Loading";
+import { customAxios } from "../../services/utils";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -66,16 +67,20 @@ const CertificationManagment = () => {
   >("none");
   //success
   const [success, setSuccess] = useState("");
+  const [showDeleteBtn, setShowDeleteButton] = useState(true);
+
+  const createInitialValues = {
+    title: "",
+    topic: "",
+    background_image: "",
+    on_complition: "True",
+    on_attend: "True",
+    course: "",
+    // text: "",
+  };
 
   const creatFormik = useFormik({
-    initialValues: {
-      title: "",
-      topic: "",
-      background_image: "",
-      on_complition: "True",
-      on_attend: "True",
-      // text: "",
-    },
+    initialValues: createInitialValues,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => {
       console.log(editorState.getCurrentContent());
@@ -119,6 +124,7 @@ const CertificationManagment = () => {
     setError("");
     setSuccess("");
     setShowEditor(false);
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);
@@ -132,6 +138,7 @@ const CertificationManagment = () => {
     getTopicsList();
     getAssessmentList();
     getCertificatesTags();
+    getCourseList();
   }, []);
 
   const deleteCertificate = () => {
@@ -145,6 +152,7 @@ const CertificationManagment = () => {
         setShowSpinner("none");
         setSuccess("Certificate deleted successfully");
         setErrorType("none");
+        setShowDeleteButton(false);
         getCertificationList();
       })
       .catch((err) => {
@@ -221,7 +229,6 @@ const CertificationManagment = () => {
       // @ts-ignore
       formData.append(key, val);
     });
-    formData.append("course", "1");
     axios
       .post(`${BASE_URL}/master/certificate-create/`, formData, {
         headers: {
@@ -265,6 +272,23 @@ const CertificationManagment = () => {
           showToast({
             type: "danger",
             message: err.message + " : admin : while fetching assessment list",
+          })
+        );
+      });
+  };
+
+  //get course list
+  const getCourseList = () => {
+    customAxios
+      .get(`${BASE_URL}/master/course-list`)
+      .then((res) => {
+        setCourses(res.data.courses);
+      })
+      .catch((err) => {
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while fetching courseList",
           })
         );
       });
@@ -450,7 +474,7 @@ const CertificationManagment = () => {
                       </Form.Group>
                     </Row>
 
-                    <Form.Group>
+                    <Form.Group className="mb-3">
                       <Form.Label>select the topic</Form.Label>
                       <Form.Select
                         required
@@ -459,6 +483,21 @@ const CertificationManagment = () => {
                       >
                         <option>select the topic</option>
                         {(topics || []).map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>select the course</Form.Label>
+                      <Form.Select
+                        required
+                        name="course"
+                        onChange={creatFormik.handleChange}
+                      >
+                        <option>select the couse</option>
+                        {(courses || []).map((c) => (
                           <option key={c.id} value={c.id}>
                             {c.name}
                           </option>
@@ -550,12 +589,20 @@ const CertificationManagment = () => {
               </p>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  handleClose();
+                  setShowDeleteButton(true);
+                }}
+              >
                 Close
               </Button>
-              <Button variant="danger text-white" onClick={deleteCertificate}>
-                delete
-              </Button>
+              {showDeleteBtn && (
+                <Button variant="danger text-white" onClick={deleteCertificate}>
+                  delete
+                </Button>
+              )}
             </Modal.Footer>
           </>
         )}

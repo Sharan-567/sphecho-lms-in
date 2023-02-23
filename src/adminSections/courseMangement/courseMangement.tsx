@@ -60,17 +60,19 @@ const CourseMangement = () => {
   //success
   const [success, setSuccess] = useState("");
 
+  const createInitialValues = {
+    name: "",
+    tags: "",
+    info_image: "",
+    description: "",
+    trainer_name: "",
+    view_all: "False",
+    enroll_all: "False",
+    featured: "False",
+  };
+
   const creatFormik = useFormik({
-    initialValues: {
-      name: "",
-      tags: "",
-      info_image: "",
-      description: "",
-      trainer_name: "",
-      view_all: "False",
-      enroll_all: "False",
-      featured: "False",
-    },
+    initialValues: createInitialValues,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => createCourse(data, resetForm),
   });
@@ -129,6 +131,7 @@ const CourseMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
     setShow(true);
