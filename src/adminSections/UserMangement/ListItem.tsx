@@ -21,7 +21,7 @@ const ListItem = ({
   addStudentToCourseHandler,
 }: Props) => {
   return (
-    <Row className="d-flex px-3 py-3 bg-graydark br-2 mb-2">
+    <Row className="d-flex px-3 py-3 bg-graydark br-1 mb-3">
       <Col xs="10">
         <p style={{ fontSize: "1.1rem", fontWeight: "bold" }}>Name: {title}</p>
         <h4

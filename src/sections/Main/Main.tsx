@@ -17,6 +17,7 @@ import {
   addUserCourses,
   addUserTopic,
 } from "../../features/courses";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { showToast } from "../../features/toast";
 import { customAxios, NormalizeProgressData } from "../../services/utils";
@@ -191,50 +192,65 @@ const Main = () => {
 
   return (
     <div className="py-4 w-100 container">
-      <Row className="px-5">
-        <Col
-          sm={4}
-          className="d-flex px-4 align-items-center justify-content-between w-100"
+      <AnimatePresence exitBeforeEnter>
+        <motion.div
+          key={"main" + "1"}
+          initial={{ y: 55, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -55, opacity: 0 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.15,
+          }}
         >
-          <div className="none"></div>
-          <Search />
-          <div className="none">
-            <Link to="/cart">
-              <AiOutlineShopping width={"2rem"} size={"2rem"} />
-              <Badge
-                bg="danger"
-                text="white"
-                pill
-                style={{ marginLeft: "-.7em", marginBottom: "-.2em" }}
-              >
-                {items.length}
-              </Badge>
-            </Link>
-            <Button
-              className="bg-primary text-white px-4 py-2 b-700 ms-4"
-              style={{ border: "none" }}
-              onClick={logoutHandler}
+          <Row className="px-5">
+            <Col
+              sm={4}
+              className="d-flex px-4 align-items-center justify-content-between w-100"
             >
-              Logout
-            </Button>
-          </div>
-        </Col>
-      </Row>
-      <Row
-        className="main__row_1"
-        style={{ padding: "5rem", paddingTop: "3rem", paddingBottom: "3rem" }}
-      >
-        {/* <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
+              <div className="none"></div>
+              <Search />
+              <div className="none">
+                <Link to="/cart">
+                  <AiOutlineShopping width={"2rem"} size={"2rem"} />
+                  <Badge
+                    bg="danger"
+                    text="white"
+                    pill
+                    style={{ marginLeft: "-.7em", marginBottom: "-.2em" }}
+                  >
+                    {items.length}
+                  </Badge>
+                </Link>
+                <Button
+                  className="bg-primary text-white px-4 py-2 b-700 ms-4"
+                  style={{ border: "none" }}
+                  onClick={logoutHandler}
+                >
+                  Logout
+                </Button>
+              </div>
+            </Col>
+          </Row>
+          <Row
+            className="main__row_1"
+            style={{
+              padding: "5rem",
+              paddingTop: "3rem",
+              paddingBottom: "3rem",
+            }}
+          >
+            {/* <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
         <p
           style={{ fontWeight: "500", lineHeight: ".8rem" }}
           className="small text-blue"
         >
           You have tauth 6 hours yesterday
         </p> */}
-        <Col sm={4} className="p-3">
-          <div className="p-3 bg-graydark br-2 h-100 ">
-            {/* <h5 className="b-700 mb-4">Rating</h5> */}
-            {/* <img
+            <Col sm={4} className="p-3">
+              <div className="p-3 bg-graydark br-2 h-100 ">
+                {/* <h5 className="b-700 mb-4">Rating</h5> */}
+                {/* <img
               src={bg1}
               alt=""
               style={{
@@ -246,90 +262,119 @@ const Main = () => {
               }}
             /> */}
 
-            <h5 className="b-700 p-1 text-center mt-2">Impact Report</h5>
-            <GaugeChart
-              id="gauge-chart5"
-              nrOfLevels={10}
-              arcWidth={0.5}
-              arcsLength={[0.2, 0.5, 0.3]}
-              colors={["#EA4228", "#F5CD19", "#0cae00"]}
-              percent={performance}
-              arcPadding={0.02}
-              hideText
-            />
-            <h5 className="text-center text-green mt-4">
-              {(performance * 100).toFixed(0)}% performace
-            </h5>
-            <p className="tiny text-center">
-              completed courses per no.of courses taken up
-            </p>
-          </div>
-        </Col>
-        <Col sm={8} className="p-3 px-4">
-          <CalenderWithEvents />
-        </Col>
-      </Row>
-      <Row
-        className="main__row_1"
-        style={{
-          marginTop: "1rem",
-          marginBottom: "1rem",
-          paddingLeft: "4rem",
-          paddingRight: "4rem",
-        }}
-      >
-        <Col sm={4}>
-          <Counter
-            Icon={BiBookOpen}
-            title="Number of courses enrolled"
-            value={noOfCoursesEnrolled}
-          />
-        </Col>
-        <Col sm={4}>
-          <Counter
-            Icon={BiBookmarkAlt}
-            title="Number of badges earned"
-            value={noOfBadgesEarned}
-          />
-        </Col>
-        <Col sm={4}>
-          <Counter
-            Icon={BiBookmarkHeart}
-            title="Number of certificates earned"
-            value={noOfCertificatesEarned}
-          />
-        </Col>
-      </Row>
-      <Container>
-        <Row
-          className="main_row_3"
-          style={{ minHeight: "16rem", padding: "5rem" }}
+                <h5 className="b-700 p-1 text-center mt-2">Impact Report</h5>
+                <GaugeChart
+                  id="gauge-chart5"
+                  nrOfLevels={10}
+                  arcWidth={0.5}
+                  arcsLength={[0.2, 0.5, 0.3]}
+                  colors={["#EA4228", "#F5CD19", "#0cae00"]}
+                  percent={performance}
+                  arcPadding={0.02}
+                  hideText
+                />
+                <h5 className="text-center text-green mt-4">
+                  {(performance * 100).toFixed(0)}% performace
+                </h5>
+                <p className="tiny text-center">
+                  completed courses per no.of courses taken up
+                </p>
+              </div>
+            </Col>
+            <Col sm={8} className="p-3 px-4">
+              <CalenderWithEvents />
+            </Col>
+          </Row>
+        </motion.div>
+      </AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
+        <motion.div
+          key={"calender-points" + "1"}
+          initial={{ y: 55, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -55, opacity: 0 }}
+          transition={{
+            duration: 0.4,
+            delay: 0.25,
+          }}
         >
-          <Col className="p-4 br-2 bg-white  position-relative">
-            <h4 className="b-700 text-blue">Latest Courses</h4>
-            <div className="p-2">
-              <AliceCarousel
-                disableDotsControls
-                autoWidth
-                renderPrevButton={() => (
-                  <span
-                    style={{ cursor: "pointer" }}
-                    className="bg-skyBlue text-white p-2 b-900"
-                  >{`<`}</span>
-                )}
-                renderNextButton={() => (
-                  <span
-                    style={{ cursor: "pointer" }}
-                    className="bg-skyBlue text-white p-2 b-900"
-                  >{`>`}</span>
-                )}
-                items={(latestCourses || []).map((course) => (
-                  <Card key={course.id} course={course} />
-                ))}
+          <Row
+            className="main__row_1"
+            style={{
+              marginTop: "1rem",
+              marginBottom: "1rem",
+              paddingLeft: "4rem",
+              paddingRight: "4rem",
+            }}
+          >
+            <Col sm={4}>
+              <Counter
+                Icon={BiBookOpen}
+                title="Number of courses enrolled"
+                value={noOfCoursesEnrolled}
               />
-            </div>
-          </Col>
-        </Row>
+            </Col>
+            <Col sm={4}>
+              <Counter
+                Icon={BiBookmarkAlt}
+                title="Number of badges earned"
+                value={noOfBadgesEarned}
+              />
+            </Col>
+            <Col sm={4}>
+              <Counter
+                Icon={BiBookmarkHeart}
+                title="Number of certificates earned"
+                value={noOfCertificatesEarned}
+              />
+            </Col>
+          </Row>
+        </motion.div>
+      </AnimatePresence>
+
+      <Container>
+        <AnimatePresence exitBeforeEnter>
+          <motion.div
+            key={"main-2" + "1"}
+            initial={{ y: 55, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -55, opacity: 0 }}
+            transition={{
+              duration: 0.4,
+              delay: 0.3,
+            }}
+          >
+            <Row
+              className="main_row_3"
+              style={{ minHeight: "16rem", padding: "5rem" }}
+            >
+              <Col className="p-4 br-2 bg-white  position-relative">
+                <h4 className="b-700 text-blue">Latest Courses</h4>
+                <div className="p-2">
+                  <AliceCarousel
+                    disableDotsControls
+                    autoWidth
+                    renderPrevButton={() => (
+                      <span
+                        style={{ cursor: "pointer" }}
+                        className="bg-skyBlue text-white p-2 b-900"
+                      >{`<`}</span>
+                    )}
+                    renderNextButton={() => (
+                      <span
+                        style={{ cursor: "pointer" }}
+                        className="bg-skyBlue text-white p-2 b-900"
+                      >{`>`}</span>
+                    )}
+                    items={(latestCourses || []).map((course) => (
+                      <Card key={course.id} course={course} />
+                    ))}
+                  />
+                </div>
+              </Col>
+            </Row>
+          </motion.div>
+        </AnimatePresence>
       </Container>
     </div>
   );

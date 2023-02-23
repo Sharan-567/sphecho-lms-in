@@ -8,6 +8,7 @@ import type { Course } from "../../definations/course";
 import { showToast } from "../../features/toast";
 import defaultImag from "../../assets/default.jpg";
 import { customAxios } from "../../services/utils";
+import { removeItem } from "../../features/cart";
 
 interface Location extends Path {
   state: {
@@ -22,6 +23,8 @@ const CourseDetail = () => {
   const imageRef = useRef<HTMLImageElement | any>(null);
   const imageRefAvathar = useRef<HTMLImageElement | any>(null);
   const dispatch = useAppDispatch();
+  const [success, setSuccess] = React.useState(false);
+  const [showGoto, setShowGoTo] = useState(false);
 
   useEffect(() => {
     if (courses) {
@@ -59,22 +62,42 @@ const CourseDetail = () => {
     customAxios
       .post(`/student/enrol-course/`, formData)
       .then((res) => {
-        console.log(res.data);
+        setSuccess(true);
+        setShowGoTo(true);
+        dispatch(removeItem(course.id));
+        setTimeout(() => {
+          setSuccess(false);
+        }, 5000);
+        dispatch(
+          showToast({
+            type: "info",
+            message: "You successfully enrolled",
+          })
+        );
       })
       .catch((err) => {
         dispatch(
           showToast({
             type: "danger",
-            message: err.message + " : enroll : while enrolling course",
+            message: err.message + " :enroll : while enrolling course",
           })
         );
       });
   };
 
   return (
-    <div className="container p-5 w-100 br-3">
-      <div className="px-5 py-4 br-2 bg-gray">
+    <div className=" p-5 br-3" style={{ maxWidth: "1000px", margin: "auto" }}>
+      {success && (
+        <div
+          className="bg-green px-2 py-4 mb-5 text-center b-600 br-1 text-white"
+          style={{}}
+        >
+          Your successfully enrolled to course
+        </div>
+      )}
+      <div className="px-5 py-4 br-2 bg-graydark">
         <h4 className="b-700 text-blue w-75 p-2 mb-3">{course?.name}</h4>
+
         <Row>
           <Col sm={6}>
             <div className="bg-2 bg-graydark br-2 p-3">
@@ -116,17 +139,21 @@ const CourseDetail = () => {
                 <h3 className="text-skyBlue b-800">
                   {getPrice(course?.full_amount)}
                 </h3>
-                {/* <Link to={`/courses/${course?.id}`}>
-                  <Button className="bg-green text-white px-5">
+
+                {showGoto ? (
+                  <Link to={`/courses/${course?.id}`}>
+                    <Button className="bg-green text-white px-5 py-3">
+                      Go to course
+                    </Button>
+                  </Link>
+                ) : (
+                  <Button
+                    className="bg-green text-white px-5 py-3"
+                    onClick={() => enroll()}
+                  >
                     Enroll Now
                   </Button>
-                </Link> */}
-                <Button
-                  className="bg-green text-white px-5"
-                  onClick={() => enroll()}
-                >
-                  Enroll Now
-                </Button>
+                )}
               </div>
             </div>
           </Col>

@@ -7,6 +7,7 @@ import "./certificate.scss";
 import { convertToObject } from "./helpers";
 import Empty from "../Empty";
 import LoadingEl from "../Loading";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Certification = {
   id: number;
@@ -144,26 +145,37 @@ const Certification = () => {
 
   return (
     <div className="container w-75 p-3">
-      <div className="p-2">
+      <div className="p-2 mb-2">
         <h2 className="b-700">Certifications</h2>
         {(certificationList || []).length > 0 && <p>Certificates you earned</p>}
         {(certificationList || []).length === 0 && (
           <p>You have no certificates available at this moment.</p>
         )}
       </div>
-      {(certificationList || []).map((certficate) => (
-        <div
-          key={certficate.id}
-          onClick={() => showCertificateHandler(certficate.id)}
-          className="bg-gray br-1 px-4 py-2 mb-2"
-          style={{ cursor: "pointer" }}
-        >
-          <h3 style={{ fontSize: "1.1rem" }}>
-            Certificate title: {certficate.certificate__title}
-          </h3>
-          <p>{certficate.date}</p>
-        </div>
-      ))}
+      <div className="mb-4">
+        {(certificationList || []).map((certficate, idx) => (
+          <AnimatePresence exitBeforeEnter>
+            <motion.div
+              key={idx + "1"}
+              initial={{ y: 25, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -25, opacity: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: idx * 0.1,
+              }}
+              onClick={() => showCertificateHandler(certficate.id)}
+              className="bg-graydark pt-3 br-1 px-4 py-2 mb-2"
+              style={{ cursor: "pointer" }}
+            >
+              <h3 style={{ fontSize: "1.1rem" }}>
+                Certificate title: {certficate.certificate__title}
+              </h3>
+              <p>{certficate.date}</p>
+            </motion.div>
+          </AnimatePresence>
+        ))}
+      </div>
       <div className="p-2">
         <h2 className="b-700">Badges</h2>
         {(badgeList || []).length > 0 && <p>Badges you earned</p>}

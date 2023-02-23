@@ -12,6 +12,7 @@ import { showToast } from "../../features/toast";
 import Loading from "../Loading";
 import NotFound from "../NotFound";
 import { addAllprogress } from "../../features/progress";
+import { motion, AnimatePresence } from "framer-motion";
 import "./course.scss";
 
 const Course = () => {
@@ -165,14 +166,27 @@ const Course = () => {
               </>
             ) : null}
             <div>
-              {(getUsersCourses(userCourses) || []).map((course) => {
+              {(getUsersCourses(userCourses) || []).map((course, idx) => {
                 return (
-                  <CourseContainer
-                    key={`course-${course.id}`}
-                    no_of_topics={getNoOftopics(course.id)}
-                    course={course}
-                    type="userCourses"
-                  />
+                  <AnimatePresence exitBeforeEnter>
+                    <motion.div
+                      key={"main-2" + "1"}
+                      initial={{ y: 55, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -55, opacity: 0 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: idx * 0.1,
+                      }}
+                    >
+                      <CourseContainer
+                        key={`course-${course.id}`}
+                        no_of_topics={getNoOftopics(course.id)}
+                        course={course}
+                        type="userCourses"
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 );
               })}
             </div>

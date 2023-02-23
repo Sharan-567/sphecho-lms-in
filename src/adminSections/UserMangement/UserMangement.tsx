@@ -12,6 +12,7 @@ import { useAppDispatch } from "../../store";
 import Loading from "../../sections/Loading";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
+import { motion, AnimatePresence } from "framer-motion";
 
 type User = {
   users: Patient[];
@@ -132,25 +133,38 @@ const UserMangement = () => {
             <Loading />
           ) : (
             <>
-              {(users?.doctors || []).map((user) => (
+              {(users?.doctors || []).map((user, idx) => (
                 <div key={user._id}>
-                  <ListItem
-                    title={user.Name || user?.Email}
-                    email={user.Email}
-                    contact={user.Contact}
-                    update={() => {
-                      setState("updateUser");
-                      setCurrentSelectedUser(user);
-                    }}
-                    addUserToCourseHandler={() => {
-                      setState("addUserToCourse");
-                      setCurrentSelectedUser(user);
-                    }}
-                    addStudentToCourseHandler={() => {
-                      setState("addStudentToCourse");
-                      setCurrentSelectedUser(user);
-                    }}
-                  />
+                  <AnimatePresence exitBeforeEnter>
+                    <motion.div
+                      key={idx}
+                      initial={{ y: 55, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -55, opacity: 0 }}
+                      transition={{
+                        duration: 0.4,
+                        delay: idx * 0.1,
+                      }}
+                    >
+                      <ListItem
+                        title={user.Name || user?.Email}
+                        email={user.Email}
+                        contact={user.Contact}
+                        update={() => {
+                          setState("updateUser");
+                          setCurrentSelectedUser(user);
+                        }}
+                        addUserToCourseHandler={() => {
+                          setState("addUserToCourse");
+                          setCurrentSelectedUser(user);
+                        }}
+                        addStudentToCourseHandler={() => {
+                          setState("addStudentToCourse");
+                          setCurrentSelectedUser(user);
+                        }}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               ))}
             </>
