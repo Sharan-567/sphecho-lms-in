@@ -87,8 +87,7 @@ const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
       </Form.Select>
       <div className="w-100 ps-2">
         <Button
-          className="p-2 px-4 br-3 mt-4 text-white m-auto"
-          style={{ margin: "auto", display: "block" }}
+          className="p-2 px-4 br-1 py-3 bg-primary mt-4 text-white ms-2"
           onClick={createPatient}
         >
           Create Account

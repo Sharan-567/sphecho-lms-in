@@ -3,6 +3,7 @@ import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../features/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
+import { motion, AnimatePresence } from "framer-motion";
 
 type UserState = "Patient" | "Provider" | "SuperUser" | "staffMember";
 type Auth = {
@@ -48,46 +49,59 @@ const StaffMember = ({ setLoginType, currentSelectedAuth }: Props) => {
   };
 
   return (
-    <div className="p-2 w-100 d-flex flex-column justify-content-center align-items-center">
-      {error ? <p className="text-danger">{error}</p> : null}
-      <h1 className="mb-5 text-primary text-center">SuperUser Login</h1>
-      <input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="py-3 text-center b-600 br-2 mb-2"
-        placeholder="UserName"
-        style={{
-          fontSize: "1.2rem",
-          border: "1px solid #81a31b",
-          display: "block",
-        }}
-        type="text"
-      />
-      <input
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="py-3 text-center b-600 br-2 mb-3"
-        placeholder="Password"
-        style={{
-          fontSize: "1.2rem",
-          border: "1px solid #81a31b",
-          display: "block",
-        }}
-        type="password"
-      />
-      <Button
-        className="p-2 px-4 br-3 my-4 text-white "
-        onClick={handleProviderLogin}
+    <AnimatePresence exitBeforeEnter>
+      <motion.div
+        key={"ti-tle"}
+        initial={{ y: 45, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -45, opacity: 0 }}
+        transition={{ duration: 0.5 }}
+        className="px-2 "
       >
-        LOGIN
-      </Button>
-      <Button
-        className="bg-black p-2 px-4 text-white"
-        onClick={() => setLoginType(undefined)}
-      >
-        GO Back
-      </Button>
-    </div>
+        {error ? <p className="text-danger">{error}</p> : null}
+        <h1 className="mb-5 text-primary text-center">SuperUser Login</h1>
+        <input
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="py-3 mb-3 text-center b-600 br-1"
+          placeholder="UserName"
+          style={{
+            fontSize: "1.2rem",
+            border: "1px solid #81a31b",
+            display: "block",
+            width: "100%",
+          }}
+          type="text"
+        />
+        <input
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="py-3 mb-3 text-center b-600 br-1"
+          placeholder="Password"
+          style={{
+            fontSize: "1.2rem",
+            border: "1px solid #81a31b",
+            display: "block",
+            width: "100%",
+          }}
+          type="password"
+        />
+
+        <Button
+          className="p-2 px-4 br-1 py-3 mt-4 text-white "
+          style={{ width: "10rem" }}
+          onClick={handleProviderLogin}
+        >
+          LOGIN
+        </Button>
+        <Button
+          className="p-2 px-4 br-1 py-3 bg-black mt-4 text-white ms-2"
+          onClick={() => setLoginType(undefined)}
+        >
+          G0 back
+        </Button>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 

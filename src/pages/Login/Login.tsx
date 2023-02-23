@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Row, Col } from "react-bootstrap";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import PatientLogin from "./PatientLogin";
 
-import logo from "../../assets/01_Logo_2x.png";
+import logo from "../../assets/white-logo.png";
 import circle from "../../assets/element-bg2.png";
 import bg from "../../assets/banner-bg.png";
 import "./Login.scss";
@@ -59,120 +59,120 @@ const Login = () => {
   ];
 
   return (
-    <div className="container bg-container">
-      <img
-        src={bg}
-        height="100vh"
-        style={{
-          position: "absolute",
-          top: 0,
-          right: 0,
-          height: "100%",
-          zIndex: -1,
-        }}
-      />
-      <div className="p-4">
-        <Link to="/">
-          <img src={logo} width="159px" />
-        </Link>
-      </div>
-      <Row>
+    <div className=" bg-container">
+      <Row style={{}}>
         <Col
-          sm={6}
-          className="p-2 d-flex justif-content-center align-items-center title-container position-relative"
-          style={{ height: "60vh" }}
+          sm={8}
+          className="p-2 d-flex flex-column justify-content-center align-items-center bg-primary title-container"
+          style={{ height: "100vh", position: "relative" }}
         >
-          <img
-            className="position-absolute top-0 left-0"
-            src={circle}
-            width="94%"
-          />
-          <motion.h1
-            className="title"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              duration: 0.8,
-              delay: 0.5,
-              ease: [0, 0.71, 0.2, 1.01],
-            }}
-            style={{ fontSize: "6rem", fontWeight: "bolder" }}
+          {/* <div className="p-4">
+            <Link to="/">
+              <img src={logo} width="159px" />
+            </Link>
+          </div> */}
+          <div
+            className="p-4"
+            style={{ position: "absolute", top: "1rem", left: "1rem" }}
           >
-            Welcome to{" "}
-            <h1
-              className="text-primary"
+            <Link to="/">
+              <img src={logo} width="159px" />
+            </Link>
+          </div>
+          <AnimatePresence exitBeforeEnter>
+            <motion.h1
+              key={"title"}
+              initial={{ y: 45, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -45, opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="text-left text-white"
               style={{
-                fontSize: "7rem",
-                textDecoration: "underline",
+                textAlign: "center",
                 fontWeight: "bold",
+                fontSize: "5rem",
               }}
             >
-              Sphecho
-            </h1>
-          </motion.h1>
+              Welcome to <br></br> SPHECHO
+            </motion.h1>
+          </AnimatePresence>
         </Col>
-        <Col sm={6} className="p-5 pt-0">
+        <Col
+          sm={4}
+          className="p-5 pt-0 d-flex justify-content-center align-items-center"
+        >
           <div className="login-wrapper m-auto p-2" style={{ width: "100%" }}>
             {!loginType ? (
               <>
-                <p className="text-center b-700" style={{ fontSize: "2rem" }}>
-                  Select The Login Type
+                <p
+                  className="text-left text-primary mb-1 b-600"
+                  style={{ fontSize: "2rem" }}
+                >
+                  Select <br></br>
                 </p>
-                {(loginTypes || []).map((item) => (
-                  <motion.button
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{
-                      duration: 0.8,
-                      ease: [0, 0.71, 0.2, 1.01],
-                      staggerChildren: 0.5,
-                    }}
-                    style={{
-                      border: "none",
-                      borderLeft: "7px solid #81a31b",
-                      fontSize: "1.4rem",
-                    }}
-                    className="w-100 m-3 b-600 py-4 btn-login shadow br-1 bg-white"
-                    onClick={() => {
-                      setLoginType(item.userState);
-                      setCurrentSelectedAuth(item);
-                      dispatch(clearError());
-                    }}
-                    key={item.title}
-                  >
-                    {item.title}
-                  </motion.button>
+                <p
+                  className="text-left text-black mb-5"
+                  style={{ fontSize: "1.2rem" }}
+                >
+                  Sphecho login type.
+                </p>
+                {(loginTypes || []).map((item, idx) => (
+                  <AnimatePresence exitBeforeEnter>
+                    <motion.button
+                      key={idx}
+                      initial={{ y: 35, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -35, opacity: 0 }}
+                      transition={{ duration: 0.4, delay: idx * 0.2 }}
+                      style={{
+                        fontSize: "1.1rem",
+                        border: "none",
+                        background: "#eeeeee",
+                      }}
+                      className="w-100 mb-3 py-4 br-1 btn-login-an"
+                      onClick={() => {
+                        setLoginType(item.userState);
+                        setCurrentSelectedAuth(item);
+                        dispatch(clearError());
+                      }}
+                      key={item.title}
+                    >
+                      {item.title}
+                    </motion.button>
+                  </AnimatePresence>
                 ))}
               </>
             ) : (
               <div
-                className="d-flex br-3 justify-content-center align-items-center w-100 p-2 shadow bg-white"
+                className="d-flex br-3 justify-content-center align-items-center w-100 bg-white"
                 style={{ minHeight: "50vh" }}
               >
-                {loginType === "Patient" ? (
-                  <PatientLogin
-                    setLoginType={setLoginType}
-                    currentSelectedAuth={currentSelectedAuth}
-                  />
-                ) : null}
-                {loginType === "staffMember" ? (
-                  <StaffMember
-                    setLoginType={setLoginType}
-                    currentSelectedAuth={currentSelectedAuth}
-                  />
-                ) : null}
-                {loginType === "Provider" ? (
-                  <Provider
-                    setLoginType={setLoginType}
-                    currentSelectedAuth={currentSelectedAuth}
-                  />
-                ) : null}
-                {loginType === "SuperUser" ? (
-                  <SuperUser
-                    setLoginType={setLoginType}
-                    currentSelectedAuth={currentSelectedAuth}
-                  />
-                ) : null}
+                <div>
+                  {loginType === "Patient" ? (
+                    <PatientLogin
+                      setLoginType={setLoginType}
+                      currentSelectedAuth={currentSelectedAuth}
+                    />
+                  ) : null}
+                  {loginType === "staffMember" ? (
+                    <StaffMember
+                      setLoginType={setLoginType}
+                      currentSelectedAuth={currentSelectedAuth}
+                    />
+                  ) : null}
+                  {loginType === "Provider" ? (
+                    <Provider
+                      setLoginType={setLoginType}
+                      currentSelectedAuth={currentSelectedAuth}
+                    />
+                  ) : null}
+                  {loginType === "SuperUser" ? (
+                    <SuperUser
+                      setLoginType={setLoginType}
+                      currentSelectedAuth={currentSelectedAuth}
+                    />
+                  ) : null}
+                </div>
               </div>
             )}
           </div>

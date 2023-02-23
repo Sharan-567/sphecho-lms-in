@@ -21,6 +21,8 @@ import { useAppDispatch } from "../../store";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import Spinner from "../Spinner";
+import CourseContainer from "./CourseContainer";
+import { useNavigate } from "react-router-dom";
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -104,7 +106,9 @@ const CourseMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Course>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const openModel = (
     course: Course,
@@ -256,17 +260,6 @@ const CourseMangement = () => {
         <ErrorMessage setError={setError}>{error}</ErrorMessage>
       )}
       <div className="bg-white py-2 px-1 br-2">
-        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
-          <h3 className="b-700">Courses</h3>
-          {userState === "staffMember" || userState === "SuperUser" ? (
-            <Button
-              className="bg-adminteritory text-white br-2"
-              onClick={createCourseOpenModal}
-            >
-              Create course
-            </Button>
-          ) : null}
-        </div>
         {showSpinner === "list" ? (
           <Loading />
         ) : courses.length === 0 ? (
@@ -278,17 +271,38 @@ const CourseMangement = () => {
             <p className="text-center">Please try again later</p>
           </>
         ) : (
-          courses.map((item) => {
-            return (
-              <ListItem
-                item={item}
-                title={item.name}
-                key={item.id}
-                openModel={openModel}
-                NoDelete
-              ></ListItem>
-            );
-          })
+          <>
+            <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+              <h3 className="b-700">Courses</h3>
+              {userState === "staffMember" || userState === "SuperUser" ? (
+                <Button
+                  className="bg-adminteritory text-white br-2"
+                  onClick={createCourseOpenModal}
+                >
+                  Create course
+                </Button>
+              ) : null}
+            </div>
+            {courses.map((item, idx) => {
+              return (
+                <div>
+                  <ListItem
+                    item={item}
+                    title={item.name}
+                    key={item.id}
+                    openModel={openModel}
+                    NoDelete
+                    isClickable={true}
+                    id={item.id}
+                    idx={idx}
+                    titleOnClickHandler={(id) => {
+                      navigate(`/coursesMangement/${item.id}/${item.name}/`);
+                    }}
+                  ></ListItem>
+                </div>
+              );
+            })}
+          </>
         )}
       </div>
 

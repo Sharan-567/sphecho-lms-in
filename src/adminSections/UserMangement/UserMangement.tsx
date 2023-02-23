@@ -103,7 +103,7 @@ const UserMangement = () => {
   //send type 1 for update the user //send type 2 for update the user to course // send type 3 for adding user to the course.
   return (
     <div className="container w-75 py-5">
-      <h1 className="mb-2">Users</h1>
+      {/* <h1 className="mb-2">Users</h1>
       <div className="mb-5">
         {(users?.users || []).map((user) => (
           <div key={user._id}>
@@ -124,37 +124,39 @@ const UserMangement = () => {
             />
           </div>
         ))}
-      </div>
-      <h1 className="mb-2">Providers</h1>
-      <div>
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            {(users?.doctors || []).map((user) => (
-              <div key={user._id}>
-                <ListItem
-                  title={user.Name || user?.Email}
-                  email={user.Email}
-                  contact={user.Contact}
-                  update={() => {
-                    setState("updateUser");
-                    setCurrentSelectedUser(user);
-                  }}
-                  addUserToCourseHandler={() => {
-                    setState("addUserToCourse");
-                    setCurrentSelectedUser(user);
-                  }}
-                  addStudentToCourseHandler={() => {
-                    setState("addStudentToCourse");
-                    setCurrentSelectedUser(user);
-                  }}
-                />
-              </div>
-            ))}
-          </>
-        )}
-      </div>
+      </div> */}
+      <>
+        <h1 className="mb-2">Providers</h1>
+        <div>
+          {loading ? (
+            <Loading />
+          ) : (
+            <>
+              {(users?.doctors || []).map((user) => (
+                <div key={user._id}>
+                  <ListItem
+                    title={user.Name || user?.Email}
+                    email={user.Email}
+                    contact={user.Contact}
+                    update={() => {
+                      setState("updateUser");
+                      setCurrentSelectedUser(user);
+                    }}
+                    addUserToCourseHandler={() => {
+                      setState("addUserToCourse");
+                      setCurrentSelectedUser(user);
+                    }}
+                    addStudentToCourseHandler={() => {
+                      setState("addStudentToCourse");
+                      setCurrentSelectedUser(user);
+                    }}
+                  />
+                </div>
+              ))}
+            </>
+          )}
+        </div>
+      </>
     </div>
   );
 };

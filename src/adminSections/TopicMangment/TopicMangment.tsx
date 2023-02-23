@@ -221,7 +221,6 @@ const TopicManagment = () => {
 
   // update
   const updateTopic = (data) => {
-  
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
@@ -242,7 +241,6 @@ const TopicManagment = () => {
           setErrorType("none");
           setShowSpinner("none");
           setSuccess("Topic updated successfully.");
-         
         })
         .catch((err) => {
           setShowSpinner("none");
@@ -267,15 +265,11 @@ const TopicManagment = () => {
       formData.append(key, val);
     });
     axios
-      .post(
-        `${BASE_URL}/master/topic-create/`,
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
+      .post(`${BASE_URL}/master/topic-create/`, formData, {
+        headers: {
+          Authorization: `token ${token}`,
+        },
+      })
       .then((res) => {
         setShowSpinner("none");
         resetForm();
@@ -289,7 +283,6 @@ const TopicManagment = () => {
         setErrorType("create");
         if (error.request) {
           setError(error.response.statusText);
-         
         } else if (error.request) {
           setError(error.request.statusText);
         } else {
@@ -329,7 +322,7 @@ const TopicManagment = () => {
             <p className="text-center">Please try again later</p>
           </>
         ) : (
-          topics.map((item) => {
+          topics.map((item, idx) => {
             return (
               <ListItem
                 //@ts-ignore
@@ -338,6 +331,7 @@ const TopicManagment = () => {
                 key={item.id}
                 openModel={openModel}
                 sm={7}
+                idx={idx}
               ></ListItem>
             );
           })

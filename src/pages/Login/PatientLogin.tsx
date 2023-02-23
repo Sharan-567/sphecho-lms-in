@@ -31,7 +31,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
   const [hash, setHash] = useState("");
   const [token, setToken] = useState("");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     const verifyOtp = async () => {
       if (otp.length === 4) {
@@ -91,26 +91,28 @@ const PatientLogin = ({ setLoginType }: Props) => {
   }, [number]);
 
   return (
-    <div className="p-2 w-100 d-flex flex-column justify-content-center align-items-center">
-      <h1 className="mb-5 text-primary text-center">Patient Login</h1>
+    <div className="px-2 ">
+      <h1 className="text-primary text-center mb-5">Patient Login</h1>
       {error ? <p className="text-danger">{error}</p> : null}
       {stage === "NUMBER" ? (
         <>
           <input
             value={number}
             onChange={(e) => setNumber(e.target.value)}
-            className="py-3 text-center b-600 br-2"
+            className="py-3 mb-3 text-center b-600 br-1"
             placeholder="Mobile Number"
             style={{
               fontSize: "1.2rem",
               border: "1px solid #81a31b",
               display: "block",
+              width: "100%",
             }}
             type="tel"
             maxLength={10}
           />
           <Button
-            className="p-2 px-4 br-3 mt-4 text-white "
+            className="p-2 px-4 br-1 py-3 mt-4 text-white "
+            style={{ width: "10rem" }}
             onClick={handleGetOTP}
           >
             GET OTP
@@ -123,7 +125,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
           <p className="my-1 b-500">Please Enter the Otp</p>
           <OtpInput
             containerStyle={{ padding: "1rem" }}
-            inputStyle={{ padding: ".5rem", width: "3rem" }}
+            inputStyle={{ padding: "1rem .7rem", width: "4rem" }}
             value={otp}
             onChange={setOtp}
             numInputs={4}
@@ -135,7 +137,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
       {stage === "PATIENTS_LIST" ? (
         <div>
           {patientList.length > 0 ? (
-            <>
+            <div>
               <p className="b-500 my-1">Select the Patient</p>
               {(patientList || []).map((patient) => {
                 return (
@@ -150,7 +152,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
                   </div>
                 );
               })}
-            </>
+            </div>
           ) : (
             <NewPatient
               mobile={number}
@@ -161,10 +163,10 @@ const PatientLogin = ({ setLoginType }: Props) => {
       ) : null}
 
       <Button
-        className="bg-black p-2 px-4 mt-4 text-white"
+        className="p-2 px-4 br-1 py-3 bg-black mt-4 text-white ms-2"
         onClick={() => setLoginType(undefined)}
       >
-        Go Back
+        G0 back
       </Button>
     </div>
   );
