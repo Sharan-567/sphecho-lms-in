@@ -306,7 +306,7 @@ const BadgeMangement = () => {
       if (key === "start_date" || key === "end_date") {
         // @ts-ignore
         let date = new Date(val).toLocaleDateString().split("/");
-        let newdate = date[2] + "-" + date[0] + "-" + date[1];
+        let newdate = date[2] + "-" + date[1] + "-" + date[0];
         formData.append(key, newdate);
       } else {
         // @ts-ignore
@@ -353,7 +353,7 @@ const BadgeMangement = () => {
       if (key === "start_date" || key === "end_date") {
         // @ts-ignore
         let date = new Date(val).toLocaleDateString().split("/");
-        let newdate = date[2] + "-" + date[0] + "-" + date[1];
+        let newdate = date[2] + "-" + date[1] + "-" + date[0];
         formData.append(key, newdate);
       } else {
         // @ts-ignore
