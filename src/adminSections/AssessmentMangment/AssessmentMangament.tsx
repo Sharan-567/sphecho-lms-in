@@ -22,6 +22,8 @@ import Loading from "../../sections/Loading";
 import { useAppDispatch } from "../../store";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
+import SingleSelect from "../SingleSelect";
+import AllQuestion from "../AllQuestions";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -54,7 +56,11 @@ const AssessmentMangement = () => {
   //success
   const [success, setSuccess] = useState("");
   const [showCourseSelect, setShowCourseSelect] = useState(false);
+  const [showQuestionsSelect, setShowQuestionSelect] = useState(false);
   const [showCourseError, setShowCourseError] = useState(false);
+  const [showQuestionErrors, setQuestionsError] = useState(false);
+  const [currentSelectCourse, setCurrentSelectedCourse] =
+    React.useState<number>();
 
   const createInitialValues = {
     name: "",
@@ -66,10 +72,24 @@ const AssessmentMangement = () => {
     topic: "",
   };
 
+  const createValidate = () => {
+    if (!currentSelectCourse) {
+      setShowCourseError(true);
+    } else {
+      setShowCourseError(false);
+    }
+    if (multipleQuestionSelected.length <= 0) {
+      setQuestionsError(true);
+    } else {
+      setQuestionsError(false);
+    }
+  };
+
   const creatFormik = useFormik({
     initialValues: createInitialValues,
     enableReinitialize: true,
     validationSchema: createSchema,
+    validate: createValidate,
     onSubmit: (data, { resetForm }) => createAsssessment(data, resetForm),
   });
 
@@ -105,6 +125,10 @@ const AssessmentMangement = () => {
   // update
   const [updatedItem, setUpdatedItem] = useState<Assessment>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
+  const [multipleQuestionSelected, setMultipleQuestions] = React.useState<
+    number[]
+  >([]);
+
   const [updateError, setUpdateError] = useState("");
   const dispatch = useAppDispatch();
 
@@ -288,6 +312,11 @@ const AssessmentMangement = () => {
       // @ts-ignore
       formData.append(key, val);
     });
+    formData.append("course", `${currentSelectCourse}`);
+    formData.append(
+      "question",
+      `${Array.from(new Set(multipleQuestionSelected))}`
+    );
     axios
       .post(`${BASE_URL}/master/assement-create/`, formData, {
         headers: {
@@ -321,6 +350,16 @@ const AssessmentMangement = () => {
   ) => {
     // @ts-ignore
     setUpdatedItem((p) => ({ ...p, [key]: e.target.value }));
+  };
+
+  const getCourseNameById = (id: number) => {
+    let courseName;
+    (courses || []).map((c) => {
+      if (c.id === id) {
+        courseName = c.name;
+      }
+    });
+    return courseName;
   };
 
   return (
@@ -370,139 +409,231 @@ const AssessmentMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-            <Modal.Header closeButton>
-              <Modal.Title>Create assessment</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={creatFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Assessment name</Form.Label>
-                    <Form.Control
-                      name="name"
-                      value={creatFormik.values.name}
-                      onChange={creatFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter Topic Name"
-                    />
-                    {creatFormik.touched.name && creatFormik.errors.name ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.name}
+            {showCourseSelect ? (
+              <div>
+                <Modal.Header closeButton>
+                  <Modal.Title>Select course</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                  <div style={{ height: "70vh", overflow: "scroll" }}>
+                    {(courses || []).map((c, idx) => (
+                      <div>
+                        <SingleSelect
+                          id={c.id}
+                          title={c.name}
+                          idx={idx}
+                          select={currentSelectCourse === c.id}
+                          setCurrent={setCurrentSelectedCourse}
+                        />
                       </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Pre assessment required</Form.Label>
-                    <Form.Select
-                      name="pre_assesment"
-                      required
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.pre_assesment}
+                    ))}
+                  </div>
+
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowCourseSelect(false)}
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>order</Form.Label>
-                    <Form.Control
-                      name="order"
-                      required
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.order}
-                      type="text"
-                    />
-                    {creatFormik.touched.order && creatFormik.errors.order ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.order}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
-
-                <Form.Group as={Col}>
-                  <Form.Label>Max marks</Form.Label>
-                  <Form.Control
-                    name="max_marks"
-                    required
-                    onChange={creatFormik.handleChange}
-                    value={creatFormik.values.max_marks}
-                    type="text"
+                      Next
+                    </Button>
+                  </Modal.Footer>
+                </Modal.Body>
+              </div>
+            ) : showQuestionsSelect ? (
+              <div>
+                <Modal.Header closeButton style={{ marginBottom: "1rem" }}>
+                  <Modal.Title>Select questions for assessment</Modal.Title>
+                </Modal.Header>
+                <div style={{ maxHeight: "70vh", overflowY: "scroll" }}>
+                  <AllQuestion
+                    multipleUsersSelect={multipleQuestionSelected}
+                    setMultipleUserSelect={setMultipleQuestions}
                   />
-                  {creatFormik.touched.max_marks &&
-                  creatFormik.errors.max_marks ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.max_marks}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Min marks to qualify</Form.Label>
-                  <Form.Control
-                    name="min_marks_to_qualify"
-                    required
-                    onChange={creatFormik.handleChange}
-                    value={creatFormik.values.min_marks_to_qualify}
-                    type="text"
-                  />
-                  {creatFormik.touched.min_marks_to_qualify &&
-                  creatFormik.errors.min_marks_to_qualify ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.min_marks_to_qualify}
-                    </div>
-                  ) : null}
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Course</Form.Label>
-                  <Form.Select
-                    required
-                    name="course"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>Select the course</option>
-                    {(courses || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-
-                <Form.Group>
-                  <Form.Label>Topics</Form.Label>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>Select the Topic</option>
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-
+                </div>
                 <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
                   <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
+                    variant="secondary"
+                    onClick={() => {
+                      setShowQuestionSelect(false);
+                    }}
                   >
-                    {showSpinner === "create" && <Spinner />}
-                    Create
+                    Select
                   </Button>
                 </Modal.Footer>
-              </Form>
-            </Modal.Body>
+              </div>
+            ) : (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>Create assessment</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form noValidate onSubmit={creatFormik.handleSubmit}>
+                    <Row className="mb-3">
+                      <Form.Group as={Col}>
+                        <Form.Label>Assessment name</Form.Label>
+                        <Form.Control
+                          name="name"
+                          value={creatFormik.values.name}
+                          onChange={creatFormik.handleChange}
+                          type="text"
+                          required
+                          placeholder="Enter Topic Name"
+                        />
+                        {creatFormik.touched.name && creatFormik.errors.name ? (
+                          <div className="text-danger">
+                            {creatFormik.errors.name}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                      <Form.Group as={Col}>
+                        <Form.Label>Pre assessment required</Form.Label>
+                        <Form.Select
+                          name="pre_assesment"
+                          required
+                          onChange={creatFormik.handleChange}
+                          value={creatFormik.values.pre_assesment}
+                        >
+                          <option value={"True"}>Yes</option>
+                          <option value={"False"}>No</option>
+                        </Form.Select>
+                      </Form.Group>
+                      <Form.Group as={Col}>
+                        <Form.Label>order</Form.Label>
+                        <Form.Control
+                          name="order"
+                          required
+                          onChange={creatFormik.handleChange}
+                          value={creatFormik.values.order}
+                          type="text"
+                        />
+                        {creatFormik.touched.order &&
+                        creatFormik.errors.order ? (
+                          <div className="text-danger">
+                            {creatFormik.errors.order}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                    </Row>
+
+                    <Form.Group as={Col}>
+                      <Form.Label>Max marks</Form.Label>
+                      <Form.Control
+                        name="max_marks"
+                        required
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.max_marks}
+                        type="text"
+                      />
+                      {creatFormik.touched.max_marks &&
+                      creatFormik.errors.max_marks ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.max_marks}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+                    <Form.Group as={Col}>
+                      <Form.Label>Min marks to qualify</Form.Label>
+                      <Form.Control
+                        name="min_marks_to_qualify"
+                        required
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.min_marks_to_qualify}
+                        type="text"
+                      />
+                      {creatFormik.touched.min_marks_to_qualify &&
+                      creatFormik.errors.min_marks_to_qualify ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.min_marks_to_qualify}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+
+                    <Form.Group>
+                      <Form.Label>Course</Form.Label>
+                      <button
+                        className="w-50 p-2 bg-white mb-3"
+                        onClick={() => setShowCourseSelect(true)}
+                        style={{
+                          display: "block",
+                          border: "1px solid #dedede",
+                          borderRadius: ".6rem",
+                        }}
+                      >
+                        {getCourseNameById(
+                          parseInt(updateFormik.values.course)
+                        ) && !currentSelectCourse
+                          ? getCourseNameById(
+                              parseInt(updateFormik.values.course)
+                            )
+                          : getCourseNameById(currentSelectCourse)
+                          ? getCourseNameById(currentSelectCourse)
+                          : "Select the users to select"}
+                      </button>
+                      {showCourseError && !currentSelectCourse ? (
+                        <div className="text-danger">Please Select Course</div>
+                      ) : null}
+                    </Form.Group>
+
+                    <Form.Group>
+                      <Form.Label>Topics</Form.Label>
+                      <Form.Select
+                        required
+                        name="topic"
+                        onChange={creatFormik.handleChange}
+                      >
+                        <option>Select the Topic</option>
+                        {(topics || []).map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
+
+                    <Form.Group className="mt-4">
+                      <Form.Label>Questions</Form.Label>
+                      <button
+                        className="w-50 p-2 bg-white mb-3"
+                        onClick={() => setShowQuestionSelect(true)}
+                        style={{
+                          display: "block",
+                          border: "1px solid #dedede",
+                          borderRadius: ".6rem",
+                        }}
+                      >
+                        {multipleQuestionSelected.length > 0
+                          ? `ids: ${Array.from(
+                              new Set(multipleQuestionSelected)
+                            )}`
+                          : "Select questions"}
+                      </button>
+                      {showQuestionErrors ? (
+                        <div className="text-danger">
+                          Please Select Questions
+                        </div>
+                      ) : null}
+                    </Form.Group>
+
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                      <Button
+                        className="d-flex align-items-center"
+                        variant="admingreen text-white"
+                        type="submit"
+                      >
+                        {showSpinner === "create" && <Spinner />}
+                        Create
+                      </Button>
+                    </Modal.Footer>
+                  </Form>
+                </Modal.Body>
+              </>
+            )}
           </>
         )}
         {currentModal === "delete" && (
@@ -570,139 +701,185 @@ const AssessmentMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-            <Modal.Header closeButton>
-              <Modal.Title>Update assessment</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={updateFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Assessment name</Form.Label>
-                    <Form.Control
-                      name="name"
-                      value={updateFormik.values.name}
-                      onChange={updateFormik.handleChange}
-                      type="text"
-                      required
-                      placeholder="Enter topic name"
-                    />
-                    {updateFormik.touched.name && updateFormik.errors.name ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.name}
+            {showCourseSelect ? (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>Select course</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ height: "70vh", overflow: "scroll" }}>
+                    {(courses || []).map((c, idx) => (
+                      <div>
+                        <SingleSelect
+                          id={c.id}
+                          title={c.name}
+                          idx={idx}
+                          select={currentSelectCourse === c.id}
+                          setCurrent={setCurrentSelectedCourse}
+                        />
                       </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Pre assessment required</Form.Label>
-                    <Form.Select
-                      name="pre_assesment"
-                      required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.pre_assesment}
+                    ))}
+                  </div>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowCourseSelect(false)}
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>order</Form.Label>
-                    <Form.Control
-                      name="order"
-                      required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.order}
-                      type="text"
-                    />
-                    {updateFormik.touched.order && updateFormik.errors.order ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.order}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
+                      Next
+                    </Button>
+                  </Modal.Footer>
+                </Modal.Body>
+              </>
+            ) : (
+              <>
+                {" "}
+                <Modal.Header closeButton>
+                  <Modal.Title>Update assessment</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form noValidate onSubmit={updateFormik.handleSubmit}>
+                    <Row className="mb-3">
+                      <Form.Group as={Col}>
+                        <Form.Label>Assessment name</Form.Label>
+                        <Form.Control
+                          name="name"
+                          value={updateFormik.values.name}
+                          onChange={updateFormik.handleChange}
+                          type="text"
+                          required
+                          placeholder="Enter topic name"
+                        />
+                        {updateFormik.touched.name &&
+                        updateFormik.errors.name ? (
+                          <div className="text-danger">
+                            {updateFormik.errors.name}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                    </Row>
+                    <Row className="mb-3">
+                      <Form.Group as={Col}>
+                        <Form.Label>Pre assessment required</Form.Label>
+                        <Form.Select
+                          name="pre_assesment"
+                          required
+                          onChange={updateFormik.handleChange}
+                          value={updateFormik.values.pre_assesment}
+                        >
+                          <option value={"True"}>Yes</option>
+                          <option value={"False"}>No</option>
+                        </Form.Select>
+                      </Form.Group>
+                      <Form.Group as={Col}>
+                        <Form.Label>order</Form.Label>
+                        <Form.Control
+                          name="order"
+                          required
+                          onChange={updateFormik.handleChange}
+                          value={updateFormik.values.order}
+                          type="text"
+                        />
+                        {updateFormik.touched.order &&
+                        updateFormik.errors.order ? (
+                          <div className="text-danger">
+                            {updateFormik.errors.order}
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                    </Row>
 
-                <Form.Group as={Col}>
-                  <Form.Label>Max marks</Form.Label>
-                  <Form.Control
-                    name="max_marks"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.max_marks}
-                    type="text"
-                  />
-                  {updateFormik.touched.max_marks &&
-                  updateFormik.errors.max_marks ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.max_marks}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Min marks to qualify</Form.Label>
-                  <Form.Control
-                    name="min_marks_to_qualify"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.min_marks_to_qualify}
-                    type="text"
-                  />
-                  {updateFormik.touched.min_marks_to_qualify &&
-                  updateFormik.errors.min_marks_to_qualify ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.min_marks_to_qualify}
-                    </div>
-                  ) : null}
-                </Form.Group>
+                    <Form.Group as={Col}>
+                      <Form.Label>Max marks</Form.Label>
+                      <Form.Control
+                        name="max_marks"
+                        required
+                        onChange={updateFormik.handleChange}
+                        value={updateFormik.values.max_marks}
+                        type="text"
+                      />
+                      {updateFormik.touched.max_marks &&
+                      updateFormik.errors.max_marks ? (
+                        <div className="text-danger">
+                          {updateFormik.errors.max_marks}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+                    <Form.Group as={Col}>
+                      <Form.Label>Min marks to qualify</Form.Label>
+                      <Form.Control
+                        name="min_marks_to_qualify"
+                        required
+                        onChange={updateFormik.handleChange}
+                        value={updateFormik.values.min_marks_to_qualify}
+                        type="text"
+                      />
+                      {updateFormik.touched.min_marks_to_qualify &&
+                      updateFormik.errors.min_marks_to_qualify ? (
+                        <div className="text-danger">
+                          {updateFormik.errors.min_marks_to_qualify}
+                        </div>
+                      ) : null}
+                    </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Course</Form.Label>
-                  <Form.Select
-                    required
-                    name="course"
-                    onChange={updateFormik.handleChange}
-                  >
-                    <option>select the course</option>
-                    {(courses || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Course</Form.Label>
+                      <button
+                        className="w-50 p-2 bg-white mb-3"
+                        onClick={() => setShowCourseSelect(true)}
+                        style={{
+                          display: "block",
+                          border: "1px solid #dedede",
+                          borderRadius: ".6rem",
+                        }}
+                      >
+                        {getCourseNameById(
+                          parseInt(updateFormik.values.course)
+                        ) && !currentSelectCourse
+                          ? getCourseNameById(
+                              parseInt(updateFormik.values.course)
+                            )
+                          : getCourseNameById(currentSelectCourse)
+                          ? getCourseNameById(currentSelectCourse)
+                          : "Select the users to select"}
+                      </button>
+                      {showCourseError && !currentSelectCourse ? (
+                        <div className="text-danger">Please Select Course</div>
+                      ) : null}
+                    </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Topics</Form.Label>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={updateFormik.handleChange}
-                  >
-                    <option>select the topic</option>
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Topics</Form.Label>
+                      <Form.Select
+                        required
+                        name="topic"
+                        onChange={updateFormik.handleChange}
+                      >
+                        <option>select the topic</option>
+                        {(topics || []).map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </Form.Select>
+                    </Form.Group>
 
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "update" && <Spinner />}
-                    Update
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            </Modal.Body>
+                    <Modal.Footer>
+                      <Button variant="secondary" onClick={handleClose}>
+                        Close
+                      </Button>
+                      <Button
+                        className="d-flex align-items-center"
+                        variant="admingreen text-white"
+                        type="submit"
+                      >
+                        {showSpinner === "update" && <Spinner />}
+                        Update
+                      </Button>
+                    </Modal.Footer>
+                  </Form>
+                </Modal.Body>
+              </>
+            )}
           </>
         )}
       </Modal>
