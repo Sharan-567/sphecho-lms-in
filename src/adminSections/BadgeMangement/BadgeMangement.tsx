@@ -113,6 +113,11 @@ const BadgeMangement = () => {
       end_date: currentSelectedItem?.end_date
         ? new Date(currentSelectedItem?.end_date)
         : "",
+      course: currentSelectedItem?.course ? currentSelectedItem?.course : "",
+      topic: currentSelectedItem?.topic ? currentSelectedItem?.topic : "",
+      assesment: currentSelectedItem?.assesment
+        ? currentSelectedItem.assesment
+        : "",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
@@ -310,6 +315,16 @@ const BadgeMangement = () => {
         let date = new Date(val).toLocaleDateString().split("/");
         let newdate = date[2] + "-" + date[1] + "-" + date[0];
         formData.append(key, newdate);
+      } else if (key === "image") {
+        if (typeof val === "string") {
+          fetch(`https://${HOST}${updateFormik.values.image}`)
+            .then((response) => response.blob())
+            .then((blob) => {
+              formData.append("file", blob, "image.jpg");
+            });
+        } else {
+          formData.append(key, val);
+        }
       } else {
         // @ts-ignore
         formData.append(key, val);
@@ -412,6 +427,7 @@ const BadgeMangement = () => {
             <ListItem
               //@ts-ignore
               item={item}
+              NoEdit={true}
               title={item.title}
               key={item.id}
               openModel={openModel}
@@ -858,14 +874,14 @@ const BadgeMangement = () => {
                   </Form.Group>
                 </Row>
 
-                <Form.Group>
-                  <Form.Label>Course</Form.Label>
+                <Form.Group className="mb-3">
+                  <Form.Label>Select the course</Form.Label>
+                  <p>current CourseID: {updateFormik.values.course}</p>
                   <Form.Select
                     required
                     name="course"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>Select the course</option>
                     {(courses || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -873,14 +889,14 @@ const BadgeMangement = () => {
                     ))}
                   </Form.Select>
                 </Form.Group>
-                <Form.Group>
-                  <Form.Label>Topic</Form.Label>
+                <Form.Group className="mb-3">
+                  <Form.Label>Select the Topic</Form.Label>
+                  <p>Current Topic Id: {updateFormik.values.topic}</p>
                   <Form.Select
                     required
                     name="topic"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>Select the Topic</option>
                     {(topics || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
@@ -889,14 +905,14 @@ const BadgeMangement = () => {
                   </Form.Select>
                 </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Assessment</Form.Label>
+                <Form.Group className="mb-3">
+                  <Form.Label>Select the assesment</Form.Label>
+                  <p>current AssessmentId: {updateFormik.values.assesment}</p>
                   <Form.Select
                     required
                     name="assesment"
                     onChange={updateFormik.handleChange}
                   >
-                    <option>Select the assesment</option>
                     {(assessments || []).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}

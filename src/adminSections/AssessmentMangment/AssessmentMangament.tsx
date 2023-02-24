@@ -111,6 +111,9 @@ const AssessmentMangement = () => {
         : "",
       course: currentSelectedItem?.course ? currentSelectedItem.course : "",
       topic: currentSelectedItem?.topic ? currentSelectedItem.topic : "",
+      question: currentSelectedItem?.question
+        ? currentSelectedItem.question.join(",")
+        : "",
     },
     enableReinitialize: true,
     // validationSchema: createSchema,
@@ -151,6 +154,7 @@ const AssessmentMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    setMultipleQuestions([]);
     creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
@@ -272,8 +276,14 @@ const AssessmentMangement = () => {
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
       //@ts-ignore
-      formData.append(key, val);
+      if (key !== "question") {
+        formData.append(key, val);
+      }
     });
+    formData.append(
+      "question",
+      Array.from(new Set(multipleQuestionSelected)).join(",")
+    );
     setShowSpinner("update");
     if (currentSelectedItem) {
       axios
@@ -730,6 +740,28 @@ const AssessmentMangement = () => {
                   </Modal.Footer>
                 </Modal.Body>
               </>
+            ) : showQuestionsSelect ? (
+              <div>
+                <Modal.Header closeButton style={{ marginBottom: "1rem" }}>
+                  <Modal.Title>Select questions for assessment</Modal.Title>
+                </Modal.Header>
+                <div style={{ maxHeight: "70vh", overflowY: "scroll" }}>
+                  <AllQuestion
+                    multipleUsersSelect={multipleQuestionSelected}
+                    setMultipleUserSelect={setMultipleQuestions}
+                  />
+                </div>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setShowQuestionSelect(false);
+                    }}
+                  >
+                    Select
+                  </Button>
+                </Modal.Footer>
+              </div>
             ) : (
               <>
                 {" "}
@@ -849,6 +881,7 @@ const AssessmentMangement = () => {
 
                     <Form.Group>
                       <Form.Label>Topics</Form.Label>
+                      <p>current Topic: {updateFormik.values.topic}</p>
                       <Form.Select
                         required
                         name="topic"
@@ -861,6 +894,35 @@ const AssessmentMangement = () => {
                           </option>
                         ))}
                       </Form.Select>
+                    </Form.Group>
+
+                    <Form.Group className="mt-4">
+                      <p>
+                        current QuestionId:{" "}
+                        {updateFormik.values.question ||
+                          multipleQuestionSelected.join(",")}
+                      </p>
+                      <Form.Label>Questions</Form.Label>
+                      <button
+                        className="w-50 p-2 bg-white mb-3"
+                        onClick={() => setShowQuestionSelect(true)}
+                        style={{
+                          display: "block",
+                          border: "1px solid #dedede",
+                          borderRadius: ".6rem",
+                        }}
+                      >
+                        {multipleQuestionSelected.length > 0
+                          ? `ids: ${Array.from(
+                              new Set(multipleQuestionSelected)
+                            )}`
+                          : "Select questions"}
+                      </button>
+                      {showQuestionErrors ? (
+                        <div className="text-danger">
+                          Please Select Questions
+                        </div>
+                      ) : null}
                     </Form.Group>
 
                     <Modal.Footer>

@@ -25,6 +25,7 @@ import SingleSelect from "../SingleSelect";
 
 //create validation
 const createSchema = Yup.object().shape({
+  module_title: Yup.string(),
   name: Yup.string()
     .required("Topic Name is required")
     .min(3, "Atleast 3 characters required"),
@@ -70,6 +71,7 @@ const TopicManagment = () => {
     assement_required: "False",
     course: "",
     order: "",
+    module_title: "",
   };
 
   const createValidate = () => {
@@ -105,6 +107,9 @@ const TopicManagment = () => {
       : "False",
     order: currentSelectedItem?.order ? currentSelectedItem.order : "",
     course: currentSelectedItem?.course ? currentSelectedItem.course : "",
+    module_title: currentSelectedItem?.module_title
+      ? currentSelectedItem.module_title
+      : "",
   };
 
   const updateFormik = useFormik({
@@ -599,6 +604,24 @@ const TopicManagment = () => {
                         </Form.Select>
                       </Form.Group>
                     </Row>
+
+                    <Row className="my-2">
+                      <Form.Group as={Col}>
+                        <Form.Label>Module title</Form.Label>
+                        <p className="" style={{ fontSize: ".7rem" }}>
+                          Note: module title divides the topics. example this
+                          first topic to to above module
+                        </p>
+                        <Form.Control
+                          name="module_title"
+                          required
+                          onChange={creatFormik.handleChange}
+                          value={creatFormik.values.module_title}
+                          type="text"
+                        />
+                      </Form.Group>
+                    </Row>
+
                     <Form.Group>
                       <Form.Label>Course</Form.Label>
                       <button
@@ -908,6 +931,22 @@ const TopicManagment = () => {
                           <option value={"True"}>Yes</option>
                           <option value={"False"}>No</option>
                         </Form.Select>
+                      </Form.Group>
+                    </Row>
+                    <Row className="my-2">
+                      <Form.Group as={Col}>
+                        <Form.Label>Module title</Form.Label>
+                        <p className="" style={{ fontSize: ".7rem" }}>
+                          Note: module title divides the topics. example this
+                          first topic to to above module
+                        </p>
+                        <Form.Control
+                          name="module_title"
+                          required
+                          onChange={updateFormik.handleChange}
+                          value={updateFormik.values.module_title}
+                          type="text"
+                        />
                       </Form.Group>
                     </Row>
                     <Form.Group>
