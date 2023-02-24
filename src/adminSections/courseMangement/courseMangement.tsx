@@ -23,6 +23,7 @@ import NotFound from "../../sections/NotFound";
 import Spinner from "../Spinner";
 import CourseContainer from "./CourseContainer";
 import { useNavigate } from "react-router-dom";
+import { customAxios } from "../../services/utils";
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -60,6 +61,7 @@ const CourseMangement = () => {
   //success
   const [success, setSuccess] = useState("");
   const [showCreateBtn, setShowCreateBtn] = useState(true);
+  const [showDeleteBtn, setShowDeleteBtn] = useState(true);
 
   const createInitialValues = {
     name: "",
@@ -133,6 +135,7 @@ const CourseMangement = () => {
     setError("");
     setSuccess("");
     setShowCreateBtn(true);
+    setShowDeleteBtn(true);
     creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
@@ -145,10 +148,6 @@ const CourseMangement = () => {
   useEffect(() => {
     getCourseList();
   }, []);
-
-  const deleteCourse = () => {
-    handleClose();
-  };
 
   //get course list
   const getCourseList = () => {
@@ -251,6 +250,37 @@ const CourseMangement = () => {
       });
   };
 
+  // create course
+  const deleteCourse = () => {
+    setShowSpinner("delete");
+
+    const formData = new FormData();
+    formData.append("course", `${currentSelectedItem.id}`);
+    customAxios
+      .post(`/lms_api_v1/master/course-delete/`, formData)
+      .then((res) => {
+        setShowSpinner("none");
+
+        setSuccess("Course is Deleted successfully");
+        getCourseList();
+        setShowDeleteBtn(false);
+        setErrorType("none");
+      })
+      .catch((err) => {
+        setShowSpinner("none");
+        setSuccess("");
+        setShowDeleteBtn(true);
+        setErrorType("create");
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while deleting course",
+          })
+        );
+      });
+  };
+
   const updateOnChangeHandler = (
     e: React.ChangeEvent<HTMLInputElement>,
     key: string
@@ -302,7 +332,6 @@ const CourseMangement = () => {
                     title={item.name}
                     key={item.id}
                     openModel={openModel}
-                    NoDelete
                     isClickable={true}
                     id={item.id}
                     idx={idx}
@@ -495,14 +524,20 @@ const CourseMangement = () => {
             <Modal.Header closeButton>
               <Modal.Title>Delete course</Modal.Title>
             </Modal.Header>
-            <Modal.Body></Modal.Body>
+
+            <Modal.Body>
+              Are you sure want to delete this Course
+              <h5> {currentSelectedItem?.name}</h5>
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-              <Button variant="danger text-white" onClick={deleteCourse}>
-                delete
-              </Button>
+              {showDeleteBtn ? (
+                <Button variant="danger text-white" onClick={deleteCourse}>
+                  delete
+                </Button>
+              ) : null}
             </Modal.Footer>
           </>
         )}

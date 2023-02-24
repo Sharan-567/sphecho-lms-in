@@ -72,11 +72,14 @@ const TopicsList = () => {
 
   useEffect(() => {
     getAllTopics();
-    getAllProgress();
     return () => {
       dispatch(resetTopics());
     };
   }, [courseId]);
+
+  useEffect(() => {
+    getAllProgress();
+  });
 
   const getAllProgress = () => {
     customAxios
