@@ -132,7 +132,7 @@ const AssessementPanel = ({
           background: "white",
           borderRadius: "2.4rem",
           padding: "3rem",
-          overflow: "hidden",
+          overflowY: "scroll",
         }}
       >
         <h4 style={{ fontWeight: "medium", textTransform: "capitalize" }}>

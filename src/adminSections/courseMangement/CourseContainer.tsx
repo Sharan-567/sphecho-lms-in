@@ -166,8 +166,7 @@ const CourseContainer = ({}) => {
                       }}
                     >
                       {t.name &&
-                        t.name.charAt(0).toUpperCase() + t.name.slice(1)}{" "}
-                      nter justify-content-center b-600
+                        t.name.charAt(0).toUpperCase() + t.name.slice(1)}
                     </p>
                   </div>
                 </Col>

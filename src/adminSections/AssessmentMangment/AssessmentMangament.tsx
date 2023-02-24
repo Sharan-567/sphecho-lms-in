@@ -281,11 +281,13 @@ const AssessmentMangement = () => {
 
       formData.append(key, val);
     });
-    formData.set(
-      "question",
-      Array.from(new Set(multipleQuestionSelected)).join(",")
-    );
-    formData.set("course", `${currentSelectCourse}`);
+    if (multipleQuestionSelected.length <= 0) {
+      formData.set(
+        "question",
+        Array.from(new Set(multipleQuestionSelected)).join(",")
+      );
+    }
+    if (!currentSelectCourse) formData.set("course", `${currentSelectCourse}`);
 
     setShowSpinner("update");
     if (currentSelectedItem) {
