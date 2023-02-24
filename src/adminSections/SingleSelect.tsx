@@ -33,7 +33,7 @@ const SingleSelect = (props: Props) => {
       >
         <Row className="d-flex justify-content-between ">
           <Col
-            sm={props.sm || 8}
+            sm={props.sm || 10}
             style={{ cursor: "pointer" }}
             onClick={() => {
               if (showSingleSelect && props.select) {
@@ -49,7 +49,8 @@ const SingleSelect = (props: Props) => {
             <div className="p-2">
               <p className="mt-2 ps-2" style={{ fontSize: "1.1rem" }}>
                 {props.title &&
-                  props.title.charAt(0).toUpperCase() + props.title.slice(1)}
+                  props.title.charAt(0).toUpperCase() +
+                    props.title.slice(1)}{" "}
               </p>
               {props.subTitle && (
                 <p className="tiny">
@@ -61,7 +62,7 @@ const SingleSelect = (props: Props) => {
           </Col>
           <Col style={{ marginTop: "1rem", height: "100%" }}>
             {props.select && (
-              <BsCheckCircleFill className="text-white" size="30" />
+              <BsCheckCircleFill className="text-white ms-auto" size="30" />
             )}
           </Col>
         </Row>

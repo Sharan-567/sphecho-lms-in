@@ -113,8 +113,8 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
             <h4>{course.trainer_name}</h4>
           </div>
           <div className="d-flex align-items-center justify-content-between mb-1">
-            <Link to={`/courses/${course.id}`}>
-              {no_of_topics && no_of_topics > 0 && (
+            {no_of_topics && no_of_topics > 0 && (
+              <Link to={`/courses/${course.id}`}>
                 <Button
                   className="bg-green text-white"
                   style={{
@@ -125,8 +125,8 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
                 >
                   Enter this Course
                 </Button>
-              )}
-            </Link>
+              </Link>
+            )}
             {type === "allCourses" && (
               <h3 className="text-skyBlue b-800">
                 {Number(course.full_amount).toFixed(0) === "0"

@@ -156,6 +156,8 @@ const AssessmentMangement = () => {
     setSuccess("");
     setMultipleQuestions([]);
     creatFormik.setValues(createInitialValues);
+    setShowCourseSelect(false);
+    setShowQuestionSelect(false);
   };
   const handleShow = () => {
     setShow(true);
@@ -276,14 +278,15 @@ const AssessmentMangement = () => {
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
       //@ts-ignore
-      if (key !== "question") {
-        formData.append(key, val);
-      }
+
+      formData.append(key, val);
     });
-    formData.append(
+    formData.set(
       "question",
       Array.from(new Set(multipleQuestionSelected)).join(",")
     );
+    formData.set("course", `${currentSelectCourse}`);
+
     setShowSpinner("update");
     if (currentSelectedItem) {
       axios
@@ -455,11 +458,18 @@ const AssessmentMangement = () => {
                 <Modal.Header closeButton style={{ marginBottom: "1rem" }}>
                   <Modal.Title>Select questions for assessment</Modal.Title>
                 </Modal.Header>
-                <div style={{ maxHeight: "70vh", overflowY: "scroll" }}>
-                  <AllQuestion
-                    multipleUsersSelect={multipleQuestionSelected}
-                    setMultipleUserSelect={setMultipleQuestions}
-                  />
+                <div
+                  style={{
+                    maxHeight: "70vh",
+                    overflowY: "scroll",
+                  }}
+                >
+                  <div className="px-3">
+                    <AllQuestion
+                      multipleUsersSelect={multipleQuestionSelected}
+                      setMultipleUserSelect={setMultipleQuestions}
+                    />
+                  </div>
                 </div>
                 <Modal.Footer>
                   <Button
@@ -563,6 +573,7 @@ const AssessmentMangement = () => {
 
                     <Form.Group>
                       <Form.Label>Course</Form.Label>
+
                       <button
                         className="w-50 p-2 bg-white mb-3"
                         onClick={() => setShowCourseSelect(true)}
@@ -746,10 +757,12 @@ const AssessmentMangement = () => {
                   <Modal.Title>Select questions for assessment</Modal.Title>
                 </Modal.Header>
                 <div style={{ maxHeight: "70vh", overflowY: "scroll" }}>
-                  <AllQuestion
-                    multipleUsersSelect={multipleQuestionSelected}
-                    setMultipleUserSelect={setMultipleQuestions}
-                  />
+                  <div className="px-3">
+                    <AllQuestion
+                      multipleUsersSelect={multipleQuestionSelected}
+                      setMultipleUserSelect={setMultipleQuestions}
+                    />
+                  </div>
                 </div>
                 <Modal.Footer>
                   <Button
@@ -855,6 +868,10 @@ const AssessmentMangement = () => {
 
                     <Form.Group>
                       <Form.Label>Course</Form.Label>
+                      <p className="text-primary">
+                        current CourseId:{" "}
+                        {currentSelectCourse || updateFormik.values.course}
+                      </p>
                       <button
                         className="w-50 p-2 bg-white mb-3"
                         onClick={() => setShowCourseSelect(true)}
@@ -881,7 +898,9 @@ const AssessmentMangement = () => {
 
                     <Form.Group>
                       <Form.Label>Topics</Form.Label>
-                      <p>current Topic: {updateFormik.values.topic}</p>
+                      <p className="text-primary">
+                        current Topic: {updateFormik.values.topic}
+                      </p>
                       <Form.Select
                         required
                         name="topic"
@@ -897,8 +916,8 @@ const AssessmentMangement = () => {
                     </Form.Group>
 
                     <Form.Group className="mt-4">
-                      <p>
-                        current QuestionId:{" "}
+                      <p className="text-primary">
+                        current Question Ids:{" "}
                         {updateFormik.values.question ||
                           multipleQuestionSelected.join(",")}
                       </p>
