@@ -130,6 +130,7 @@ const BadgeMangement = () => {
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
   const dispatch = useAppDispatch();
+  const [showCreateBtn, setShowCreateBtn] = useState(false);
 
   const openModel = (
     badge: Badge,
@@ -139,6 +140,7 @@ const BadgeMangement = () => {
     setUpdatedItem(badge);
     setShow(true);
     setCurrentModal(type);
+    setShowCreateBtn(true);
   };
 
   const createCourseOpenModal = () => {

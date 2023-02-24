@@ -59,6 +59,7 @@ const CourseMangement = () => {
   >("none");
   //success
   const [success, setSuccess] = useState("");
+  const [showCreateBtn, setShowCreateBtn] = useState(false);
 
   const createInitialValues = {
     name: "",
@@ -131,6 +132,7 @@ const CourseMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    setShowCreateBtn(true);
     creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
@@ -231,11 +233,13 @@ const CourseMangement = () => {
         resetForm();
         setSuccess("Course is created successfully");
         getCourseList();
+        setShowCreateBtn(false);
         setErrorType("none");
       })
       .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
+        setShowCreateBtn(true);
         setErrorType("create");
         setError(err.message);
         dispatch(
@@ -261,6 +265,9 @@ const CourseMangement = () => {
     <Container style={{ maxWidth: "820px" }}>
       {error && errorType === "list" && (
         <ErrorMessage setError={setError}>{error}</ErrorMessage>
+      )}
+      {success && (
+        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
       )}
       <div className="bg-white py-2 px-1 br-2">
         {showSpinner === "list" ? (
@@ -467,14 +474,16 @@ const CourseMangement = () => {
                   <Button variant="secondary" onClick={handleClose}>
                     Close
                   </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "create" && <Spinner />}
-                    Create
-                  </Button>
+                  {showCreateBtn && (
+                    <Button
+                      className="d-flex align-items-center"
+                      variant="admingreen text-white"
+                      type="submit"
+                    >
+                      {showSpinner === "create" && <Spinner />}
+                      Create
+                    </Button>
+                  )}
                 </Modal.Footer>
               </Form>
             </Modal.Body>

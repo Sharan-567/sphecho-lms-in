@@ -22,6 +22,7 @@ import { useAppDispatch } from "../../store";
 import NotFound from "../../sections/NotFound";
 import { showToast } from "../../features/toast";
 import * as Yup from "yup";
+import { customAxios } from "../../services/utils";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -269,21 +270,12 @@ const QuestionMangement = () => {
     console.log(data);
     setShowSpinner("create");
     const formData = new FormData();
-    const token = localStorage.getItem("token");
     Object.entries(data).map(([key, val]) => {
       // @ts-ignore
       formData.append(key, val);
     });
-    axios
-      .post(
-        "https://lmsv2.metahos.com/lms_api_v1/master/question-create/",
-        formData,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
+    customAxios
+      .post("/master/question-create/", formData)
       .then((res) => {
         setShowSpinner("none");
         resetForm();
