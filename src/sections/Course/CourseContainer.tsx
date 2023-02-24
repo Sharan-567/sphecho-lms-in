@@ -114,16 +114,18 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
           </div>
           <div className="d-flex align-items-center justify-content-between mb-1">
             <Link to={`/courses/${course.id}`}>
-              <Button
-                className="bg-green text-white"
-                style={{
-                  width: "100%",
-                  padding: ".6rem 1rem",
-                  fontSize: ".9rem",
-                }}
-              >
-                Enter this Course
-              </Button>
+              {no_of_topics && no_of_topics > 0 && (
+                <Button
+                  className="bg-green text-white"
+                  style={{
+                    width: "100%",
+                    padding: ".6rem 1rem",
+                    fontSize: ".9rem",
+                  }}
+                >
+                  Enter this Course
+                </Button>
+              )}
             </Link>
             {type === "allCourses" && (
               <h3 className="text-skyBlue b-800">

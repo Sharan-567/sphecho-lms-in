@@ -88,13 +88,6 @@ const SideNav = () => {
         to: "/certification",
       },
       // {
-      //   id: 3,
-      //   Icon: AiOutlineNotification,
-      //   title: "Webinars",
-      //   to: "/webinars",
-      // },
-
-      // {
       //   id: 4,
       //   Icon: AiOutlineComment,
       //   title: "Community",
@@ -144,12 +137,12 @@ const SideNav = () => {
         Icon: AiOutlineFileProtect,
         to: "/certification",
       },
-      // {
-      //   id: 3,
-      //   Icon: AiOutlineNotification,
-      //   title: "Webinars",
-      //   to: "/webinars",
-      // },
+      {
+        id: 3,
+        Icon: AiOutlineNotification,
+        title: "Webinars",
+        to: "/webinars",
+      },
       {
         id: 5,
         Icon: AiOutlineUser,

@@ -89,7 +89,7 @@ const CourseContainer = ({}) => {
             style={{ marginBottom: "2rem" }}
           >
             <h2 className="title-container">Course: {courseName}</h2>
-            <div>create module</div>
+            <div></div>
           </div>
           {(topics || []).map((t) => (
             <div key={t.id}>

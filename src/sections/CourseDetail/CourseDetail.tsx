@@ -141,9 +141,9 @@ const CourseDetail = () => {
                 </h3>
 
                 {showGoto ? (
-                  <Link to={`/courses/${course?.id}`}>
+                  <Link to={`/courses`}>
                     <Button className="bg-green text-white px-5 py-3">
-                      Go to course
+                      Go to courses
                     </Button>
                   </Link>
                 ) : (
