@@ -59,7 +59,7 @@ const CourseMangement = () => {
   >("none");
   //success
   const [success, setSuccess] = useState("");
-  const [showCreateBtn, setShowCreateBtn] = useState(false);
+  const [showCreateBtn, setShowCreateBtn] = useState(true);
 
   const createInitialValues = {
     name: "",
@@ -269,7 +269,19 @@ const CourseMangement = () => {
       {success && (
         <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
       )}
+
       <div className="bg-white py-2 px-1 br-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+          <h3 className="b-700">Courses</h3>
+          {userState === "staffMember" || userState === "SuperUser" ? (
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create course
+            </Button>
+          ) : null}
+        </div>
         {showSpinner === "list" ? (
           <Loading />
         ) : courses.length === 0 ? (
@@ -282,17 +294,6 @@ const CourseMangement = () => {
           </>
         ) : (
           <>
-            <div className="d-flex justify-content-between mb-3 mt-2 p-2">
-              <h3 className="b-700">Courses</h3>
-              {userState === "staffMember" || userState === "SuperUser" ? (
-                <Button
-                  className="bg-adminteritory text-white br-2"
-                  onClick={createCourseOpenModal}
-                >
-                  Create course
-                </Button>
-              ) : null}
-            </div>
             {courses.map((item, idx) => {
               return (
                 <div>

@@ -53,6 +53,8 @@ const AssessmentMangement = () => {
   >("none");
   //success
   const [success, setSuccess] = useState("");
+  const [showCourseSelect, setShowCourseSelect] = useState(false);
+  const [showCourseError, setShowCourseError] = useState(false);
 
   const createInitialValues = {
     name: "",
