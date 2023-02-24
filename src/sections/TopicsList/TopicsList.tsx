@@ -110,26 +110,37 @@ const TopicsList = () => {
     }
   }, [modules]);
 
-  const isCompleted = (topic: Topic | Assessment): boolean => {
-    if (courseId && `${courseId}` in progress) {
-      if ("content" in topic && progress[courseId].topics.includes(topic.id)) {
-        return true;
-      } else if (progress[courseId].assesments.includes(topic.id)) {
-        return true;
+  const isCompleted = React.useCallback(
+    (topic: Topic | Assessment) => {
+      if (courseId && `${courseId}` in progress) {
+        if (
+          "content" in topic &&
+          progress[courseId].topics.includes(topic.id)
+        ) {
+          return true;
+        } else if (progress[courseId].assesments.includes(topic.id)) {
+          return true;
+        }
       }
-    }
-    return false;
-  };
+      return false;
+    },
+    [courseId]
+  );
 
-  const isModuleCompleted = (module: Module): boolean => {
-    for (let i = 0; i < module.topics.length; i++) {
-      let completed = isCompleted(module.topics[i]);
-      if (!completed) {
-        return false;
+  React.useEffect(() => {});
+
+  const isModuleCompleted = useCallback(
+    (module: Module) => {
+      for (let i = 0; i < module.topics.length; i++) {
+        let completed = isCompleted(module.topics[i]);
+        if (!completed) {
+          return false;
+        }
       }
-    }
-    return true;
-  };
+      return true;
+    },
+    [modules]
+  );
 
   if (modules.length === 0) {
     return (

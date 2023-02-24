@@ -29,7 +29,7 @@ const MultiPleSelect = <T extends {}>(props: ListItem<T>) => {
       >
         <Row className="d-flex justify-content-between">
           <Col
-            sm={props.sm || 8}
+            sm={props.sm || 10}
             style={{ cursor: "pointer" }}
             onClick={() => {
               if (showMultiSelct) {
