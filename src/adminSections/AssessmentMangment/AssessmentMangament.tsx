@@ -24,6 +24,9 @@ import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import SingleSelect from "../SingleSelect";
 import AllQuestion from "../AllQuestions";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -61,6 +64,9 @@ const AssessmentMangement = () => {
   const [showQuestionErrors, setQuestionsError] = useState(false);
   const [currentSelectCourse, setCurrentSelectedCourse] =
     React.useState<number>();
+  const [searchTxt, setSearchTxt] = useState("");
+  const fuse = new Fuse(assements, { keys: ["name"] });
+  const result = fuse.search(searchTxt);
 
   const createInitialValues = {
     name: "",
@@ -382,12 +388,19 @@ const AssessmentMangement = () => {
       <div className="bg-white py-2 px-1 br-2">
         <div className="d-flex justify-content-between mb-3 mt-2 p-2">
           <h3 className="b-700">Assessments</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createCourseOpenModal}
-          >
-            Create assessment
-          </Button>
+          <div className="d-flex justify-content-between">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder="Search assessments"
+            />
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create assessment
+            </Button>
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -399,6 +412,19 @@ const AssessmentMangement = () => {
             </h3>
             <p className="text-center">Please try again later</p>
           </>
+        ) : searchTxt.length > 0 ? (
+          result.map(({ item }) => {
+            return (
+              <ListItem
+                //@ts-ignore
+                item={item}
+                title={item.name}
+                key={item.id}
+                openModel={openModel}
+                sm={7}
+              ></ListItem>
+            );
+          })
         ) : (
           assements.map((item) => {
             return (

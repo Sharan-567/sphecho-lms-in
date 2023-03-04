@@ -9,3 +9,9 @@
     background-color: #d4d4d4 !important;
   }
 }
+
+.item-container {
+  &:hover {
+    background-color: #dddddd !important;
+  }
+}

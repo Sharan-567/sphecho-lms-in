@@ -30,6 +30,9 @@ import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import Loading from "../../sections/Loading";
 import { customAxios } from "../../services/utils";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 function getMinDate() {
   return new Date(2000, 1, 1);
@@ -136,6 +139,9 @@ const BadgeMangement = () => {
   const [updateError, setUpdateError] = useState("");
   const dispatch = useAppDispatch();
   const [showCreateBtn, setShowCreateBtn] = useState(false);
+  const [searchTxt, setSearchTxt] = useState("");
+  const fuse = new Fuse(badges || [], { keys: ["name"] });
+  const result = fuse.search(searchTxt);
 
   const openModel = (
     badge: Badge,
@@ -403,14 +409,21 @@ const BadgeMangement = () => {
   return (
     <Container style={{ maxWidth: "820px" }}>
       <div className="bg-white py-2 px-1 br-2">
-        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container">
           <h3 className="b-700">Badges</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createCourseOpenModal}
-          >
-            Create badge
-          </Button>
+          <div className="d-flex justify-content-between">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder={"Search badges"}
+            />
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create badge
+            </Button>
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -422,6 +435,18 @@ const BadgeMangement = () => {
             </h3>
             <p className="text-center">Please try again later</p>
           </>
+        ) : searchTxt.length > 0 ? (
+          (result || []).map(({ item }) => (
+            <ListItem
+              //@ts-ignore
+              item={item}
+              NoEdit={true}
+              title={item.title}
+              key={item.id}
+              openModel={openModel}
+              sm={7}
+            ></ListItem>
+          ))
         ) : (
           (badges || []).map((item) => (
             <ListItem

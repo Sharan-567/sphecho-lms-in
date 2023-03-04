@@ -27,6 +27,10 @@ import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import Loading from "../../sections/Loading";
 import { customAxios } from "../../services/utils";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -98,6 +102,9 @@ const CertificationManagment = () => {
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
   const dispatch = useAppDispatch();
+  const [searchTxt, setSearchTxt] = useState("");
+  const fuse = new Fuse(certificates || [], { keys: ["name"] });
+  const result = fuse.search(searchTxt);
 
   const [editorState, setEditorState] = useState<EditorState>(
     EditorState.createEmpty()
@@ -333,14 +340,21 @@ const CertificationManagment = () => {
   return (
     <Container style={{ maxWidth: "820px" }}>
       <div className="bg-white py-2 px-1 br-2">
-        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container">
           <h3 className="b-700">Certificates</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createCourseOpenModal}
-          >
-            Create certificate
-          </Button>
+          <div className="d-flex justify-content-between">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder={"Search certificates"}
+            />
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create certificate
+            </Button>
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -352,6 +366,19 @@ const CertificationManagment = () => {
             </h3>
             <p className="text-center">Please try again later</p>
           </>
+        ) : searchTxt.length > 0 ? (
+          (result || []).map(({ item }) => {
+            return (
+              <ListItem
+                item={item}
+                title={item.title}
+                key={item.id}
+                openModel={openModel}
+                NoEdit
+                sm={9}
+              ></ListItem>
+            );
+          })
         ) : (
           (certificates || []).map((item) => {
             return (
@@ -515,21 +542,44 @@ const CertificationManagment = () => {
                         )}
                       </p>
                     </div>
-                    <Editor
-                      editorStyle={{ minHeight: "15rem" }}
-                      editorState={editorState}
-                      onEditorStateChange={onEditorStateChange}
-                      mention={{
-                        separator: " ",
-                        trigger: "{",
-                        suggestions: Object.entries(certificateTags || {}).map(
-                          ([key, value]) => ({
+                    <div>
+                      <Editor
+                        editorStyle={{ minHeight: "15rem", background: "none" }}
+                        editorState={editorState}
+                        onEditorStateChange={onEditorStateChange}
+                        toolbar={{
+                          options: [
+                            "inline",
+                            "fontSize",
+                            "fontFamily",
+                            "textAlign",
+                            "colorPicker",
+                            "link",
+                            "embedded",
+                            "emoji",
+                            "image",
+                            "remove",
+                            "history",
+                          ],
+                          inline: {
+                            options: ["bold", "italic", "underline"],
+                          },
+                          fontSize: {
+                            options: [12, 14, 16, 18, 24, 30, 36],
+                          },
+                        }}
+                        mention={{
+                          separator: " ",
+                          trigger: "{",
+                          suggestions: Object.entries(
+                            certificateTags || {}
+                          ).map(([key, value]) => ({
                             text: key,
                             value: value.slice(1),
-                          })
-                        ),
-                      }}
-                    />
+                          })),
+                        }}
+                      />
+                    </div>
                   </>
                 )}
                 {!showEditor ? (

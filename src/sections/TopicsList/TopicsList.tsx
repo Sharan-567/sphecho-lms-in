@@ -70,17 +70,6 @@ const TopicsList = () => {
     }
   }, [courseId]);
 
-  useEffect(() => {
-    getAllTopics();
-    return () => {
-      dispatch(resetTopics());
-    };
-  }, [courseId]);
-
-  useEffect(() => {
-    getAllProgress();
-  });
-
   const getAllProgress = () => {
     customAxios
       .get(`student/student-progress/`)
@@ -99,7 +88,16 @@ const TopicsList = () => {
   };
 
   useEffect(() => {
+    getAllTopics();
+    getAllProgress();
+    return () => {
+      dispatch(resetTopics());
+    };
+  }, [courseId]);
+
+  useEffect(() => {
     let added = false;
+    getAllProgress();
     if (modules && modules?.length > 0) {
       modules?.forEach((module) => {
         module?.topics.forEach((topic) => {
@@ -113,37 +111,28 @@ const TopicsList = () => {
     }
   }, [modules]);
 
-  const isCompleted = React.useCallback(
-    (topic: Topic | Assessment) => {
-      if (courseId && `${courseId}` in progress) {
-        if (
-          "content" in topic &&
-          progress[courseId].topics.includes(topic.id)
-        ) {
-          return true;
-        } else if (progress[courseId].assesments.includes(topic.id)) {
-          return true;
-        }
-      }
-      return false;
-    },
-    [courseId]
-  );
-
-  const isModuleCompleted = useCallback(
-    (module: Module) => {
-      if (module && module?.topics) {
-        for (let i = 0; i < module?.topics.length; i++) {
-          let completed = isCompleted(module?.topics[i]);
-          if (!completed) {
-            return false;
-          }
-        }
+  const isCompleted = (topic: Topic | Assessment) => {
+    if (courseId && `${courseId}` in progress) {
+      if ("content" in topic && progress[courseId].topics.includes(topic.id)) {
+        return true;
+      } else if (progress[courseId].assesments.includes(topic.id)) {
         return true;
       }
-    },
-    [modules]
-  );
+    }
+    return false;
+  };
+
+  const isModuleCompleted = (module: Module) => {
+    if (module && module?.topics) {
+      for (let i = 0; i < module?.topics.length; i++) {
+        let completed = isCompleted(module?.topics[i]);
+        if (!completed) {
+          return false;
+        }
+      }
+      return true;
+    }
+  };
 
   if (modules?.length === 0) {
     return (

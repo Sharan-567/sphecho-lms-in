@@ -23,6 +23,9 @@ import NotFound from "../../sections/NotFound";
 import { showToast } from "../../features/toast";
 import * as Yup from "yup";
 import { customAxios } from "../../services/utils";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -117,6 +120,9 @@ const QuestionMangement = () => {
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
   const dispatch = useAppDispatch();
+  const [searchTxt, setSearchTxt] = useState("");
+  const fuse = new Fuse(questions || [], { keys: ["name"] });
+  const result = fuse.search(searchTxt);
 
   const openModel = (
     question: Question,
@@ -310,12 +316,19 @@ const QuestionMangement = () => {
       <div className="bg-white py-2 px-1 br-2">
         <div className="d-flex justify-content-between mb-3 mt-2 p-2">
           <h3 className="b-700">Questions</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createCourseOpenModal}
-          >
-            Create question
-          </Button>
+          <div className="d-flex justify-content-between header-container ">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder={"Search questions"}
+            />
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create question
+            </Button>
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -327,6 +340,17 @@ const QuestionMangement = () => {
             </h3>
             <p className="text-center">Please try again later</p>
           </>
+        ) : searchTxt.length > 0 ? (
+          (result || []).map(({ item }) => (
+            <ListItem
+              //@ts-ignore
+              item={item}
+              title={item.question}
+              key={item.id}
+              openModel={openModel}
+              sm={7}
+            ></ListItem>
+          ))
         ) : (
           (questions || []).map((item) => (
             <ListItem

@@ -22,6 +22,9 @@ import Loading from "../../sections/Loading";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import SingleSelect from "../SingleSelect";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -59,6 +62,10 @@ const TopicManagment = () => {
   const [success, setSuccess] = useState("");
   const [currentSelectCourse, setCurrentSelectedCourse] =
     React.useState<number>();
+  const [searchTxt, setSearchTxt] = useState("");
+
+  const fuse = new Fuse(topics, { keys: ["name"] });
+  const topicsResult = fuse.search(searchTxt);
 
   const createInitialValues = {
     name: "",
@@ -353,14 +360,17 @@ const TopicManagment = () => {
   return (
     <Container style={{ maxWidth: "820px" }}>
       <div className="bg-white py-2 px-1 br-2">
-        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container ">
           <h3 className="b-700">Topics</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createCourseOpenModal}
-          >
-            Create topic
-          </Button>
+          <div className="d-flex justify-content-between">
+            <SearchBtn searchtxt={searchTxt} setSearchTxt={setSearchTxt} />
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createCourseOpenModal}
+            >
+              Create topic
+            </Button>
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -373,19 +383,35 @@ const TopicManagment = () => {
             <p className="text-center">Please try again later</p>
           </>
         ) : (
-          topics.map((item, idx) => {
-            return (
-              <ListItem
-                //@ts-ignore
-                item={item}
-                title={item.name}
-                key={item.id}
-                openModel={openModel}
-                sm={7}
-                idx={idx}
-              ></ListItem>
-            );
-          })
+          <>
+            {searchTxt.length > 0
+              ? (topicsResult || []).map(({ item }, idx) => {
+                  return (
+                    <ListItem
+                      //@ts-ignore
+                      item={item}
+                      title={item.name}
+                      key={item.id}
+                      openModel={openModel}
+                      sm={7}
+                      idx={idx}
+                    ></ListItem>
+                  );
+                })
+              : topics.map((item, idx) => {
+                  return (
+                    <ListItem
+                      //@ts-ignore
+                      item={item}
+                      title={item.name}
+                      key={item.id}
+                      openModel={openModel}
+                      sm={7}
+                      idx={idx}
+                    ></ListItem>
+                  );
+                })}
+          </>
         )}
       </div>
 
@@ -490,7 +516,7 @@ const TopicManagment = () => {
                         // value={creatFormik.values.info_image}
                       />
                       {/* @ts-ignore */}
-                      {updateFormik.values.info_image instanceof File && (
+                      {creatFormik.values.info_image instanceof File && (
                         <img
                           className="mt-3"
                           style={{ width: "8rem" }}

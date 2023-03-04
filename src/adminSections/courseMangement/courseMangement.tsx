@@ -24,6 +24,10 @@ import Spinner from "../Spinner";
 import CourseContainer from "./CourseContainer";
 import { useNavigate } from "react-router-dom";
 import { customAxios } from "../../services/utils";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
+
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -111,9 +115,12 @@ const CourseMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Course>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const [searchTxt, setSearchTxt] = useState("");
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const fuse = new Fuse(courses, { keys: ["name"] });
+  const result = fuse.search(searchTxt);
 
   const openModel = (
     course: Course,
@@ -257,7 +264,7 @@ const CourseMangement = () => {
     const formData = new FormData();
     formData.append("course", `${currentSelectedItem.id}`);
     customAxios
-      .post(`/lms_api_v1/master/course-delete/`, formData)
+      .post(`/master/course-delete/`, formData)
       .then((res) => {
         setShowSpinner("none");
 
@@ -270,7 +277,7 @@ const CourseMangement = () => {
         setShowSpinner("none");
         setSuccess("");
         setShowDeleteBtn(true);
-        setErrorType("create");
+        setErrorType("delete");
         setError(err.message);
         dispatch(
           showToast({
@@ -301,16 +308,23 @@ const CourseMangement = () => {
       )}
 
       <div className="bg-white py-2 px-1 br-2">
-        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container">
           <h3 className="b-700">Courses</h3>
-          {userState === "staffMember" || userState === "SuperUser" ? (
-            <Button
-              className="bg-adminteritory text-white br-2"
-              onClick={createCourseOpenModal}
-            >
-              Create course
-            </Button>
-          ) : null}
+          <div className="d-flex justify-content-between">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder={"Search Courses"}
+            />
+            {userState === "staffMember" || userState === "SuperUser" ? (
+              <Button
+                className="bg-adminteritory text-white br-2"
+                onClick={createCourseOpenModal}
+              >
+                Create course
+              </Button>
+            ) : null}
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -324,24 +338,47 @@ const CourseMangement = () => {
           </>
         ) : (
           <>
-            {courses.map((item, idx) => {
-              return (
-                <div>
-                  <ListItem
-                    item={item}
-                    title={item.name}
-                    key={item.id}
-                    openModel={openModel}
-                    isClickable={true}
-                    id={item.id}
-                    idx={idx}
-                    titleOnClickHandler={(id) => {
-                      navigate(`/coursesMangement/${item.id}/${item.name}/`);
-                    }}
-                  ></ListItem>
-                </div>
-              );
-            })}
+            {searchTxt.length > 0
+              ? (result || []).map(({ item }, idx) => {
+                  return (
+                    <div>
+                      <ListItem
+                        item={item}
+                        title={item.name}
+                        key={item.id}
+                        openModel={openModel}
+                        isClickable={true}
+                        id={item.id}
+                        idx={idx}
+                        titleOnClickHandler={(id) => {
+                          navigate(
+                            `/coursesMangement/${item.id}/${item.name}/`
+                          );
+                        }}
+                      ></ListItem>
+                    </div>
+                  );
+                })
+              : courses.map((item, idx) => {
+                  return (
+                    <div>
+                      <ListItem
+                        item={item}
+                        title={item.name}
+                        key={item.id}
+                        openModel={openModel}
+                        isClickable={true}
+                        id={item.id}
+                        idx={idx}
+                        titleOnClickHandler={(id) => {
+                          navigate(
+                            `/coursesMangement/${item.id}/${item.name}/`
+                          );
+                        }}
+                      ></ListItem>
+                    </div>
+                  );
+                })}
           </>
         )}
       </div>

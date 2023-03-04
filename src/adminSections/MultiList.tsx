@@ -42,12 +42,15 @@ const MultiPleSelect = <T extends {}>(props: ListItem<T>) => {
             }}
           >
             <div className="p-2">
-              <p className="mt-2 ps-2" style={{ fontSize: "1.1rem" }}>
+              <p
+                className="mt-2 ps-2"
+                style={{ fontSize: "1.1rem", wordBreak: "break-word" }}
+              >
                 {props.title &&
                   props.title.charAt(0).toUpperCase() + props.title.slice(1)}
               </p>
               {props.subTitle && (
-                <p className="tiny">
+                <p className="tiny" style={{ wordBreak: "break-word" }}>
                   {props.subTitle.charAt(0).toUpperCase() +
                     props.subTitle.slice(1)}
                 </p>
