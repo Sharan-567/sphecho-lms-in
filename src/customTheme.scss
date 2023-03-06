@@ -120,6 +120,12 @@ $skyBlue: rgb(14, 156, 240);
 
 // drop shadow
 
+.add-hover {
+  &:hover {
+    background-color: #cccccc I !important;
+  }
+}
+
 .shadow {
   -webkit-box-shadow: 10px 10px 58px 13px rgba(245, 245, 245, 1);
   -moz-box-shadow: 10px 10px 58px 13px rgba(245, 245, 245, 1);

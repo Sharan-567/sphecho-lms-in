@@ -713,18 +713,56 @@ const TopicManagment = () => {
             </Modal.Footer>
           </>
         )}
+
         {currentModal === "read" && (
           <>
             <Modal.Header closeButton>
-              <Modal.Title>Detail of topic</Modal.Title>
+              <Modal.Title>Detail of Topic</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
-                <div key={k} className="d-flex">
-                  <p className="b-700 me-2">{k}: </p>
-                  <p>{(v || "").toString()}</p>
-                </div>
-              ))}
+              {Object.entries(currentSelectedItem || {}).map(([k, v]) =>
+                v ? (
+                  <>
+                    <div key={k} className="d-flex my-2">
+                      <div
+                        className="b-700 me-2 p-3 text- bg-graydark"
+                        style={{
+                          minWidth: "30%",
+                          borderRadius: "0.5rem",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {k === "caption_file_url"
+                          ? "Caption Url"
+                          : k === "assement_required"
+                          ? "Assessment required"
+                          : k === "min_marks_to_qualify"
+                          ? "Min Marks "
+                          : k === "max_marks"
+                          ? "Max marks "
+                          : k}
+                      </div>
+
+                      <div
+                        className="b-700 me-2 p-3 w-100 add-hover "
+                        style={{
+                          borderRadius: "0.5rem",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {k === "info_image" ? (
+                          <img
+                            src={`https://${HOST}${v}`}
+                            style={{ width: "15rem" }}
+                          />
+                        ) : (
+                          (v || "").toString()
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ) : null
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button

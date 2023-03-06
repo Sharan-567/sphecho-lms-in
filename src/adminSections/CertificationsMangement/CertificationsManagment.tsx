@@ -103,7 +103,7 @@ const CertificationManagment = () => {
   const [updateError, setUpdateError] = useState("");
   const dispatch = useAppDispatch();
   const [searchTxt, setSearchTxt] = useState("");
-  const fuse = new Fuse(certificates || [], { keys: ["name"] });
+  const fuse = new Fuse(certificates || [], { keys: ["title"] });
   const result = fuse.search(searchTxt);
 
   const [editorState, setEditorState] = useState<EditorState>(

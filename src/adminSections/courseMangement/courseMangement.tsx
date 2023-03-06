@@ -584,12 +584,35 @@ const CourseMangement = () => {
               <Modal.Title>Detail of course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
-                <div key={k} className="d-flex">
-                  <p className="b-700 me-2">{k}: </p>
-                  <p>{(v || "").toString()}</p>
-                </div>
-              ))}
+              {Object.entries(currentSelectedItem || {}).map(([k, v]) =>
+                v ? (
+                  <div key={k} className="d-flex my-2">
+                    <div
+                      className="b-700 me-2 p-3 text-black bg-graydark"
+                      style={{ minWidth: "25%", borderRadius: "0.5rem" }}
+                    >
+                      {k}
+                    </div>
+
+                    <div
+                      className="b-700 me-2 p-3 w-100 add-hover"
+                      style={{
+                        borderRadius: "0.5rem",
+                        wordBreak: "break-word",
+                      }}
+                    >
+                      {k === "info_image" || k === "trainer_image" ? (
+                        <img
+                          src={`https://${HOST}${v}`}
+                          style={{ width: "15rem" }}
+                        />
+                      ) : (
+                        (v || "").toString()
+                      )}
+                    </div>
+                  </div>
+                ) : null
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button
@@ -601,7 +624,6 @@ const CourseMangement = () => {
             </Modal.Footer>
           </>
         )}
-
         {currentModal === "update" && (
           <>
             {error && errorType === "update" && (
