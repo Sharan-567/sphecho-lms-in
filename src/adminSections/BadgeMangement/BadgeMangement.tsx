@@ -727,8 +727,8 @@ const BadgeMangement = () => {
                           wordBreak: "break-word",
                         }}
                       >
-                        {k === "caption_file_url"
-                          ? "Caption Url"
+                        {k === "image"
+                          ? "Badge"
                           : k === "assement_required"
                           ? "Assessment required"
                           : k === "min_marks_to_qualify"
@@ -745,7 +745,7 @@ const BadgeMangement = () => {
                           wordBreak: "break-word",
                         }}
                       >
-                        {k === "info_image" ? (
+                        {k === "image" ? (
                           <img
                             src={`https://${HOST}${v}`}
                             style={{ width: "15rem" }}

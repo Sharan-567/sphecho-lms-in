@@ -27,7 +27,6 @@ import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import Loading from "../../sections/Loading";
 import { customAxios } from "../../services/utils";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import SearchBtn from "../SearchBtn";
 import Fuse from "fuse.js";
 import "../main.scss";

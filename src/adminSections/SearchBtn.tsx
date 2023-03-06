@@ -17,6 +17,7 @@ const SearchBtn = ({ searchtxt, setSearchTxt, placeholder }) => {
     <motion.div
       className="bg-graydark br-4 d-flex justify-content-left align-items-center px-3 py-3 me-2"
       animate={{ width: bigInput ? "100%" : "4rem" }}
+      transition={{ type: "keyframes", ease: "linear" }}
       style={{ overflow: "hidden" }}
     >
       <motion.input
