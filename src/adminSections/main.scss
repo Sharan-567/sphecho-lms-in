@@ -4,3 +4,13 @@
     flex-direction: column !important;
   }
 }
+
+.clear {
+  * {
+    all: initial !important;
+  }
+}
+
+.editorc {
+  aspect-ratio: 1 / 2;
+}

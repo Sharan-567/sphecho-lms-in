@@ -30,6 +30,7 @@ import { customAxios } from "../../services/utils";
 import SearchBtn from "../SearchBtn";
 import Fuse from "fuse.js";
 import "../main.scss";
+import JoditEditor, { Jodit } from "jodit-react";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -71,6 +72,7 @@ const CertificationManagment = () => {
   //success
   const [success, setSuccess] = useState("");
   const [showDeleteBtn, setShowDeleteButton] = useState(true);
+  const [content, setContent] = useState();
 
   const createInitialValues = {
     title: "",
@@ -86,9 +88,16 @@ const CertificationManagment = () => {
     initialValues: createInitialValues,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => {
-      console.log(editorState.getCurrentContent());
-      const markup = draftToHtml(convertToRaw(editorState.getCurrentContent()));
-      data["text"] = markup;
+      let hdata = `<html><style>
+    @page {
+        size: 660pt 500pt;
+    }
+    </style><body style="background:
+    url(${dataImage})
+    no-repeat
+    left center;background-size: contain;">${content}</body> </html>`;
+      data["text"] = hdata;
+      console.log(hdata);
       createCertificate(data, resetForm);
     },
   });
@@ -104,9 +113,47 @@ const CertificationManagment = () => {
   const [searchTxt, setSearchTxt] = useState("");
   const fuse = new Fuse(certificates || [], { keys: ["title"] });
   const result = fuse.search(searchTxt);
+  const [bgImage, setBgImage] = useState("");
+  const [dataImage, setDataImg] = useState();
+  const [showbg, setShowBg] = useState(false);
 
-  const [editorState, setEditorState] = useState<EditorState>(
-    EditorState.createEmpty()
+  const config = React.useMemo(
+    () => ({
+      readonly: false,
+      editorCssClass: "editorc",
+      iframe: true,
+      width: "1190px",
+      iframeStyle: bgImage
+        ? `body{width:100%;height: 49rem;background: url(${URL.createObjectURL(
+            bgImage
+          )}); background-size: contain; background-repeat: no-repeat; z-index: -100}`
+        : "",
+
+      showWordsCounter: false,
+      showXPathInStatusbar: false,
+      removeButtons: [
+        "source",
+        "fullsize",
+        "about",
+        "outdent",
+        "indent",
+        "video",
+        // "preview",
+        "table",
+        "fontsize",
+        "superscript",
+        "subscript",
+        "file",
+        "eraser",
+        "copyformat",
+      ],
+
+      uploader: {
+        url: "/api/upload",
+        insertImageAsBase64URI: true,
+      },
+    }),
+    [showbg]
   );
 
   const openModel = (
@@ -131,6 +178,7 @@ const CertificationManagment = () => {
     setSuccess("");
     setShowEditor(false);
     creatFormik.setValues(createInitialValues);
+    setShowBg(false);
   };
   const handleShow = () => {
     setShow(true);
@@ -332,8 +380,13 @@ const CertificationManagment = () => {
     });
   };
 
-  const onEditorStateChange = (editorState: EditorState) => {
-    setEditorState(editorState);
+  const renderHtml = (htmlString) => {
+    return <div dangerouslySetInnerHTML={{ __html: htmlString }}></div>;
+  };
+
+  const onBlur = (newContent) => {
+    console.log(newContent);
+    setContent(newContent);
   };
 
   return (
@@ -444,13 +497,21 @@ const CertificationManagment = () => {
                         type="file"
                         required
                         placeholder="Upload background image"
-                        onChange={(e) =>
+                        onChange={(e) => {
                           creatFormik.setFieldValue(
                             "background_image",
                             //@ts-ignore
                             e.currentTarget.files[0]
-                          )
-                        }
+                          );
+                          setBgImage(e.currentTarget.files[0]);
+                          const reader = new FileReader();
+                          reader.onload = function (e) {
+                            const dataUri = e.target.result;
+                            setDataImg(dataUri);
+                          };
+                          reader.readAsDataURL(e.currentTarget.files[0]);
+                          setShowBg(true);
+                        }}
                         // value={creatFormik.values.info_image}
                       />
                       {creatFormik.touched.background_image &&
@@ -542,41 +603,10 @@ const CertificationManagment = () => {
                       </p>
                     </div>
                     <div>
-                      <Editor
-                        editorStyle={{ minHeight: "15rem", background: "none" }}
-                        editorState={editorState}
-                        onEditorStateChange={onEditorStateChange}
-                        toolbar={{
-                          options: [
-                            "inline",
-                            "fontSize",
-                            "fontFamily",
-                            "textAlign",
-                            "colorPicker",
-                            "link",
-                            "embedded",
-                            "emoji",
-                            "image",
-                            "remove",
-                            "history",
-                          ],
-                          inline: {
-                            options: ["bold", "italic", "underline"],
-                          },
-                          fontSize: {
-                            options: [12, 14, 16, 18, 24, 30, 36],
-                          },
-                        }}
-                        mention={{
-                          separator: " ",
-                          trigger: "{",
-                          suggestions: Object.entries(
-                            certificateTags || {}
-                          ).map(([key, value]) => ({
-                            text: key,
-                            value: value.slice(1),
-                          })),
-                        }}
+                      <JoditEditor
+                        value={content}
+                        config={config}
+                        onChange={onBlur}
                       />
                     </div>
                   </>

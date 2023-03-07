@@ -241,6 +241,7 @@ const QuestionMangement = () => {
       // @ts-ignore
       formData.append(key, val);
     });
+    formData.set("topic", `${topics[0].id}`);
     setShowSpinner("update");
     if (currentSelectedItem) {
       axios
@@ -280,6 +281,7 @@ const QuestionMangement = () => {
       // @ts-ignore
       formData.append(key, val);
     });
+    formData.set("topic", `${topics[0].id}`);
     customAxios
       .post("/master/question-create/", formData)
       .then((res) => {
@@ -538,21 +540,6 @@ const QuestionMangement = () => {
                       {creatFormik.errors.marks}
                     </div>
                   ) : null}
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Topic</Form.Label>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>select the topic</option>
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
                 </Form.Group>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
@@ -838,21 +825,6 @@ const QuestionMangement = () => {
                       {updateFormik.errors.marks}
                     </div>
                   ) : null}
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Topic</Form.Label>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={updateFormik.handleChange}
-                  >
-                    <option>select the Topic</option>
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
                 </Form.Group>
                 <Modal.Footer>
                   <Button variant="secondary" onClick={handleClose}>
