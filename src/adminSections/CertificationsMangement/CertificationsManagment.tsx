@@ -88,19 +88,31 @@ const CertificationManagment = () => {
     initialValues: createInitialValues,
     validationSchema: createSchema,
     onSubmit: (data, { resetForm }) => {
-      let hdata = `<html><style>
-    @page {
-        size: 660pt 500pt;
-    }
-    </style><body style="background:
-    url(${dataImage})
-    no-repeat
-    left center;background-size: contain;">${content}</body> </html>`;
+      let hdata = `<html>
+                  <head>
+                    <style>
+                        @page {
+                          size: 660pt 500pt;
+                        }
+                    </style>
+                  </head>
+                  <body>
+                  <div>
+                        <img src="${dataImage}" width="50%", object-fit="center" />
+                  </div>
+                     
+                  </body>
+                  </html>
+                          `;
       data["text"] = hdata;
       console.log(hdata);
       createCertificate(data, resetForm);
     },
   });
+
+  //  <div style="background:url(${dataImage});background-size: contain; background-repeat: no-repeat; min-height:775px;padding-top: 1.3rem;padding-left: 1rem">
+  //    <p>cool</p>
+  //  </div>;
 
   // modal handlers
   const [show, setShow] = useState(false);
@@ -116,6 +128,7 @@ const CertificationManagment = () => {
   const [bgImage, setBgImage] = useState("");
   const [dataImage, setDataImg] = useState();
   const [showbg, setShowBg] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   const config = React.useMemo(
     () => ({
@@ -608,6 +621,36 @@ const CertificationManagment = () => {
                         config={config}
                         onChange={onBlur}
                       />
+                      <button
+                        onClick={() => {
+                          setPreview(true);
+                          setTimeout(() => {
+                            setPreview(false);
+                          }, 30000);
+                        }}
+                      >
+                        show
+                      </button>
+
+                      {preview &&
+                        renderHtml(
+                          `<html>
+                  <head>
+                    <style>
+                        @page {
+                          size: 660pt 500pt;
+                        }
+                    </style>
+                  </head>
+                  <body>
+                  <div>
+                        <img src="${dataImage}" width="50%", object-fit="center" />
+                  </div>
+                     
+                  </body>
+                  </html>
+                          `
+                        )}
                     </div>
                   </>
                 )}
