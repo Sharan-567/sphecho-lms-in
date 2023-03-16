@@ -12,7 +12,7 @@ import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
 import { logout } from "../../features/auth";
-import {
+import courses, {
   addAllCourses,
   addUserCourses,
   addUserTopic,
@@ -374,9 +374,13 @@ const Main = () => {
                         className="bg-skyBlue text-white p-2 b-900"
                       >{`>`}</span>
                     )}
-                    items={(latestCourses || []).map((course) => (
-                      <Card key={course.id} course={course} />
-                    ))}
+                    items={(latestCourses || []).map((course) =>
+                      course.featured ? (
+                        <Card key={course.id} course={course} />
+                      ) : (
+                        ""
+                      )
+                    )}
                   />
                 </div>
               </Col>

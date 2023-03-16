@@ -83,7 +83,7 @@ const SideNav = () => {
       },
       {
         id: 3,
-        title: "certification",
+        title: "My certificaties",
         Icon: AiOutlineFileProtect,
         to: "/certification",
       },
@@ -133,7 +133,7 @@ const SideNav = () => {
       },
       {
         id: 101,
-        title: "Certification",
+        title: "My certificates",
         Icon: AiOutlineFileProtect,
         to: "/certification",
       },

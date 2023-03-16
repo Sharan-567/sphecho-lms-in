@@ -72,8 +72,6 @@ const TopicManagment = () => {
   const courseFuse = new Fuse(courses, { keys: ["name"] });
   const courseSearchResult = courseFuse.search(courseSelectSearch);
 
-  console.log(courseSearchResult);
-
   const createInitialValues = {
     name: "",
     video: "",
@@ -269,12 +267,11 @@ const TopicManagment = () => {
     Object.entries(data || {}).forEach(([key, val]) => {
       if (key === "course" && currentSelectCourse) {
         if (val !== currentSelectCourse) {
-          formData.append(key, `${currentSelectCourse}`);
-          console.log(val, currentSelectCourse);
+          formData.set(key, `${currentSelectCourse}`);
         }
       } else {
         //@ts-ignore
-        formData.append(key, val);
+        formData.set(key, val);
       }
     });
     setShowSpinner("update");
@@ -307,7 +304,7 @@ const TopicManagment = () => {
     }
   };
 
-  const getCourseNameById = (id: number) => {
+  const getCourseNameById = (id?: number) => {
     let courseName;
     (courses || []).map((c) => {
       if (c.id === id) {
@@ -327,7 +324,7 @@ const TopicManagment = () => {
         // @ts-ignore
         formData.append(key, val);
       });
-      formData.append("course", `${currentSelectCourse}`);
+      formData.set("course", `${currentSelectCourse}`);
       axios
         .post(`${BASE_URL}/master/topic-create/`, formData, {
           headers: {
@@ -371,7 +368,11 @@ const TopicManagment = () => {
         <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container ">
           <h3 className="b-700">Topics</h3>
           <div className="d-flex justify-content-between">
-            <SearchBtn searchtxt={searchTxt} setSearchTxt={setSearchTxt} />
+            <SearchBtn
+              placeholder={"Search topic"}
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+            />
             <Button
               className="bg-adminteritory text-white br-2"
               onClick={createCourseOpenModal}
@@ -1084,10 +1085,10 @@ const TopicManagment = () => {
                           }}
                         >
                           {getCourseNameById(
-                            parseInt(updateFormik.values.course)
+                            parseInt(updateFormik.values.course as string)
                           ) && !currentSelectCourse
                             ? getCourseNameById(
-                                parseInt(updateFormik.values.course)
+                                parseInt(updateFormik.values.course as string)
                               )
                             : getCourseNameById(currentSelectCourse)
                             ? getCourseNameById(currentSelectCourse)

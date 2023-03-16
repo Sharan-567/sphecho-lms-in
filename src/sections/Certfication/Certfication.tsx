@@ -8,6 +8,7 @@ import { convertToObject } from "./helpers";
 import Empty from "../Empty";
 import LoadingEl from "../Loading";
 import { motion, AnimatePresence } from "framer-motion";
+import { Document, pdfjs, Page } from "react-pdf";
 
 type Certification = {
   id: number;
@@ -30,6 +31,8 @@ const Certification = () => {
   const [certificationList, setCertificationList] = useState<Certification[]>(
     []
   );
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
   const [badgeList, setBadgeList] = useState<Badge[]>();
   const [error, setError] = useState("");
   const [showCertificate, setShowCertificate] = useState(false);
@@ -69,6 +72,7 @@ const Certification = () => {
       const headers = {
         Authorization: "token " + token,
       };
+
       fetch(`${BASE_URL}/student/certificate/${id}/`, {
         method: "GET",
         headers,
@@ -119,6 +123,10 @@ const Certification = () => {
     );
   }
 
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
   if (showCertificate) {
     return (
       <div
@@ -133,12 +141,27 @@ const Certification = () => {
           <BsArrowLeft size="25" className="text-primary" />
           <p>Back</p>
         </Button>
-        <embed
-          width={"100%"}
-          height="100%"
+        {/* <embed
+          width={"80%"}
+          height={"97%"}
           src={pdf + "#toolbar=0&navpanes=0&scrollbar=0"}
           type="application/pdf"
-        />
+        /> */}
+        <div
+          className="pdf-container"
+          style={{
+            margin: "auto",
+            maxWidth: "90%",
+            overflow: "hidden",
+            color: "white",
+            background: "white",
+            overflowY: "hidden",
+          }}
+        >
+          <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+            <Page pageNumber={pageNumber} />
+          </Document>
+        </div>
       </div>
     );
   }

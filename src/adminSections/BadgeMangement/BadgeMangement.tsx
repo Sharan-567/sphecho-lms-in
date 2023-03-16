@@ -33,6 +33,8 @@ import { customAxios } from "../../services/utils";
 import SearchBtn from "../SearchBtn";
 import Fuse from "fuse.js";
 import "../main.scss";
+import SearchBar from "../SearchBar";
+import SingleSelect from "../SingleSelect";
 
 function getMinDate() {
   return new Date(2000, 1, 1);
@@ -82,6 +84,10 @@ const BadgeMangement = () => {
   >("none");
   //success
   const [success, setSuccess] = useState("");
+  const [showCourseSelect, setShowCourseSelect] = useState(false);
+  const [showCourseError, setShowCourseError] = useState(false);
+  const [currentSelectCourse, setCurrentSelectedCourse] =
+    React.useState<number>();
 
   const createInitialValues = {
     title: "",
@@ -92,7 +98,6 @@ const BadgeMangement = () => {
     start_date: "",
     end_date: "",
     course: "",
-    assesment: "",
     topic: "",
   };
 
@@ -118,9 +123,6 @@ const BadgeMangement = () => {
         : "",
       course: currentSelectedItem?.course ? currentSelectedItem?.course : "",
       topic: currentSelectedItem?.topic ? currentSelectedItem?.topic : "",
-      assesment: currentSelectedItem?.assesment
-        ? currentSelectedItem.assesment
-        : "",
     },
     enableReinitialize: true,
     validationSchema: createSchema,
@@ -143,6 +145,11 @@ const BadgeMangement = () => {
   const fuse = new Fuse(badges || [], { keys: ["title"] });
   const result = fuse.search(searchTxt);
 
+  const [courseSelectSearch, setCourseSelectSearchTxt] = useState("");
+
+  const courseFuse = new Fuse(courses, { keys: ["name"] });
+  const courseSearchResult = courseFuse.search(courseSelectSearch);
+
   const openModel = (
     badge: Badge,
     type: "create" | "delete" | "update" | "read"
@@ -163,6 +170,8 @@ const BadgeMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    setCurrentSelectedCourse(undefined);
+    setCourseSelectSearchTxt("");
     creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
@@ -321,21 +330,18 @@ const BadgeMangement = () => {
         let date = new Date(val).toLocaleDateString().split("/");
         let newdate = date[2] + "-" + date[1] + "-" + date[0];
         formData.append(key, newdate);
-      } else if (key === "image") {
-        if (typeof val === "string") {
-          fetch(`https://${HOST}${updateFormik.values.image}`)
-            .then((response) => response.blob())
-            .then((blob) => {
-              formData.append("file", blob, "image.jpg");
-            });
-        } else {
-          formData.append(key, val);
+      } else if (key === "course") {
+        if (val !== currentSelectCourse) {
+          formData.set(key, `${currentSelectCourse}`);
         }
+      } else if (key === "image") {
+        if (val instanceof File) formData.append(key, val);
       } else {
         // @ts-ignore
         formData.append(key, val);
       }
     });
+
     setShowSpinner("update");
     if (currentSelectedItem) {
       axios
@@ -351,7 +357,6 @@ const BadgeMangement = () => {
           setShowSpinner("none");
           setSuccess("Badge updated successfully.");
           getBadgeList();
-          console.log(res.data);
         })
         .catch((err) => {
           setShowSpinner("none");
@@ -383,6 +388,7 @@ const BadgeMangement = () => {
         formData.append(key, val);
       }
     });
+    formData.set("course", `${currentSelectCourse}`);
     customAxios
       .post("/master/badge-create/", formData)
       .then((res) => {
@@ -404,6 +410,16 @@ const BadgeMangement = () => {
           })
         );
       });
+  };
+
+  const getCourseNameById = (id?: number) => {
+    let courseName;
+    (courses || []).map((c) => {
+      if (c.id === id) {
+        courseName = c.name;
+      }
+    });
+    return courseName;
   };
 
   return (
@@ -440,7 +456,6 @@ const BadgeMangement = () => {
             <ListItem
               //@ts-ignore
               item={item}
-              NoEdit={true}
               title={item.title}
               key={item.id}
               openModel={openModel}
@@ -452,7 +467,6 @@ const BadgeMangement = () => {
             <ListItem
               //@ts-ignore
               item={item}
-              NoEdit={true}
               title={item.title}
               key={item.id}
               openModel={openModel}
@@ -471,210 +485,260 @@ const BadgeMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-            <Modal.Header closeButton>
-              <Modal.Title>Create badge</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={creatFormik.handleSubmit}>
-                <Form.Group className="b-3">
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
-                    name="title"
-                    value={creatFormik.values.title}
-                    onChange={creatFormik.handleChange}
-                    type="text"
-                    required
-                    placeholder="Enter topic title"
-                  />
-                  {creatFormik.touched.title && creatFormik.errors.title ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.title}
+            {showCourseSelect ? (
+              <div>
+                <Modal.Header closeButton>
+                  <Modal.Title>Select course</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                  <div style={{ maxWidth: "40rem", margin: "auto" }}>
+                    <div className="p-3">
+                      <SearchBar
+                        placeholder="Search course"
+                        selectSearchTxt={courseSelectSearch}
+                        setSelectSearchTxt={setCourseSelectSearchTxt}
+                      />
                     </div>
-                  ) : null}
-                </Form.Group>
-
-                <Row className="mb-3">
-                  <Form.Group className="mb-3">
-                    <Form.Label>Image</Form.Label>
-                    <Form.Control
-                      name="image"
-                      type="file"
-                      required
-                      placeholder="Upload badge image"
-                      onChange={(e) =>
-                        creatFormik.setFieldValue(
-                          "image",
-                          //@ts-ignore
-                          e.currentTarget.files[0]
-                        )
-                      }
-                      // value={creatFormik.values.image}
-                    />
-                    {creatFormik.touched.image && creatFormik.errors.image ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.image}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>On complition</Form.Label>
-                    <Form.Select
-                      required
-                      name="on_complition"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.on_complition}
+                    <div style={{ height: "70vh", overflow: "scroll" }}>
+                      {courseSearchResult.length > 0
+                        ? (courseSearchResult || []).map(({ item: c }, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))
+                        : (courses || []).map((c, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowCourseSelect(false)}
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {creatFormik.touched.on_complition &&
-                    creatFormik.errors.on_complition ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.on_complition}
-                      </div>
-                    ) : null}
-                  </Form.Group>
+                      Next
+                    </Button>
+                  </Modal.Footer>
+                </Modal.Body>
+              </div>
+            ) : (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>Create badge</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                    <Form noValidate onSubmit={creatFormik.handleSubmit}>
+                      <Form.Group className="b-3">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control
+                          name="title"
+                          value={creatFormik.values.title}
+                          onChange={creatFormik.handleChange}
+                          type="text"
+                          required
+                          placeholder="Enter topic title"
+                        />
+                        {creatFormik.touched.title &&
+                        creatFormik.errors.title ? (
+                          <div className="text-danger">
+                            {creatFormik.errors.title}
+                          </div>
+                        ) : null}
+                      </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>On attend</Form.Label>
-                    <Form.Select
-                      required
-                      name="on_attend"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.on_attend}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {creatFormik.touched.on_attend &&
-                    creatFormik.errors.on_attend ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.on_attend}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
+                      <Row className="mb-3">
+                        <Form.Group className="mb-3">
+                          <Form.Label>Image</Form.Label>
+                          <Form.Control
+                            name="image"
+                            type="file"
+                            required
+                            placeholder="Upload badge image"
+                            onChange={(e) =>
+                              creatFormik.setFieldValue(
+                                "image",
+                                //@ts-ignore
+                                e.currentTarget.files[0]
+                              )
+                            }
+                            // value={creatFormik.values.image}
+                          />
+                          {creatFormik.touched.image &&
+                          creatFormik.errors.image ? (
+                            <div className="text-danger">
+                              {creatFormik.errors.image}
+                            </div>
+                          ) : null}
+                        </Form.Group>
 
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Number of badges</Form.Label>
-                    <Form.Control
-                      name="numbers"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.numbers}
-                      type="text"
-                      required
-                      placeholder="1,2.."
-                    />
-                    {creatFormik.touched.numbers &&
-                    creatFormik.errors.numbers ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.numbers}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>Start date</Form.Label>
-                    <DatePicker
-                      style={{ background: "red" }}
-                      name="start_date"
-                      dateFomart="DD/MM/YYYY"
-                      customInput={<CustomInput />}
-                      selected={creatFormik.values.start_date}
-                      onChange={(date: Date) =>
-                        creatFormik.setFieldValue("start_date", date)
-                      }
-                    />
-                    {creatFormik.touched.start_date &&
-                    creatFormik.errors.start_date ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.start_date}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>End date</Form.Label>
-                    <DatePicker
-                      name="end_date"
-                      customInput={<CustomInput />}
-                      dateFomart="DD/MM/YYYY"
-                      selected={creatFormik.values.end_date}
-                      onChange={(date: Date) =>
-                        creatFormik.setFieldValue("end_date", date)
-                      }
-                    />
-                    {creatFormik.touched.end_date &&
-                    creatFormik.errors.end_date ? (
-                      <div className="text-danger">
-                        {creatFormik.errors.end_date}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
+                        <Form.Group as={Col}>
+                          <Form.Label>On complition</Form.Label>
+                          <Form.Select
+                            required
+                            name="on_complition"
+                            onChange={creatFormik.handleChange}
+                            value={creatFormik.values.on_complition}
+                          >
+                            <option value={"True"}>Yes</option>
+                            <option value={"False"}>No</option>
+                          </Form.Select>
+                          {creatFormik.touched.on_complition &&
+                          creatFormik.errors.on_complition ? (
+                            <div className="text-danger">
+                              {creatFormik.errors.on_complition}
+                            </div>
+                          ) : null}
+                        </Form.Group>
 
-                <Form.Group>
-                  <Form.Label>Course</Form.Label>
-                  <Form.Select
-                    required
-                    name="course"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>select the course</option>
-                    {(courses || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Topic</Form.Label>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>select the topic</option>
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>On attend</Form.Label>
+                          <Form.Select
+                            required
+                            name="on_attend"
+                            onChange={creatFormik.handleChange}
+                            value={creatFormik.values.on_attend}
+                          >
+                            <option value={"True"}>Yes</option>
+                            <option value={"False"}>No</option>
+                          </Form.Select>
+                          {creatFormik.touched.on_attend &&
+                          creatFormik.errors.on_attend ? (
+                            <div className="text-danger">
+                              {creatFormik.errors.on_attend}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                      </Row>
 
-                <Form.Group>
-                  <Form.Label>Assessment</Form.Label>
-                  <Form.Select
-                    required
-                    name="assesment"
-                    onChange={creatFormik.handleChange}
-                  >
-                    <option>select the assesment</option>
-                    {(assessments || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                      <Row className="mb-3">
+                        <Form.Group as={Col}>
+                          <Form.Label>Number of badges</Form.Label>
+                          <Form.Control
+                            name="numbers"
+                            onChange={creatFormik.handleChange}
+                            value={creatFormik.values.numbers}
+                            type="text"
+                            required
+                            placeholder="1,2.."
+                          />
+                          {creatFormik.touched.numbers &&
+                          creatFormik.errors.numbers ? (
+                            <div className="text-danger">
+                              {creatFormik.errors.numbers}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>Start date</Form.Label>
+                          <DatePicker
+                            style={{ background: "red" }}
+                            name="start_date"
+                            dateFomart="DD/MM/YYYY"
+                            customInput={<CustomInput />}
+                            selected={creatFormik.values.start_date}
+                            onChange={(date: Date) =>
+                              creatFormik.setFieldValue("start_date", date)
+                            }
+                          />
+                          {creatFormik.touched.start_date &&
+                          creatFormik.errors.start_date ? (
+                            <div className="text-danger">
+                              {creatFormik.errors.start_date}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>End date</Form.Label>
+                          <DatePicker
+                            name="end_date"
+                            customInput={<CustomInput />}
+                            dateFomart="DD/MM/YYYY"
+                            selected={creatFormik.values.end_date}
+                            onChange={(date: Date) =>
+                              creatFormik.setFieldValue("end_date", date)
+                            }
+                          />
+                          {creatFormik.touched.end_date &&
+                          creatFormik.errors.end_date ? (
+                            <div className="text-danger">
+                              {creatFormik.errors.end_date}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                      </Row>
 
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "create" && <Spinner />}
-                    Create
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            </Modal.Body>
+                      <Form.Group>
+                        <Form.Label>Course</Form.Label>
+                        <button
+                          className="w-50 p-2 bg-white mb-3"
+                          onClick={() => setShowCourseSelect(true)}
+                          style={{
+                            display: "block",
+                            border: "1px solid #dedede",
+                            borderRadius: ".6rem",
+                          }}
+                        >
+                          {currentSelectCourse
+                            ? getCourseNameById(currentSelectCourse)
+                            : "Select the users to select"}
+                        </button>
+                        {showCourseError && !currentSelectCourse ? (
+                          <div className="text-danger">
+                            Please Select Course
+                          </div>
+                        ) : null}
+                      </Form.Group>
+
+                      <Form.Group>
+                        <Form.Label>Topic</Form.Label>
+                        <Form.Select
+                          required
+                          name="topic"
+                          onChange={creatFormik.handleChange}
+                        >
+                          <option>select the topic</option>
+                          {(topics || []).map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                        <Button
+                          className="d-flex align-items-center"
+                          variant="admingreen text-white"
+                          type="submit"
+                        >
+                          {showSpinner === "create" && <Spinner />}
+                          Create
+                        </Button>
+                      </Modal.Footer>
+                    </Form>
+                  </div>
+                </Modal.Body>
+              </>
+            )}
           </>
         )}
         {currentModal === "delete" && (
@@ -779,225 +843,276 @@ const BadgeMangement = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-            <Modal.Header closeButton>
-              <Modal.Title>Edit badge</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={updateFormik.handleSubmit}>
-                <Form.Group className="b-3">
-                  <Form.Label>Title</Form.Label>
-                  <Form.Control
-                    name="title"
-                    value={updateFormik.values.title}
-                    onChange={updateFormik.handleChange}
-                    type="text"
-                    required
-                    placeholder="Enter badge title"
-                  />
-                  {updateFormik.touched.title && updateFormik.errors.title ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.title}
+            {showCourseSelect ? (
+              <div>
+                <Modal.Header closeButton>
+                  <Modal.Title>Select course</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                  <div style={{ maxWidth: "40rem", margin: "auto" }}>
+                    <div className="p-3">
+                      <SearchBar
+                        placeholder="Search course"
+                        selectSearchTxt={courseSelectSearch}
+                        setSelectSearchTxt={setCourseSelectSearchTxt}
+                      />
                     </div>
-                  ) : null}
-                </Form.Group>
-
-                <Row className="mb-3">
-                  <Form.Group className="mb-3">
-                    <Form.Label>Image</Form.Label>
-                    <Form.Control
-                      name="image"
-                      type="file"
-                      required
-                      placeholder="Upload info image"
-                      onChange={(e) =>
-                        updateFormik.setFieldValue(
-                          "image",
-                          //@ts-ignore
-                          e.currentTarget.files[0]
-                        )
-                      }
-                      // value={updateFormik.values.image}
-                    />
-                    {typeof updateFormik.values.image === "string" && (
-                      <img
-                        className="mt-3"
-                        style={{ width: "8rem" }}
-                        src={`https://${HOST}${updateFormik.values.image}`}
-                      />
-                    )}
-                    {/* @ts-ignore */}
-                    {updateFormik.values.image instanceof File && (
-                      <img
-                        className="mt-3"
-                        style={{ width: "8rem" }}
-                        src={URL.createObjectURL(updateFormik.values.image)}
-                      />
-                    )}
-                    {updateFormik.touched.image && updateFormik.errors.image ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.image}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>On complition</Form.Label>
-                    <Form.Select
-                      required
-                      name="on_complition"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.on_complition}
+                    <div style={{ height: "70vh", overflow: "scroll" }}>
+                      {courseSearchResult.length > 0
+                        ? (courseSearchResult || []).map(({ item: c }, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))
+                        : (courses || []).map((c, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowCourseSelect(false)}
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {updateFormik.touched.on_complition &&
-                    updateFormik.errors.on_complition ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.on_complition}
-                      </div>
-                    ) : null}
-                  </Form.Group>
+                      Next
+                    </Button>
+                  </Modal.Footer>
+                </Modal.Body>
+              </div>
+            ) : (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>Edit badge</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                    <Form noValidate onSubmit={updateFormik.handleSubmit}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Title</Form.Label>
+                        <Form.Control
+                          name="title"
+                          value={updateFormik.values.title}
+                          onChange={updateFormik.handleChange}
+                          type="text"
+                          required
+                          placeholder="Enter badge title"
+                        />
+                        {updateFormik.touched.title &&
+                        updateFormik.errors.title ? (
+                          <div className="text-danger">
+                            {updateFormik.errors.title}
+                          </div>
+                        ) : null}
+                      </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>On attend</Form.Label>
-                    <Form.Select
-                      required
-                      name="on_attend"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.on_attend}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {updateFormik.touched.on_attend &&
-                    updateFormik.errors.on_attend ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.on_attend}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
+                      <Row className="mb-3">
+                        <Form.Group className="mb-3">
+                          <Form.Label>Image</Form.Label>
+                          <Form.Control
+                            name="image"
+                            type="file"
+                            required
+                            placeholder="Upload info image"
+                            onChange={(e) =>
+                              updateFormik.setFieldValue(
+                                "image",
+                                //@ts-ignore
+                                e.currentTarget.files[0]
+                              )
+                            }
+                            // value={updateFormik.values.image}
+                          />
+                          {typeof updateFormik.values.image === "string" && (
+                            <img
+                              className="mt-3"
+                              style={{ width: "8rem" }}
+                              src={`https://${HOST}${updateFormik.values.image}`}
+                            />
+                          )}
+                          {/* @ts-ignore */}
+                          {updateFormik.values.image instanceof File && (
+                            <img
+                              className="mt-3"
+                              style={{ width: "8rem" }}
+                              src={URL.createObjectURL(
+                                updateFormik.values.image
+                              )}
+                            />
+                          )}
+                          {updateFormik.touched.image &&
+                          updateFormik.errors.image ? (
+                            <div className="text-danger">
+                              {updateFormik.errors.image}
+                            </div>
+                          ) : null}
+                        </Form.Group>
 
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Number of badges</Form.Label>
-                    <Form.Control
-                      name="numbers"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.numbers}
-                      type="text"
-                      required
-                      placeholder="1,2.."
-                    />
-                    {updateFormik.touched.numbers &&
-                    updateFormik.errors.numbers ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.numbers}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>Start date</Form.Label>
-                    <DatePicker
-                      style={{ background: "red" }}
-                      name="start_date"
-                      dateFomart="DD/MM/YYYY"
-                      customInput={<CustomInput />}
-                      selected={updateFormik.values.start_date}
-                      onChange={(date: Date) =>
-                        updateFormik.setFieldValue("start_date", date)
-                      }
-                    />
-                    {updateFormik.touched.start_date &&
-                    updateFormik.errors.start_date ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.start_date}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                  <Form.Group as={Col}>
-                    <Form.Label>End date</Form.Label>
-                    <DatePicker
-                      name="end_date"
-                      customInput={<CustomInput />}
-                      dateFomart="DD/MM/YYYY"
-                      selected={updateFormik.values.end_date}
-                      onChange={(date: Date) =>
-                        updateFormik.setFieldValue("end_date", date)
-                      }
-                    />
-                    {updateFormik.touched.end_date &&
-                    updateFormik.errors.end_date ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.end_date}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-                </Row>
+                        <Form.Group className="mb-3" as={Col}>
+                          <Form.Label>On complition</Form.Label>
+                          <Form.Select
+                            required
+                            name="on_complition"
+                            onChange={updateFormik.handleChange}
+                            value={updateFormik.values.on_complition}
+                          >
+                            <option value={"True"}>Yes</option>
+                            <option value={"False"}>No</option>
+                          </Form.Select>
+                          {updateFormik.touched.on_complition &&
+                          updateFormik.errors.on_complition ? (
+                            <div className="text-danger">
+                              {updateFormik.errors.on_complition}
+                            </div>
+                          ) : null}
+                        </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Select the course</Form.Label>
-                  <p>current CourseID: {updateFormik.values.course}</p>
-                  <Form.Select
-                    required
-                    name="course"
-                    onChange={updateFormik.handleChange}
-                  >
-                    {(courses || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                  <Form.Label>Select the Topic</Form.Label>
-                  <p>Current Topic Id: {updateFormik.values.topic}</p>
-                  <Form.Select
-                    required
-                    name="topic"
-                    onChange={updateFormik.handleChange}
-                  >
-                    {(topics || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>On attend</Form.Label>
+                          <Form.Select
+                            required
+                            name="on_attend"
+                            onChange={updateFormik.handleChange}
+                            value={updateFormik.values.on_attend}
+                          >
+                            <option value={"True"}>Yes</option>
+                            <option value={"False"}>No</option>
+                          </Form.Select>
+                          {updateFormik.touched.on_attend &&
+                          updateFormik.errors.on_attend ? (
+                            <div className="text-danger">
+                              {updateFormik.errors.on_attend}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                      </Row>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Select the assesment</Form.Label>
-                  <p>current AssessmentId: {updateFormik.values.assesment}</p>
-                  <Form.Select
-                    required
-                    name="assesment"
-                    onChange={updateFormik.handleChange}
-                  >
-                    {(assessments || []).map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.name}
-                      </option>
-                    ))}
-                  </Form.Select>
-                </Form.Group>
+                      <Row className="mb-3">
+                        <Form.Group as={Col}>
+                          <Form.Label>Number of badges</Form.Label>
+                          <Form.Control
+                            name="numbers"
+                            onChange={updateFormik.handleChange}
+                            value={updateFormik.values.numbers}
+                            type="text"
+                            required
+                            placeholder="1,2.."
+                          />
+                          {updateFormik.touched.numbers &&
+                          updateFormik.errors.numbers ? (
+                            <div className="text-danger">
+                              {updateFormik.errors.numbers}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>Start date</Form.Label>
+                          <DatePicker
+                            style={{ background: "red" }}
+                            name="start_date"
+                            dateFomart="DD/MM/YYYY"
+                            customInput={<CustomInput />}
+                            selected={updateFormik.values.start_date}
+                            onChange={(date: Date) =>
+                              updateFormik.setFieldValue("start_date", date)
+                            }
+                          />
+                          {updateFormik.touched.start_date &&
+                          updateFormik.errors.start_date ? (
+                            <div className="text-danger">
+                              {updateFormik.errors.start_date}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                        <Form.Group as={Col}>
+                          <Form.Label>End date</Form.Label>
+                          <DatePicker
+                            name="end_date"
+                            customInput={<CustomInput />}
+                            dateFomart="DD/MM/YYYY"
+                            selected={updateFormik.values.end_date}
+                            onChange={(date: Date) =>
+                              updateFormik.setFieldValue("end_date", date)
+                            }
+                          />
+                          {updateFormik.touched.end_date &&
+                          updateFormik.errors.end_date ? (
+                            <div className="text-danger">
+                              {updateFormik.errors.end_date}
+                            </div>
+                          ) : null}
+                        </Form.Group>
+                      </Row>
 
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "update" && <Spinner />}
-                    update
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            </Modal.Body>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Select the course</Form.Label>
+                        <button
+                          className="w-50 p-2 bg-white mb-3"
+                          onClick={() => setShowCourseSelect(true)}
+                          style={{
+                            display: "block",
+                            border: "1px solid #dedede",
+                            borderRadius: ".6rem",
+                          }}
+                        >
+                          {currentSelectCourse
+                            ? getCourseNameById(currentSelectCourse)
+                            : "Select the users to select"}
+                        </button>
+                        {showCourseError && !currentSelectCourse ? (
+                          <div className="text-danger">
+                            Please Select Course
+                          </div>
+                        ) : null}
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Select the Topic</Form.Label>
+                        <p>Current Topic Id: {updateFormik.values.topic}</p>
+                        <Form.Select
+                          required
+                          name="topic"
+                          onChange={updateFormik.handleChange}
+                        >
+                          {(topics || []).map((c) => (
+                            <option key={c.id} value={c.id}>
+                              {c.name}
+                            </option>
+                          ))}
+                        </Form.Select>
+                      </Form.Group>
+
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Close
+                        </Button>
+                        <Button
+                          className="d-flex align-items-center"
+                          variant="admingreen text-white"
+                          type="submit"
+                        >
+                          {showSpinner === "update" && <Spinner />}
+                          update
+                        </Button>
+                      </Modal.Footer>
+                    </Form>
+                  </div>
+                </Modal.Body>
+              </>
+            )}
           </>
         )}
       </Modal>

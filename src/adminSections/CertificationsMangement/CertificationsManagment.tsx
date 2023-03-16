@@ -31,6 +31,10 @@ import SearchBtn from "../SearchBtn";
 import Fuse from "fuse.js";
 import "../main.scss";
 import JoditEditor, { Jodit } from "jodit-react";
+import { Document, pdfjs, Page } from "react-pdf";
+import SearchBar from "../SearchBar";
+import SingleSelect from "../SingleSelect";
+import { v4 as uuidv4 } from "uuid";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -40,7 +44,15 @@ const createSchema = Yup.object().shape({
     .nullable(),
   on_complition: Yup.string().required("On completion is required"),
   on_attend: Yup.string().required("On attend is required"),
+  signature_1: Yup.string()
+    // .required("signature 1 image  is required")
+    .nullable(),
+  signature_2: Yup.string()
+    // .required("signature 2 ima ge  is required")
+    .nullable(),
   // text: Yup.string().required("Text is required"),
+  sig1_title: Yup.string(),
+  sig2_title: Yup.string(),
 });
 
 const CertificationManagment = () => {
@@ -73,6 +85,13 @@ const CertificationManagment = () => {
   const [success, setSuccess] = useState("");
   const [showDeleteBtn, setShowDeleteButton] = useState(true);
   const [content, setContent] = useState();
+  const [pdf, setPdf] = useState();
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
 
   const createInitialValues = {
     title: "",
@@ -80,43 +99,69 @@ const CertificationManagment = () => {
     background_image: "",
     on_complition: "True",
     on_attend: "True",
-    course: "",
+    // course: "",
+    signature_1: "",
+    signature_2: "",
+    sig1_title: "",
+    sig2_title: "",
     // text: "",
+  };
+
+  const updateInitialValues = {
+    title: currentSelectedItem?.title ? currentSelectedItem.title : "",
+    topic: currentSelectedItem?.topic ? currentSelectedItem?.topic : "",
+    background_image: currentSelectedItem?.background_image
+      ? currentSelectedItem?.background_image
+      : "",
+    signature_1: currentSelectedItem?.signature_1
+      ? currentSelectedItem.signature_1
+      : "",
+    signature_2: currentSelectedItem?.signature_2
+      ? currentSelectedItem.signature_2
+      : "",
+    sign1_title: currentSelectedItem?.sign1_title
+      ? currentSelectedItem.sign1_title
+      : "",
+    sign2_title: currentSelectedItem?.sign2_title
+      ? currentSelectedItem.sign2_title
+      : "",
+    course: currentSelectedItem?.course ? currentSelectedItem.course : "",
+    on_complition: "True",
+    on_attend: "True",
+    text: "",
+  };
+
+  const updateFormik = useFormik({
+    initialValues: updateInitialValues,
+    enableReinitialize: true,
+    // validationSchema: createSchema,
+    onSubmit: (data) => {
+      updateCertificate(data);
+    },
+  });
+
+  const createValidate = () => {
+    if (!currentSelectCourse) {
+      setShowCourseError(true);
+    } else {
+      setShowCourseError(true);
+    }
   };
 
   const creatFormik = useFormik({
     initialValues: createInitialValues,
     validationSchema: createSchema,
+    validate: createValidate,
     onSubmit: (data, { resetForm }) => {
-      let hdata = `<html>
-                  <head>
-                    <style>
-                        @page {
-                          size: 660pt 500pt;
-                        }
-                    </style>
-                  </head>
-                  <body>
-                  <div>
-                        <img src="${dataImage}" width="50%", object-fit="center" />
-                  </div>
-                     
-                  </body>
-                  </html>
-                          `;
-      data["text"] = hdata;
-      console.log(hdata);
+      data["text"] = "";
       createCertificate(data, resetForm);
     },
   });
 
-  //  <div style="background:url(${dataImage});background-size: contain; background-repeat: no-repeat; min-height:775px;padding-top: 1.3rem;padding-left: 1rem">
-  //    <p>cool</p>
-  //  </div>;
-
   // modal handlers
   const [show, setShow] = useState(false);
-
+  const [currentSelectCourse, setCurrentSelectedCourse] =
+    React.useState<number>();
   // update
   const [updatedItem, setUpdatedItem] = useState<Certificate>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
@@ -128,20 +173,34 @@ const CertificationManagment = () => {
   const [bgImage, setBgImage] = useState("");
   const [dataImage, setDataImg] = useState();
   const [showbg, setShowBg] = useState(false);
-  const [preview, setPreview] = useState(false);
+  const [previewPdf, setPreviewPdf] = useState(false);
+  const [showCourseSelect, setShowCourseSelect] = useState(false);
+
+  const [courseSelectSearch, setCourseSelectSearchTxt] = useState("");
+
+  const courseFuse = new Fuse(courses, { keys: ["name"] });
+  const courseSearchResult = courseFuse.search(courseSelectSearch);
+  const [showCourseError, setShowCourseError] = useState(false);
 
   const config = React.useMemo(
     () => ({
       readonly: false,
-      editorCssClass: "editorc",
+      editorCssClass: "c-editor",
       iframe: true,
-      width: "1190px",
-      iframeStyle: bgImage
-        ? `body{width:100%;height: 49rem;background: url(${URL.createObjectURL(
-            bgImage
-          )}); background-size: contain; background-repeat: no-repeat; z-index: -100}`
-        : "",
+      width: "1110px",
 
+      style: {
+        "line-height": "0px",
+        padding: 0,
+        margin: 0,
+        background: `url(${dataImage})`,
+        "background-size": "100%",
+        width: "1100px",
+        "background-repeat": "no-repeat",
+        "font-size": "12px",
+        overflow: "hidden",
+      },
+      iframeStyle: "",
       showWordsCounter: false,
       showXPathInStatusbar: false,
       removeButtons: [
@@ -165,6 +224,7 @@ const CertificationManagment = () => {
         url: "/api/upload",
         insertImageAsBase64URI: true,
       },
+      draggableTags: ["name"],
     }),
     [showbg]
   );
@@ -192,21 +252,65 @@ const CertificationManagment = () => {
     setShowEditor(false);
     creatFormik.setValues(createInitialValues);
     setShowBg(false);
-  };
-  const handleShow = () => {
-    setShow(true);
-    setError("");
-    setSuccess("");
+    setPdf(undefined);
+    setCurrentSelectedCourse(undefined);
+    setShowCourseSelect(false);
   };
 
   // get list of courses
   useEffect(() => {
     getCertificationList();
-    getTopicsList();
     getAssessmentList();
     getCertificatesTags();
     getCourseList();
   }, []);
+
+  const getCertificatePdf = () => {
+    setPreviewPdf(true);
+    let token = localStorage.getItem("token");
+    if (token) {
+      const headers = {
+        Authorization: "token " + token,
+      };
+
+      const formData = new FormData();
+      formData.set(
+        "background_image",
+        currentSelectedItem?.background_image as string
+      );
+      formData.set("signature_1", currentSelectedItem?.signature_1 as string);
+      formData.set("signature_2", currentSelectedItem?.signature_2 as string);
+      formData.set("sig1_title", currentSelectedItem?.sign1_title as string);
+      formData.set("sig2_title", currentSelectedItem?.sign2_title as string);
+
+      fetch(`${BASE_URL}/master/certificate-preview/`, {
+        method: "POST",
+        headers,
+        body: formData,
+      })
+        .then((res) => res.blob())
+        .then((blob) => {
+          setPreviewPdf(false);
+          const reader = new FileReader();
+          let base64Data;
+          reader.readAsDataURL(blob);
+          reader.onload = () => {
+            base64Data = reader.result;
+            setPdf(base64Data);
+          };
+        })
+        .catch((err) => {
+          setPreviewPdf(false);
+          if (err.response) {
+            setError(err.response.statusText);
+          } else if (err.request) {
+            setError(err.request);
+          } else {
+            setError(err.message);
+          }
+        });
+    }
+  };
 
   const deleteCertificate = () => {
     let token = localStorage.getItem("token");
@@ -230,6 +334,81 @@ const CertificationManagment = () => {
           showToast({
             type: "danger",
             message: err.message + " : admin : while deleting Certificate",
+          })
+        );
+      });
+  };
+
+  const updateCertificate = (data) => {
+    const formData = new FormData();
+    Object.entries(data).map(([key, val]) => {
+      if (key === "course" && currentSelectCourse) {
+        if (val !== currentSelectCourse) {
+          formData.set(key, `${currentSelectCourse}`);
+        }
+      } else if (
+        (key === "background_image" && typeof val === "string") ||
+        (key === "signature_1" && typeof val === "string") ||
+        (key === "signature_2" && typeof val === "string")
+      ) {
+      } else {
+        //@ts-ignore
+        formData.set(key, val);
+      }
+    });
+
+    customAxios
+      .get(`/student/get-course-details/${formData.get("course")}/`)
+      .then((res) => {
+        let topics: Topic[] = res.data.topics;
+        //@ts-ignore
+        let lastTopic: Topic = { order: -10000 };
+        for (let i = 0; i < topics.length; i++) {
+          if (topics[i].order > lastTopic.order) {
+            lastTopic = topics[i];
+          }
+        }
+        if (!lastTopic.id) {
+          setShowSpinner("none");
+          setSuccess("");
+          setErrorType("update");
+          setError("No Topics for this course");
+        } else {
+          formData.set("topic", lastTopic.id.toString());
+          customAxios
+            .post(
+              `/master/certificate-update/${currentSelectedItem?.id}/`,
+              formData
+            )
+            .then((res) => {
+              setShowSpinner("none");
+              setSuccess("Certificate is updated successfully");
+              getCertificationList();
+              setErrorType("none");
+            })
+            .catch((err) => {
+              setShowSpinner("none");
+              setSuccess("");
+              setErrorType("update");
+              setError(err.message);
+              dispatch(
+                showToast({
+                  type: "danger",
+                  message: err.message + " : admin : updating certificate",
+                })
+              );
+            });
+        }
+      })
+      .catch((err) => {
+        setShowSpinner("none");
+        setSuccess("");
+        setErrorType("update");
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : topic update certificate",
           })
         );
       });
@@ -296,18 +475,49 @@ const CertificationManagment = () => {
       // @ts-ignore
       formData.append(key, val);
     });
-    axios
-      .post(`${BASE_URL}/master/certificate-create/`, formData, {
-        headers: {
-          Authorization: `token ${token}`,
-        },
-      })
+    formData.set("course", `${currentSelectCourse}`);
+
+    customAxios
+      .get(`/student/get-course-details/${currentSelectCourse}/`)
       .then((res) => {
-        setShowSpinner("none");
-        resetForm();
-        setSuccess("Certificate is created successfully");
-        getCertificationList();
-        setErrorType("none");
+        let topics: Topic[] = res.data.topics;
+        //@ts-ignore
+        let lastTopic: Topic = { order: -10000 };
+        for (let i = 0; i < topics.length; i++) {
+          if (topics[i].order > lastTopic.order) {
+            lastTopic = topics[i];
+          }
+        }
+        if (!lastTopic.id) {
+          setShowSpinner("none");
+          setSuccess("");
+          setErrorType("create");
+          setError("No Topics for this course");
+        } else {
+          formData.set("topic", lastTopic.id.toString());
+          customAxios
+            .post(`/master/certificate-create/`, formData)
+            .then((res) => {
+              setShowSpinner("none");
+              resetForm();
+              setSuccess("Certificate is created successfully");
+              getCertificationList();
+              setErrorType("none");
+            })
+            .catch((err) => {
+              setShowSpinner("none");
+              setSuccess("");
+              setErrorType("create");
+              setError(err.message);
+              dispatch(
+                showToast({
+                  type: "danger",
+                  message:
+                    err.message + " : admin : while creating certificates",
+                })
+              );
+            });
+        }
       })
       .catch((err) => {
         setShowSpinner("none");
@@ -317,7 +527,7 @@ const CertificationManagment = () => {
         dispatch(
           showToast({
             type: "danger",
-            message: err.message + " : admin : while creating certificates",
+            message: err.message + " : admin : adding topic certificates",
           })
         );
       });
@@ -361,36 +571,14 @@ const CertificationManagment = () => {
       });
   };
 
-  //get topics list
-  const getTopicsList = () => {
-    let token = localStorage.getItem("token");
-    axios
-      .get(`${BASE_URL}/master/topic-list`, {
-        headers: { Authorization: `token ${token}` },
-      })
-      .then((res) => {
-        setTopics(res.data.topics);
-        console.log(res.data.topics);
-      })
-      .catch((err) => {
-        setError(err.message);
-        dispatch(
-          showToast({
-            type: "danger",
-            message: err.message + " : admin : while fetching topic list",
-          })
-        );
-      });
-  };
-
-  const validateAndNext = () => {
-    creatFormik.validateForm().then((data) => {
-      if (Object.keys(data).length === 0) {
-        setShowEditor(true);
-      } else {
-        setValidateErros(data);
+  const getCourseNameById = (id?: number) => {
+    let courseName;
+    (courses || []).map((c) => {
+      if (c.id === id) {
+        courseName = c.name;
       }
     });
+    return courseName;
   };
 
   const renderHtml = (htmlString) => {
@@ -398,8 +586,15 @@ const CertificationManagment = () => {
   };
 
   const onBlur = (newContent) => {
-    console.log(newContent);
     setContent(newContent);
+  };
+
+  const addUniqueName = (file: File) => {
+    let type = file.type.split("/")[1];
+    const renamedFile = new File([file], `${uuidv4()}.${type}`, {
+      type: file.type,
+    });
+    return renamedFile;
   };
 
   return (
@@ -439,7 +634,6 @@ const CertificationManagment = () => {
                 title={item.title}
                 key={item.id}
                 openModel={openModel}
-                NoEdit
                 sm={9}
               ></ListItem>
             );
@@ -452,7 +646,6 @@ const CertificationManagment = () => {
                 title={item.title}
                 key={item.id}
                 openModel={openModel}
-                NoEdit
                 sm={9}
               ></ListItem>
             );
@@ -474,223 +667,346 @@ const CertificationManagment = () => {
             {success && (
               <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
             )}
-            <Modal.Header closeButton>
-              <Modal.Title>Create certificate</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              <Form noValidate onSubmit={creatFormik.handleSubmit}>
-                {!showEditor ? (
-                  <>
-                    <Form.Group className="mb-3">
-                      <Form.Label>Title</Form.Label>
-                      <Form.Control
-                        name="title"
-                        value={creatFormik.values.title}
-                        onChange={creatFormik.handleChange}
-                        type="text"
-                        required
-                        placeholder="Enter certificate title"
+            {showCourseSelect ? (
+              <div>
+                <Modal.Header closeButton>
+                  <Modal.Title>Select course</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                  <div style={{ maxWidth: "40rem", margin: "auto" }}>
+                    <div className="p-3">
+                      <SearchBar
+                        placeholder="Search course"
+                        selectSearchTxt={courseSelectSearch}
+                        setSelectSearchTxt={setCourseSelectSearchTxt}
                       />
-                      {creatFormik.touched.title && creatFormik.errors.title ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.title}
-                        </div>
-                      ) : null}
-                      {validateErrors?.title ? (
-                        <div className="text-danger">
-                          {validateErrors.title}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Background image</Form.Label>
-                      <Form.Control
-                        name="background_image"
-                        type="file"
-                        required
-                        placeholder="Upload background image"
-                        onChange={(e) => {
-                          creatFormik.setFieldValue(
-                            "background_image",
-                            //@ts-ignore
-                            e.currentTarget.files[0]
-                          );
-                          setBgImage(e.currentTarget.files[0]);
-                          const reader = new FileReader();
-                          reader.onload = function (e) {
-                            const dataUri = e.target.result;
-                            setDataImg(dataUri);
-                          };
-                          reader.readAsDataURL(e.currentTarget.files[0]);
-                          setShowBg(true);
-                        }}
-                        // value={creatFormik.values.info_image}
-                      />
-                      {creatFormik.touched.background_image &&
-                      creatFormik.errors.background_image ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.background_image}
-                        </div>
-                      ) : null}
-                      {validateErrors?.background_image ? (
-                        <div className="text-danger">
-                          {validateErrors.background_image}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-
-                    <Row className="mb-3">
-                      <Form.Group as={Col}>
-                        <Form.Label>On completion</Form.Label>
-                        <Form.Select
-                          required
-                          name="on_complition"
-                          onChange={creatFormik.handleChange}
-                          value={creatFormik.values.on_complition}
-                        >
-                          <option value={"True"}>Yes</option>
-                          <option value={"False"}>No</option>
-                        </Form.Select>
-                        {creatFormik.touched.on_complition &&
-                        creatFormik.errors.on_complition ? (
-                          <div className="text-danger">
-                            {creatFormik.errors.on_complition}
-                          </div>
-                        ) : null}
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>On attend</Form.Label>
-                        <Form.Select
-                          name="on_attend"
-                          required
-                          onChange={creatFormik.handleChange}
-                          value={creatFormik.values.on_attend}
-                        >
-                          <option value={"True"}>Yes</option>
-                          <option value={"False"}>No</option>
-                        </Form.Select>
-                      </Form.Group>
-                    </Row>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>select the topic</Form.Label>
-                      <Form.Select
-                        required
-                        name="topic"
-                        onChange={creatFormik.handleChange}
-                      >
-                        <option>select the topic</option>
-                        {(topics || []).map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                    <Form.Group>
-                      <Form.Label>select the course</Form.Label>
-                      <Form.Select
-                        required
-                        name="course"
-                        onChange={creatFormik.handleChange}
-                      >
-                        <option>select the couse</option>
-                        {(courses || []).map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name}
-                          </option>
-                        ))}
-                      </Form.Select>
-                    </Form.Group>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <h6>Use the following tags only.</h6>
-                      <p className="me-2">
-                        {Object.entries(certificateTags || {}).map(
-                          ([key, value]) => `${key}: ${value}, `
-                        )}
-                      </p>
                     </div>
-                    <div>
-                      <JoditEditor
-                        value={content}
-                        config={config}
-                        onChange={onBlur}
-                      />
-                      <button
-                        onClick={() => {
-                          setPreview(true);
-                          setTimeout(() => {
-                            setPreview(false);
-                          }, 30000);
-                        }}
-                      >
-                        show
-                      </button>
-
-                      {preview &&
-                        renderHtml(
-                          `<html>
-                  <head>
-                    <style>
-                        @page {
-                          size: 660pt 500pt;
-                        }
-                    </style>
-                  </head>
-                  <body>
-                  <div>
-                        <img src="${dataImage}" width="50%", object-fit="center" />
+                    <div style={{ height: "70vh", overflow: "scroll" }}>
+                      {courseSearchResult.length > 0
+                        ? (courseSearchResult || []).map(({ item: c }, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))
+                        : (courses || []).map((c, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))}
+                    </div>
                   </div>
-                     
-                  </body>
-                  </html>
-                          `
-                        )}
-                    </div>
-                  </>
-                )}
-                {!showEditor ? (
                   <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                      Close
-                    </Button>
                     <Button
-                      className="d-flex align-items-center"
-                      variant="admingreen text-white"
-                      onClick={() => validateAndNext()}
+                      variant="secondary"
+                      onClick={() => setShowCourseSelect(false)}
                     >
                       Next
                     </Button>
                   </Modal.Footer>
-                ) : (
-                  <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                      Close
-                    </Button>
-                    <Button
-                      className="d-flex align-items-center"
-                      variant="admingreen text-white"
-                      onClick={() => setShowEditor(false)}
-                    >
-                      Back
-                    </Button>
-                    <Button
-                      className="d-flex align-items-center"
-                      variant="admingreen text-white"
-                      type="submit"
-                    >
-                      {showSpinner === "create" && <Spinner />}
-                      Create
-                    </Button>
-                  </Modal.Footer>
-                )}
-              </Form>
-            </Modal.Body>
+                </Modal.Body>
+              </div>
+            ) : (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>Create certificate</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ margin: "auto", maxWidth: "700px" }}>
+                    <Form noValidate onSubmit={creatFormik.handleSubmit}>
+                      {true ? (
+                        <>
+                          <Form.Group className="mb-3">
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control
+                              name="title"
+                              value={creatFormik.values.title}
+                              onChange={creatFormik.handleChange}
+                              type="text"
+                              required
+                              placeholder="Enter certificate title"
+                            />
+                            {creatFormik.touched.title &&
+                            creatFormik.errors.title ? (
+                              <div className="text-danger">
+                                {creatFormik.errors.title}
+                              </div>
+                            ) : null}
+                            {validateErrors?.title ? (
+                              <div className="text-danger">
+                                {validateErrors.title}
+                              </div>
+                            ) : null}
+                          </Form.Group>
+
+                          <Form.Group className="mb-3">
+                            <Form.Label>Background image</Form.Label>
+                            <Form.Control
+                              name="background_image"
+                              type="file"
+                              required
+                              placeholder="Upload background image"
+                              onChange={(e) => {
+                                // @ts-ignore
+                                let file = e.currentTarget.files[0];
+                                creatFormik.setFieldValue(
+                                  "background_image",
+                                  addUniqueName(file)
+                                );
+                                // setBgImage(e.currentTarget.files[0]);
+                                // const reader = new FileReader();
+                                // reader.onload = function (e) {
+                                //   const dataUri = e.target.result;
+                                //   setDataImg(dataUri);
+                                // };
+                                // reader.readAsDataURL(e.currentTarget.files[0]);
+                                // setShowBg(true);
+                              }}
+                              // value={creatFormik.values.info_image}
+                            />
+                            {creatFormik.values.background_image instanceof
+                              File && (
+                              <img
+                                className="mt-3"
+                                style={{ width: "8rem" }}
+                                src={URL.createObjectURL(
+                                  creatFormik.values.background_image
+                                )}
+                              />
+                            )}
+                            {creatFormik.touched.background_image &&
+                            creatFormik.errors.background_image ? (
+                              <div className="text-danger">
+                                {creatFormik.errors.background_image}
+                              </div>
+                            ) : null}
+                            {validateErrors?.background_image ? (
+                              <div className="text-danger">
+                                {validateErrors.background_image}
+                              </div>
+                            ) : null}
+                          </Form.Group>
+                          <Row className="mb-3">
+                            <Form.Group as={Col}>
+                              <Form.Label>signature 1 image</Form.Label>
+                              <Form.Control
+                                name="signature_1"
+                                type="file"
+                                required
+                                placeholder="Upload signature 1 image"
+                                onChange={(e) => {
+                                  //@ts-ignore
+                                  let file = e.currentTarget.files[0];
+                                  creatFormik.setFieldValue(
+                                    "signature_1",
+                                    addUniqueName(file)
+                                  );
+                                }}
+                                // value={creatFormik.values.info_image}
+                              />
+                              {creatFormik.values.signature_1 instanceof
+                                File && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={URL.createObjectURL(
+                                    creatFormik.values.signature_1
+                                  )}
+                                />
+                              )}
+                              {creatFormik.touched.signature_1 &&
+                              creatFormik.errors.signature_1 ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.signature_1}
+                                </div>
+                              ) : null}
+                              {validateErrors?.signature_1a ? (
+                                <div className="text-danger">
+                                  {validateErrors.signature_1a}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                            <Form.Group as={Col}>
+                              <Form.Label>signature 2 image</Form.Label>
+                              <Form.Control
+                                name="signature_2"
+                                type="file"
+                                required
+                                placeholder="Upload signature 2 image"
+                                onChange={(e) => {
+                                  //@ts-ignore
+                                  let file = e.currentTarget.files[0];
+                                  creatFormik.setFieldValue(
+                                    "signature_2",
+                                    addUniqueName(file)
+                                  );
+                                }}
+                                // value={creatFormik.values.info_image}
+                              />
+                              {creatFormik.values.signature_2 instanceof
+                                File && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={URL.createObjectURL(
+                                    creatFormik.values.signature_2
+                                  )}
+                                />
+                              )}
+                              {creatFormik.touched.signature_2 &&
+                              creatFormik.errors.signature_2 ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.signature_2}
+                                </div>
+                              ) : null}
+                              {validateErrors?.signature_2 ? (
+                                <div className="text-danger">
+                                  {validateErrors.signature_2}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                          </Row>
+
+                          <Row className="mb-3">
+                            <Form.Group as={Col} className="mb-3">
+                              <Form.Label>signature 1 title</Form.Label>
+                              <Form.Control
+                                name="sig1_title"
+                                value={creatFormik.values.sig1_title}
+                                onChange={creatFormik.handleChange}
+                                type="text"
+                                required
+                                placeholder="Enter signature 1 title"
+                              />
+                              {creatFormik.touched.sig1_title &&
+                              creatFormik.errors.sig1_title ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.sig1_title}
+                                </div>
+                              ) : null}
+                              {validateErrors?.sig1_title ? (
+                                <div className="text-danger">
+                                  {validateErrors.sig1_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                            <Form.Group as={Col} className="mb-3">
+                              <Form.Label>signature 2 title</Form.Label>
+                              <Form.Control
+                                name="sig2_title"
+                                value={creatFormik.values.sig2_title}
+                                onChange={creatFormik.handleChange}
+                                type="text"
+                                required
+                                placeholder="Enter signature 2 title"
+                              />
+                              {creatFormik.touched.sig2_title &&
+                              creatFormik.errors.sig2_title ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.sig2_title}
+                                </div>
+                              ) : null}
+                              {validateErrors?.sig2_title ? (
+                                <div className="text-danger">
+                                  {validateErrors.sig2_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                          </Row>
+
+                          <Form.Group>
+                            <Form.Label>Course</Form.Label>
+                            <button
+                              className="w-50 p-2 bg-white mb-3"
+                              onClick={() => setShowCourseSelect(true)}
+                              style={{
+                                display: "block",
+                                border: "1px solid #dedede",
+                                borderRadius: ".6rem",
+                              }}
+                            >
+                              {currentSelectCourse
+                                ? getCourseNameById(currentSelectCourse)
+                                : "Select the users to select"}
+                            </button>
+                            {showCourseError && !currentSelectCourse ? (
+                              <div className="text-danger">
+                                Please Select Course
+                              </div>
+                            ) : null}
+                          </Form.Group>
+                        </>
+                      ) : (
+                        <>
+                          <div>
+                            <h6>Use the following tags only.</h6>
+                            <p className="me-2">
+                              {Object.entries(certificateTags || {}).map(
+                                ([key, value]) => `${key}: ${value}, `
+                              )}
+                            </p>
+                          </div>
+                          <div>
+                            {/* <JoditEditor
+                              value={content}
+                              config={config}
+                              onChange={onBlur}
+                            /> */}
+                          </div>
+                        </>
+                      )}
+                      {!showEditor ? (
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center"
+                            variant="admingreen text-white"
+                            type="submit"
+                          >
+                            Create
+                          </Button>
+                        </Modal.Footer>
+                      ) : (
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center"
+                            variant="admingreen text-white"
+                            onClick={() => setShowEditor(false)}
+                          >
+                            Back
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center"
+                            variant="admingreen text-white"
+                            type="submit"
+                          >
+                            {showSpinner === "create" && <Spinner />}
+                            Create
+                          </Button>
+                        </Modal.Footer>
+                      )}
+                    </Form>
+                  </div>
+                </Modal.Body>
+              </>
+            )}
           </>
         )}
         {currentModal === "delete" && (
@@ -734,16 +1050,91 @@ const CertificationManagment = () => {
               <Modal.Title>Detail of certification</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
-                <div key={k} className="d-flex">
-                  <p className="b-700 me-2">{k}: </p>
-                  <p style={{ wordBreak: "break-word" }}>
-                    {(v || "").toString()}
-                  </p>
+              {pdf ? null : (
+                <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                  {Object.entries(currentSelectedItem || {}).map(([k, v]) =>
+                    v ? (
+                      <>
+                        <div key={k} className="d-flex my-2">
+                          <div
+                            className="b-700 me-2 p-3 text- bg-graydark"
+                            style={{
+                              minWidth: "30%",
+                              borderRadius: "0.5rem",
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            {k === "sign1_title"
+                              ? "Signature 1 title"
+                              : k === "sign2_title"
+                              ? "Signature 2 title"
+                              : k === "min_marks_to_qualify"
+                              ? "Min Marks "
+                              : k === "max_marks"
+                              ? "Max marks "
+                              : k}
+                          </div>
+
+                          <div
+                            className="b-700 me-2 p-3 w-100 add-hover "
+                            style={{
+                              borderRadius: "0.5rem",
+                              wordBreak: "break-word",
+                            }}
+                          >
+                            {k === "background_image" ||
+                            k === "signature_1" ||
+                            k === "signature_2" ? (
+                              <img
+                                src={`https://${HOST}${v}`}
+                                style={{ width: "15rem" }}
+                              />
+                            ) : (
+                              (v || "").toString()
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : null
+                  )}
                 </div>
-              ))}
+              )}
+              {pdf ? (
+                <div>
+                  <div
+                    style={{
+                      marginTop: "2rem",
+                      height: "47rem",
+                      overflow: "hidden",
+                      color: "white",
+                      background: "white",
+                    }}
+                  >
+                    <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+                      <Page pageNumber={pageNumber} />
+                    </Document>
+                  </div>
+                </div>
+              ) : null}
             </Modal.Body>
             <Modal.Footer>
+              {pdf ? (
+                <Button
+                  style={{}}
+                  onClick={() => setPdf(undefined)}
+                  className="text-white"
+                >
+                  Show Details
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => getCertificatePdf()}
+                  className="text-white"
+                >
+                  {previewPdf ? "Loading ..." : "Preview Certificate"}
+                </Button>
+              )}
+
               <Button
                 className="bg-adminsecondary text-white"
                 onClick={handleClose}
@@ -751,6 +1142,378 @@ const CertificationManagment = () => {
                 Close
               </Button>
             </Modal.Footer>
+          </>
+        )}
+        {currentModal === "update" && (
+          <>
+            {error && errorType === "update" && (
+              <ErrorMessage setError={setError}>{error}</ErrorMessage>
+            )}
+            {success && (
+              <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
+            )}
+            {showCourseSelect ? (
+              <div>
+                <Modal.Header closeButton>
+                  <Modal.Title>Select course</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                  <div style={{ maxWidth: "40rem", margin: "auto" }}>
+                    <div className="p-3">
+                      <SearchBar
+                        placeholder="Search course"
+                        selectSearchTxt={courseSelectSearch}
+                        setSelectSearchTxt={setCourseSelectSearchTxt}
+                      />
+                    </div>
+                    <div style={{ height: "70vh", overflow: "scroll" }}>
+                      {courseSearchResult.length > 0
+                        ? (courseSearchResult || []).map(({ item: c }, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))
+                        : (courses || []).map((c, idx) => (
+                            <div>
+                              <SingleSelect
+                                id={c.id}
+                                title={c.name}
+                                idx={idx}
+                                select={currentSelectCourse === c.id}
+                                setCurrent={setCurrentSelectedCourse}
+                              />
+                            </div>
+                          ))}
+                    </div>
+                  </div>
+                  <Modal.Footer>
+                    <Button
+                      variant="secondary"
+                      onClick={() => setShowCourseSelect(false)}
+                    >
+                      Next
+                    </Button>
+                  </Modal.Footer>
+                </Modal.Body>
+              </div>
+            ) : (
+              <>
+                <Modal.Header closeButton>
+                  <Modal.Title>Update certificate</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <div style={{ margin: "auto", maxWidth: "700px" }}>
+                    <Form noValidate onSubmit={updateFormik.handleSubmit}>
+                      {true ? (
+                        <>
+                          <Form.Group className="mb-3">
+                            <Form.Label>Title</Form.Label>
+                            <Form.Control
+                              name="title"
+                              value={updateFormik.values.title}
+                              onChange={updateFormik.handleChange}
+                              type="text"
+                              required
+                              placeholder="Enter certificate title"
+                            />
+                            {updateFormik.touched.title &&
+                            updateFormik.errors.title ? (
+                              <div className="text-danger">
+                                {updateFormik.errors.title}
+                              </div>
+                            ) : null}
+                            {validateErrors?.title ? (
+                              <div className="text-danger">
+                                {validateErrors.title}
+                              </div>
+                            ) : null}
+                          </Form.Group>
+
+                          <Form.Group className="mb-3">
+                            <Form.Label>Background image</Form.Label>
+                            <Form.Control
+                              name="background_image"
+                              type="file"
+                              required
+                              placeholder="Upload background image"
+                              onChange={(e) => {
+                                //@ts-ignore
+                                let file = e.currentTarget.files[0];
+                                updateFormik.setFieldValue(
+                                  "background_image",
+                                  addUniqueName(file)
+                                );
+                              }}
+                            />
+                            {updateFormik.touched.background_image &&
+                            updateFormik.errors.background_image ? (
+                              <div className="text-danger">
+                                {updateFormik.errors.background_image}
+                              </div>
+                            ) : null}
+                            {typeof updateFormik.values.background_image ===
+                              "string" && (
+                              <img
+                                className="mt-3"
+                                style={{ width: "8rem" }}
+                                src={`https://${HOST}${updateFormik.values.background_image}`}
+                              />
+                            )}
+                            {updateFormik.values.background_image instanceof
+                              File && (
+                              <img
+                                className="mt-3"
+                                style={{ width: "8rem" }}
+                                src={URL.createObjectURL(
+                                  updateFormik.values.background_image
+                                )}
+                              />
+                            )}
+                            {validateErrors?.background_image ? (
+                              <div className="text-danger">
+                                {validateErrors.background_image}
+                              </div>
+                            ) : null}
+                          </Form.Group>
+                          <Row className="mb-3">
+                            <Form.Group as={Col}>
+                              <Form.Label>signature 1 image</Form.Label>
+                              <Form.Control
+                                name="signature_1"
+                                type="file"
+                                required
+                                placeholder="Upload signature 1 image"
+                                onChange={(e) => {
+                                  //@ts-ignore
+                                  let file = e.currentTarget.files[0];
+                                  updateFormik.setFieldValue(
+                                    "signature_1",
+                                    addUniqueName(file)
+                                  );
+                                }}
+                                // value={updateFormik.values.info_image}
+                              />
+                              {typeof updateFormik.values.signature_1 ===
+                                "string" && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={`https://${HOST}${updateFormik.values.signature_1}`}
+                                />
+                              )}
+                              {updateFormik.values.signature_1 instanceof
+                                File && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={URL.createObjectURL(
+                                    updateFormik.values.signature_1
+                                  )}
+                                />
+                              )}
+                              {updateFormik.touched.signature_1 &&
+                              updateFormik.errors.signature_1 ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.signature_1}
+                                </div>
+                              ) : null}
+                              {validateErrors?.signature_1a ? (
+                                <div className="text-danger">
+                                  {validateErrors.signature_1a}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                            <Form.Group as={Col}>
+                              <Form.Label>signature 2 image</Form.Label>
+                              <Form.Control
+                                name="signature_2"
+                                type="file"
+                                required
+                                placeholder="Upload signature 2 image"
+                                onChange={(e) => {
+                                  //@ts-ignore
+                                  let file = e.currentTarget.files[0];
+                                  updateFormik.setFieldValue(
+                                    "signature_2",
+                                    addUniqueName(file)
+                                  );
+                                }}
+                                // value={updateFormik.values.info_image}
+                              />
+                              {typeof updateFormik.values.signature_2 ===
+                                "string" && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={`https://${HOST}${updateFormik.values.signature_2}`}
+                                />
+                              )}
+                              {updateFormik.values.signature_2 instanceof
+                                File && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={URL.createObjectURL(
+                                    updateFormik.values.signature_2
+                                  )}
+                                />
+                              )}
+                              {updateFormik.touched.signature_2 &&
+                              updateFormik.errors.signature_2 ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.signature_2}
+                                </div>
+                              ) : null}
+                              {validateErrors?.signature_2 ? (
+                                <div className="text-danger">
+                                  {validateErrors.signature_2}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                          </Row>
+
+                          <Row className="mb-3">
+                            <Form.Group as={Col} className="mb-3">
+                              <Form.Label>signature 1 title</Form.Label>
+                              <Form.Control
+                                name="sign1_title"
+                                value={updateFormik.values.sign1_title}
+                                onChange={updateFormik.handleChange}
+                                type="text"
+                                required
+                                placeholder="Enter signature 1 title"
+                              />
+                              {updateFormik.touched.sign1_title &&
+                              updateFormik.errors.sign1_title ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.sign1_title}
+                                </div>
+                              ) : null}
+                              {validateErrors?.sig1_title ? (
+                                <div className="text-danger">
+                                  {validateErrors.sig1_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                            <Form.Group as={Col} className="mb-3">
+                              <Form.Label>signature 2 title</Form.Label>
+                              <Form.Control
+                                name="sign2_title"
+                                value={updateFormik.values.sign2_title}
+                                onChange={updateFormik.handleChange}
+                                type="text"
+                                required
+                                placeholder="Enter signature 2 title"
+                              />
+                              {updateFormik.touched.sign2_title &&
+                              updateFormik.errors.sign2_title ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.sign2_title}
+                                </div>
+                              ) : null}
+                              {validateErrors?.sig2_title ? (
+                                <div className="text-danger">
+                                  {validateErrors.sig2_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                          </Row>
+
+                          <Form.Group>
+                            <button
+                              className="w-50 p-2 bg-white mb-3"
+                              onClick={() => setShowCourseSelect(true)}
+                              style={{
+                                display: "block",
+                                border: "1px solid #dedede",
+                                borderRadius: ".6rem",
+                              }}
+                            >
+                              {getCourseNameById(
+                                parseInt(updateFormik.values.course as string)
+                              ) && !currentSelectCourse
+                                ? getCourseNameById(
+                                    parseInt(
+                                      updateFormik.values.course as string
+                                    )
+                                  )
+                                : getCourseNameById(currentSelectCourse)
+                                ? getCourseNameById(currentSelectCourse)
+                                : "Select the users to select"}
+                            </button>
+                            {showCourseError && !currentSelectCourse ? (
+                              <div className="text-danger">
+                                Please Select Course
+                              </div>
+                            ) : null}
+                          </Form.Group>
+                        </>
+                      ) : (
+                        <>
+                          {/* <div>
+                            <h6>Use the following tags only.</h6>
+                            <p className="me-2">
+                              {Object.entries(certificateTags || {}).map(
+                                ([key, value]) => `${key}: ${value}, `
+                              )}
+                            </p>
+                          </div>
+                          <div>
+                            <JoditEditor
+                              value={content}
+                              config={config}
+                              onChange={onBlur}
+                            />
+                          </div> */}
+                        </>
+                      )}
+                      {!showEditor ? (
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center"
+                            variant="admingreen text-white"
+                            type="submit"
+                          >
+                            Update
+                          </Button>
+                        </Modal.Footer>
+                      ) : (
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Close
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center"
+                            variant="admingreen text-white"
+                            onClick={() => setShowEditor(false)}
+                          >
+                            Back
+                          </Button>
+                          <Button
+                            className="d-flex align-items-center"
+                            variant="admingreen text-white"
+                            type="submit"
+                          >
+                            {showSpinner === "create" && <Spinner />}
+                            Create
+                          </Button>
+                        </Modal.Footer>
+                      )}
+                    </Form>
+                  </div>
+                </Modal.Body>
+              </>
+            )}
           </>
         )}
       </Modal>
