@@ -4,20 +4,34 @@ import {
   Progress,
   StudentCourse,
   Topic,
-  Module
+  Module,
 } from "../definations/course";
 import topicService from "./topic.service";
 import { BASE_URL } from "../features/settings";
 import { Assessment } from "../definations/assessment";
 
-const token = localStorage.getItem("token");
-
 export const customAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
-    Authorization: `token ${token}`,
+    Authorization: `token ${localStorage.getItem("token")}`,
   },
 });
+
+customAxios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      config.headers.Authorization = `token ${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    console.log("request error", error);
+    return Promise.reject(error);
+  }
+);
 
 /**
  *
@@ -114,22 +128,21 @@ export const getTotalTopicsOfCourse = (courseId: number): Promise<number> => {
   });
 };
 
-
 export const normalizeTopics = (topics: (Topic | Assessment)[]) => {
   const result: Module[] = [];
-  topics.forEach(topic => {
-   if(topic?.module_title) {
-    let obj: Module = {
-      module_name: topic.module_title,
-      completed: false,
-      topics: [topic]
+  topics.forEach((topic) => {
+    if (topic?.module_title) {
+      let obj: Module = {
+        module_name: topic.module_title,
+        completed: false,
+        topics: [topic],
+      };
+      result.push(obj);
+    } else {
+      let obj = result.pop();
+      obj?.topics.push(topic);
+      result.push(obj);
     }
-    result.push(obj)
-   } else {
-    let obj = result.pop();
-    obj?.topics.push(topic);
-    result.push(obj)
-  }
-  }) 
+  });
   return result;
-}
+};
