@@ -232,7 +232,7 @@ const Certification = () => {
               }}
             >
               <img
-                src={`https://${HOST}/open_api_v_0_0_1/shared_data/media/${badge.badge__image}`}
+                src={`https://${HOST}/media/${badge.badge__image}`}
                 width={100}
                 style={{ marginBottom: "1rem" }}
               />
