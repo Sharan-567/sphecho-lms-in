@@ -61,8 +61,8 @@ const Course = () => {
               if (topicRes.data.topics) {
                 noOfTopics = topicRes.data.topics.length;
               }
-              if (topicRes.data.assessments) {
-                noOfAssessments = topicRes.data.assessments.length;
+              if (topicRes.data.assesements) {
+                noOfAssessments = topicRes.data.assesements.length;
               }
               dispatch(addUserTopic({ courseId, noOfTopics, noOfAssessments }));
               setLoading(false);

@@ -301,49 +301,48 @@ const CourseContainer = ({}) => {
 
   return (
     <div>
-      <AnimatePresence exitBeforeEnter>
-        <motion.div
-          key={"mxain" + "1"}
-          initial={{ y: 55, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -55, opacity: 0 }}
-          transition={{
-            duration: 0.4,
-            delay: 0.1,
-          }}
-          className="course-container"
-          style={{
-            maxWidth: "700px",
-            margin: "auto",
-            paddingTop: "3rem",
-          }}
+      <motion.div
+        key={"mxain" + "1"}
+        initial={{ y: 55, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -55, opacity: 0 }}
+        transition={{
+          duration: 0.4,
+          delay: 0.1,
+        }}
+        className="course-container"
+        style={{
+          maxWidth: "700px",
+          margin: "auto",
+          paddingTop: "3rem",
+        }}
+      >
+        <div
+          className="d-flex justify-content-between align-items-center"
+          style={{ marginBottom: "1.1rem" }}
         >
-          <div
-            className="d-flex justify-content-between align-items-center"
-            style={{ marginBottom: "1.1rem" }}
-          >
-            <h2 className="title-container">Course: {courseName}</h2>
-            <div></div>
-          </div>
-          {(topics || []).map((t) => (
-            <AnimatePresence exitBeforeEnter>
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
-                transition={{
-                  duration: 0.4,
-                  delay: 0.1,
-                }}
-                className="course-container"
-                style={{
-                  margin: "auto",
-                }}
-                key={t.id}
-              >
-                {t.module_title ? (
-                  <div className="text-center">
-                    {/* <div
+          <h2 className="title-container">Course: {courseName}</h2>
+          <div></div>
+        </div>
+        {(topics || []).map((t) => (
+          <AnimatePresence exitBeforeEnter>
+            <motion.div
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -50, opacity: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: 0.1,
+              }}
+              className="course-container"
+              style={{
+                margin: "auto",
+              }}
+              key={t.id}
+            >
+              {t.module_title ? (
+                <div className="text-center">
+                  {/* <div
                       className="w-100"
                       style={{
                         marginBottom: "-2.3rem",
@@ -352,56 +351,56 @@ const CourseContainer = ({}) => {
                         borderTop: "2px dashed #cccccc",
                       }}
                     ></div> */}
-                    <p
-                      className="my-2 b-500 mt-2 pt-3 px-4 pb-5 text-center br-1 text-black "
-                      style={{
-                        height: "3rem",
-                        fontSize: "1.2rem",
-                        background: "white",
-                        display: "inline-block",
-                        textTransform: "capitalize",
-                      }}
-                    >
-                      {t.module_title}
-                      <AiTwotoneDelete
-                        onClick={() => {
-                          removeModule(t.id);
-                        }}
-                        className="text-black"
-                        style={{
-                          marginTop: "-.8rem",
-                          marginLeft: "1rem",
-                          cursor: "pointer",
-                        }}
-                        size={18}
-                      />
-                    </p>
-                  </div>
-                ) : (
-                  <motion.div
-                    className="add-module-line" //moudle lilne
+                  <p
+                    className="my-2 b-500 mt-2 pt-3 px-4 pb-5 text-center br-1 text-black "
                     style={{
-                      height: "1.5rem",
-                      overflow: "hidden",
+                      height: "3rem",
+                      fontSize: "1.2rem",
+                      background: "white",
+                      display: "inline-block",
+                      textTransform: "capitalize",
                     }}
                   >
-                    <div
-                      className="inside-line"
-                      style={{
-                        height: 0,
-
-                        transform: "translateY(-9rem)",
+                    {t.module_title}
+                    <AiTwotoneDelete
+                      onClick={() => {
+                        removeModule(t.id);
                       }}
-                    >
-                      <p
-                        className="px-5"
-                        style={{
-                          borderTop: "2px dashed #cccccc",
-                          zIndex: "-1",
-                        }}
-                      ></p>
-                      <div style={{ textAlign: "center", marginTop: "-2rem" }}>
-                        {/* <BsFillPlusCircleFill
+                      className="text-black"
+                      style={{
+                        marginTop: "-.8rem",
+                        marginLeft: "1rem",
+                        cursor: "pointer",
+                      }}
+                      size={18}
+                    />
+                  </p>
+                </div>
+              ) : (
+                <motion.div
+                  className="add-module-line" //moudle lilne
+                  style={{
+                    height: "1.5rem",
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    className="inside-line"
+                    style={{
+                      height: 0,
+
+                      transform: "translateY(-9rem)",
+                    }}
+                  >
+                    <p
+                      className="px-5"
+                      style={{
+                        borderTop: "2px dashed #cccccc",
+                        zIndex: "-1",
+                      }}
+                    ></p>
+                    <div style={{ textAlign: "center", marginTop: "-2rem" }}>
+                      {/* <BsFillPlusCircleFill
                         size="1.6rem"
                         style={{
                           zIndex: "100",
@@ -410,116 +409,133 @@ const CourseContainer = ({}) => {
                           marginTop: "-4rem",
                         }}
                       /> */}
-                        <p
-                          onClick={() => {
-                            setModelType("MODULE_CREATE");
-                            setCurrentSelectedTopic(t.id);
-                          }}
-                          className="bg-gray"
-                          style={{
-                            color: "black",
-                            display: "inline-block",
-                            padding: ".2rem 1rem",
-                            cursor: "pointer",
-                            borderRadius: ".5rem",
-                          }}
-                        >
-                          <BsFillPlusCircleFill
-                            size="1.1rem"
-                            style={{
-                              zIndex: "100",
-                              color: "black",
-                              textAlign: "center",
-                              marginTop: "-.5rem",
-                              marginRight: ".5rem",
-                            }}
-                          />
-                          Add module
-                        </p>
-                        <p
-                          className="bg-gray"
-                          style={{
-                            // background: "#18b3a7",
-                            color: "black",
-                            display: "inline-block",
-                            padding: ".2rem 1rem",
-                            cursor: "pointer",
-                            borderRadius: ".5rem",
-                            margin: "0rem 1rem",
-                          }}
-                          onClick={() => {
-                            setModelType("TOPIC_CREATE");
-                            setCurrentSelectedIndex(t.order - 1);
-                          }}
-                        >
-                          Add topic
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
-
-                <Row className="d-flex justify-content-between bg-graydark br-1 ">
-                  <Col sm={8} style={{ cursor: "pointer" }}>
-                    <div className="p-2 d-flex align-items-center">
-                      <OrderInput
-                        order={`${t.order}`}
-                        courseId={courseId}
-                        topicId={t.id}
-                        getAllTopics={getAllTopics}
-                      />
                       <p
-                        className="mt-2 ps-2"
+                        onClick={() => {
+                          setModelType("MODULE_CREATE");
+                          setCurrentSelectedTopic(t.id);
+                        }}
+                        className="bg-gray"
                         style={{
-                          fontSize: "1.1rem",
-
-                          wordWrap: "break-word",
+                          color: "black",
+                          display: "inline-block",
+                          padding: ".2rem 1rem",
+                          cursor: "pointer",
+                          borderRadius: ".5rem",
                         }}
                       >
-                        {t.name &&
-                          t.name.charAt(0).toUpperCase() + t.name.slice(1)}
+                        <BsFillPlusCircleFill
+                          size="1.1rem"
+                          style={{
+                            zIndex: "100",
+                            color: "black",
+                            textAlign: "center",
+                            marginTop: "-.5rem",
+                            marginRight: ".5rem",
+                          }}
+                        />
+                        Add module
+                      </p>
+                      <p
+                        className="bg-gray"
+                        style={{
+                          // background: "#18b3a7",
+                          color: "black",
+                          display: "inline-block",
+                          padding: ".2rem 1rem",
+                          cursor: "pointer",
+                          borderRadius: ".5rem",
+                          margin: "0rem 1rem",
+                        }}
+                        onClick={() => {
+                          setModelType("TOPIC_CREATE");
+                          setCurrentSelectedIndex(t.order - 1);
+                        }}
+                      >
+                        Add topic
                       </p>
                     </div>
-                  </Col>
-                  <Col
-                    style={{
-                      minHeight: "100%",
+                  </div>
+                </motion.div>
+              )}
 
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Button
-                      className="bg-graydark text-white me-1  btn-circle"
-                      onClick={() => deleteTopic(t.id)}
+              <Row className="d-flex justify-content-between br-1 bg-graydark ">
+                <Col sm={8} style={{ cursor: "pointer" }}>
+                  <div className="p-2 d-flex align-items-center">
+                    <OrderInput
+                      order={`${t.order}`}
+                      courseId={courseId}
+                      topicId={t.id}
+                      getAllTopics={getAllTopics}
+                      isAssessment={t.max_marks ? true : false}
+                    />
+                    <p
+                      className="mt-2 ps-2"
                       style={{
-                        outline: "none",
-                        border: "none",
-                        borderRadius: "4rem",
+                        fontSize: "1.1rem",
+                        verticalAlign: "center",
+                        wordWrap: "break-word",
                       }}
                     >
-                      <AiTwotoneDelete className="text-danger" size={22} />
-                    </Button>
-                    <Button
-                      className="bg-graydark text-white me-1  btn-circle"
-                      onClick={() => {
-                        setSelectedUpdateTopic(t);
-                        setModelType("TOPIC_UPDATE");
-                      }}
-                      style={{
-                        outline: "none",
-                        border: "none",
-                        borderRadius: "4rem",
-                      }}
-                    >
-                      <BsPenFill className="text-adminsecondary" size="20" />
-                    </Button>
-                  </Col>
-                </Row>
-              </motion.div>
-            </AnimatePresence>
-          ))}
-          {/* {(modules || []).map((m) => (
+                      {t.name &&
+                        t.name.charAt(0).toUpperCase() + t.name.slice(1)}{" "}
+                      <br></br>
+                      {t.max_marks ? (
+                        <p
+                          style={{
+                            fontWeight: "bold",
+                            fontSize: ".9rem",
+                            marginBottom: "-.5rem",
+                          }}
+                        >
+                          Assessment
+                        </p>
+                      ) : null}
+                    </p>
+                  </div>
+                </Col>
+                <Col
+                  style={{
+                    minHeight: "100%",
+
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {!t.max_marks ? (
+                    <>
+                      <Button
+                        className="bg-graydark text-white me-1  btn-circle"
+                        onClick={() => deleteTopic(t.id)}
+                        style={{
+                          outline: "none",
+                          border: "none",
+                          borderRadius: "4rem",
+                        }}
+                      >
+                        <AiTwotoneDelete className="text-danger" size={22} />
+                      </Button>
+                      <Button
+                        className="bg-graydark text-white me-1  btn-circle"
+                        onClick={() => {
+                          setSelectedUpdateTopic(t);
+                          setModelType("TOPIC_UPDATE");
+                        }}
+                        style={{
+                          outline: "none",
+                          border: "none",
+                          borderRadius: "4rem",
+                        }}
+                      >
+                        <BsPenFill className="text-adminsecondary" size="20" />
+                      </Button>
+                    </>
+                  ) : null}
+                </Col>
+              </Row>
+            </motion.div>
+          </AnimatePresence>
+        ))}
+        {/* {(modules || []).map((m) => (
           <div>
             <div>
               <Row className="d-flex justify-content-between bg-primary text-white br-1 my-4">
@@ -569,274 +585,78 @@ const CourseContainer = ({}) => {
             </>
           </div>
         ))} */}
-          <div
-            style={{
-              height: "3rem",
-              overflow: "hidden",
-              marginTop: "2rem",
+        <div
+          style={{
+            height: "3rem",
+            overflow: "hidden",
+            marginTop: "2rem",
 
-              textAlign: "center",
+            textAlign: "center",
+          }}
+        >
+          <p
+            style={{
+              background: "black",
+              color: "white",
+              display: "inline-block",
+              padding: ".2rem 1rem",
+              cursor: "pointer",
+              borderRadius: ".5rem",
             }}
           >
-            <p
+            <BsFillPlusCircleFill
+              size="1.1rem"
               style={{
-                background: "black",
+                zIndex: "100",
                 color: "white",
-                display: "inline-block",
-                padding: ".2rem 1rem",
-                cursor: "pointer",
-                borderRadius: ".5rem",
+                textAlign: "center",
+                marginTop: "-.5rem",
+                marginRight: ".5rem",
               }}
-            >
-              <BsFillPlusCircleFill
-                size="1.1rem"
-                style={{
-                  zIndex: "100",
-                  color: "white",
-                  textAlign: "center",
-                  marginTop: "-.5rem",
-                  marginRight: ".5rem",
-                }}
-              />
-              Add module
-            </p>
-            <p
-              className="bg-primary"
-              style={{
-                // background: "#18b3a7",
-                color: "white",
-                display: "inline-block",
-                padding: ".2rem 1rem",
-                cursor: "pointer",
-                borderRadius: ".5rem",
-                margin: "0rem 1rem",
-              }}
-              onClick={() => {
-                setModelType("TOPIC_CREATE");
-                setCurrentSelectedIndex(topics?.length + 1);
-              }}
-            >
-              Add topic
-            </p>
-          </div>
-          {modelType === "TOPIC_CREATE" && (
-            <>
-              <Modal size="xl" show={true} onHide={hideModel}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Create topic</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form noValidate onSubmit={creatFormik.handleSubmit}>
-                    <Row className="mb-3">
-                      <Form.Group as={Col}>
-                        <Form.Label>Topic name</Form.Label>
-                        <Form.Control
-                          name="name"
-                          value={creatFormik.values.name}
-                          onChange={creatFormik.handleChange}
-                          type="text"
-                          required
-                          placeholder="Enter Topic Name"
-                        />
-                        {creatFormik.touched.name && creatFormik.errors.name ? (
-                          <div className="text-danger">
-                            {creatFormik.errors.name}
-                          </div>
-                        ) : null}
-                      </Form.Group>
-
-                      <Form.Group as={Col}>
-                        <Form.Label>Video url</Form.Label>
-                        <Form.Control
-                          name="video"
-                          onChange={creatFormik.handleChange}
-                          value={creatFormik.values.video}
-                          type="text"
-                          required
-                          placeholder="Enter play,example.."
-                        />
-                        {creatFormik.touched.video &&
-                        creatFormik.errors.video ? (
-                          <div className="text-danger">
-                            {creatFormik.errors.video}
-                          </div>
-                        ) : null}
-                      </Form.Group>
-                    </Row>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>Info image</Form.Label>
-                      <Form.Control
-                        name="info_image"
-                        type="file"
-                        required
-                        placeholder="Upload info image"
-                        onChange={(e) =>
-                          creatFormik.setFieldValue(
-                            "info_image",
-                            //@ts-ignore
-                            e.currentTarget.files[0]
-                          )
-                        }
-                        // value={creatFormik.values.info_image}
-                      />
-                      {/* @ts-ignore */}
-                      {creatFormik.values.info_image instanceof File && (
-                        <img
-                          className="mt-3"
-                          style={{ width: "8rem" }}
-                          src={URL.createObjectURL(
-                            creatFormik.values.info_image
-                          )}
-                        />
-                      )}
-                      {creatFormik.touched.info_image &&
-                      creatFormik.errors.info_image ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.info_image}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>pdf url</Form.Label>
-                      <Form.Control
-                        name="pdf"
-                        required
-                        onChange={creatFormik.handleChange}
-                        value={creatFormik.values.pdf}
-                        placeholder="Add the course pdf.."
-                      />
-                      {creatFormik.touched.pdf && creatFormik.errors.pdf ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.pdf}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-                    <Form.Group as={Col}>
-                      <Form.Label>Image url</Form.Label>
-                      <Form.Control
-                        name="image"
-                        required
-                        onChange={creatFormik.handleChange}
-                        value={creatFormik.values.image}
-                        type="text"
-                      />
-                      {creatFormik.touched.image && creatFormik.errors.image ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.image}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-                    <Form.Group>
-                      <Form.Label>Content</Form.Label>
-                      <Form.Control
-                        name="content"
-                        required
-                        onChange={creatFormik.handleChange}
-                        value={creatFormik.values.content}
-                        type="text"
-                        as={"textarea"}
-                        rows={3}
-                      />
-                      {creatFormik.touched.content &&
-                      creatFormik.errors.content ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.content}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-                    <Form.Group>
-                      <Form.Label>Description</Form.Label>
-                      <Form.Control
-                        name="description"
-                        required
-                        onChange={creatFormik.handleChange}
-                        as={"textarea"}
-                        rows={4}
-                        value={creatFormik.values.description}
-                        type="text"
-                      />
-                      {creatFormik.touched.description &&
-                      creatFormik.errors.description ? (
-                        <div className="text-danger">
-                          {creatFormik.errors.description}
-                        </div>
-                      ) : null}
-                    </Form.Group>
-
-                    <Modal.Footer>
-                      <Button variant="secondary" onClick={hideModel}>
-                        Close
-                      </Button>
-                      <Button
-                        className="d-flex align-items-center"
-                        variant="admingreen text-white"
-                        type="submit"
-                      >
-                        Create
-                      </Button>
-                    </Modal.Footer>
-                  </Form>
-                </Modal.Body>
-              </Modal>
-            </>
-          )}
-          {modelType === "MODULE_CREATE" && (
-            <Modal size="sm" show={true} onHide={hideModel}>
-              <Modal.Header closeButton>
-                <Modal.Title>Create Module</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <Form.Group className="mb-3">
-                  <Form.Label>Module title</Form.Label>
-                  <Form.Control
-                    name="Title"
-                    required
-                    onChange={(e) => setModuleTitle(e.target.value)}
-                    value={moduleTitle}
-                    placeholder="My title.."
-                  />
-                </Form.Group>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={hideModel}>
-                  Close
-                </Button>
-                <Button
-                  onClick={() => {
-                    updateMoudle();
-                  }}
-                  className="d-flex align-items-center"
-                  variant="admingreen text-white"
-                  type="submit"
-                >
-                  Create
-                </Button>
-              </Modal.Footer>
-            </Modal>
-          )}
-          {modelType === "TOPIC_UPDATE" && (
+            />
+            Add module
+          </p>
+          <p
+            className="bg-primary"
+            style={{
+              // background: "#18b3a7",
+              color: "white",
+              display: "inline-block",
+              padding: ".2rem 1rem",
+              cursor: "pointer",
+              borderRadius: ".5rem",
+              margin: "0rem 1rem",
+            }}
+            onClick={() => {
+              setModelType("TOPIC_CREATE");
+              setCurrentSelectedIndex(topics?.length + 1);
+            }}
+          >
+            Add topic
+          </p>
+        </div>
+        {modelType === "TOPIC_CREATE" && (
+          <>
             <Modal size="xl" show={true} onHide={hideModel}>
               <Modal.Header closeButton>
-                <Modal.Title>Update topic</Modal.Title>
+                <Modal.Title>Create topic</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <Form noValidate onSubmit={updateFormik.handleSubmit}>
+                <Form noValidate onSubmit={creatFormik.handleSubmit}>
                   <Row className="mb-3">
                     <Form.Group as={Col}>
                       <Form.Label>Topic name</Form.Label>
                       <Form.Control
                         name="name"
-                        value={updateFormik.values.name}
-                        onChange={updateFormik.handleChange}
+                        value={creatFormik.values.name}
+                        onChange={creatFormik.handleChange}
                         type="text"
                         required
                         placeholder="Enter Topic Name"
                       />
-                      {updateFormik.touched.name && updateFormik.errors.name ? (
+                      {creatFormik.touched.name && creatFormik.errors.name ? (
                         <div className="text-danger">
-                          {updateFormik.errors.name}
+                          {creatFormik.errors.name}
                         </div>
                       ) : null}
                     </Form.Group>
@@ -845,16 +665,15 @@ const CourseContainer = ({}) => {
                       <Form.Label>Video url</Form.Label>
                       <Form.Control
                         name="video"
-                        onChange={updateFormik.handleChange}
-                        value={updateFormik.values.video}
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.video}
                         type="text"
                         required
                         placeholder="Enter play,example.."
                       />
-                      {updateFormik.touched.video &&
-                      updateFormik.errors.video ? (
+                      {creatFormik.touched.video && creatFormik.errors.video ? (
                         <div className="text-danger">
-                          {updateFormik.errors.video}
+                          {creatFormik.errors.video}
                         </div>
                       ) : null}
                     </Form.Group>
@@ -868,35 +687,26 @@ const CourseContainer = ({}) => {
                       required
                       placeholder="Upload info image"
                       onChange={(e) =>
-                        updateFormik.setFieldValue(
+                        creatFormik.setFieldValue(
                           "info_image",
                           //@ts-ignore
                           e.currentTarget.files[0]
                         )
                       }
-                      // value={updateFormik.values.info_image}
+                      // value={creatFormik.values.info_image}
                     />
-                    {typeof updateFormik.values.info_image === "string" && (
-                      <img
-                        className="mt-3"
-                        style={{ width: "8rem" }}
-                        src={`https://${HOST}${updateFormik.values.info_image}`}
-                      />
-                    )}
                     {/* @ts-ignore */}
-                    {updateFormik.values.info_image instanceof File && (
+                    {creatFormik.values.info_image instanceof File && (
                       <img
                         className="mt-3"
                         style={{ width: "8rem" }}
-                        src={URL.createObjectURL(
-                          updateFormik.values.info_image
-                        )}
+                        src={URL.createObjectURL(creatFormik.values.info_image)}
                       />
                     )}
-                    {updateFormik.touched.info_image &&
-                    updateFormik.errors.info_image ? (
+                    {creatFormik.touched.info_image &&
+                    creatFormik.errors.info_image ? (
                       <div className="text-danger">
-                        {updateFormik.errors.info_image}
+                        {creatFormik.errors.info_image}
                       </div>
                     ) : null}
                   </Form.Group>
@@ -906,13 +716,13 @@ const CourseContainer = ({}) => {
                     <Form.Control
                       name="pdf"
                       required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.pdf}
+                      onChange={creatFormik.handleChange}
+                      value={creatFormik.values.pdf}
                       placeholder="Add the course pdf.."
                     />
-                    {updateFormik.touched.pdf && updateFormik.errors.pdf ? (
+                    {creatFormik.touched.pdf && creatFormik.errors.pdf ? (
                       <div className="text-danger">
-                        {updateFormik.errors.pdf}
+                        {creatFormik.errors.pdf}
                       </div>
                     ) : null}
                   </Form.Group>
@@ -921,13 +731,13 @@ const CourseContainer = ({}) => {
                     <Form.Control
                       name="image"
                       required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.image}
+                      onChange={creatFormik.handleChange}
+                      value={creatFormik.values.image}
                       type="text"
                     />
-                    {updateFormik.touched.image && updateFormik.errors.image ? (
+                    {creatFormik.touched.image && creatFormik.errors.image ? (
                       <div className="text-danger">
-                        {updateFormik.errors.image}
+                        {creatFormik.errors.image}
                       </div>
                     ) : null}
                   </Form.Group>
@@ -936,16 +746,16 @@ const CourseContainer = ({}) => {
                     <Form.Control
                       name="content"
                       required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.content}
+                      onChange={creatFormik.handleChange}
+                      value={creatFormik.values.content}
                       type="text"
                       as={"textarea"}
                       rows={3}
                     />
-                    {updateFormik.touched.content &&
-                    updateFormik.errors.content ? (
+                    {creatFormik.touched.content &&
+                    creatFormik.errors.content ? (
                       <div className="text-danger">
-                        {updateFormik.errors.content}
+                        {creatFormik.errors.content}
                       </div>
                     ) : null}
                   </Form.Group>
@@ -954,16 +764,16 @@ const CourseContainer = ({}) => {
                     <Form.Control
                       name="description"
                       required
-                      onChange={updateFormik.handleChange}
+                      onChange={creatFormik.handleChange}
                       as={"textarea"}
                       rows={4}
-                      value={updateFormik.values.description}
+                      value={creatFormik.values.description}
                       type="text"
                     />
-                    {updateFormik.touched.description &&
-                    updateFormik.errors.description ? (
+                    {creatFormik.touched.description &&
+                    creatFormik.errors.description ? (
                       <div className="text-danger">
-                        {updateFormik.errors.description}
+                        {creatFormik.errors.description}
                       </div>
                     ) : null}
                   </Form.Group>
@@ -977,15 +787,212 @@ const CourseContainer = ({}) => {
                       variant="admingreen text-white"
                       type="submit"
                     >
-                      Update
+                      Create
                     </Button>
                   </Modal.Footer>
                 </Form>
               </Modal.Body>
             </Modal>
-          )}
-        </motion.div>
-      </AnimatePresence>
+          </>
+        )}
+        {modelType === "MODULE_CREATE" && (
+          <Modal size="sm" show={true} onHide={hideModel}>
+            <Modal.Header closeButton>
+              <Modal.Title>Create Module</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form.Group className="mb-3">
+                <Form.Label>Module title</Form.Label>
+                <Form.Control
+                  name="Title"
+                  required
+                  onChange={(e) => setModuleTitle(e.target.value)}
+                  value={moduleTitle}
+                  placeholder="My title.."
+                />
+              </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={hideModel}>
+                Close
+              </Button>
+              <Button
+                onClick={() => {
+                  updateMoudle();
+                }}
+                className="d-flex align-items-center"
+                variant="admingreen text-white"
+                type="submit"
+              >
+                Create
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+        {modelType === "TOPIC_UPDATE" && (
+          <Modal size="xl" show={true} onHide={hideModel}>
+            <Modal.Header closeButton>
+              <Modal.Title>Update topic</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Form noValidate onSubmit={updateFormik.handleSubmit}>
+                <Row className="mb-3">
+                  <Form.Group as={Col}>
+                    <Form.Label>Topic name</Form.Label>
+                    <Form.Control
+                      name="name"
+                      value={updateFormik.values.name}
+                      onChange={updateFormik.handleChange}
+                      type="text"
+                      required
+                      placeholder="Enter Topic Name"
+                    />
+                    {updateFormik.touched.name && updateFormik.errors.name ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.name}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+
+                  <Form.Group as={Col}>
+                    <Form.Label>Video url</Form.Label>
+                    <Form.Control
+                      name="video"
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.video}
+                      type="text"
+                      required
+                      placeholder="Enter play,example.."
+                    />
+                    {updateFormik.touched.video && updateFormik.errors.video ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.video}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                </Row>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Info image</Form.Label>
+                  <Form.Control
+                    name="info_image"
+                    type="file"
+                    required
+                    placeholder="Upload info image"
+                    onChange={(e) =>
+                      updateFormik.setFieldValue(
+                        "info_image",
+                        //@ts-ignore
+                        e.currentTarget.files[0]
+                      )
+                    }
+                    // value={updateFormik.values.info_image}
+                  />
+                  {typeof updateFormik.values.info_image === "string" && (
+                    <img
+                      className="mt-3"
+                      style={{ width: "8rem" }}
+                      src={`https://${HOST}${updateFormik.values.info_image}`}
+                    />
+                  )}
+                  {/* @ts-ignore */}
+                  {updateFormik.values.info_image instanceof File && (
+                    <img
+                      className="mt-3"
+                      style={{ width: "8rem" }}
+                      src={URL.createObjectURL(updateFormik.values.info_image)}
+                    />
+                  )}
+                  {updateFormik.touched.info_image &&
+                  updateFormik.errors.info_image ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.info_image}
+                    </div>
+                  ) : null}
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>pdf url</Form.Label>
+                  <Form.Control
+                    name="pdf"
+                    required
+                    onChange={updateFormik.handleChange}
+                    value={updateFormik.values.pdf}
+                    placeholder="Add the course pdf.."
+                  />
+                  {updateFormik.touched.pdf && updateFormik.errors.pdf ? (
+                    <div className="text-danger">{updateFormik.errors.pdf}</div>
+                  ) : null}
+                </Form.Group>
+                <Form.Group as={Col}>
+                  <Form.Label>Image url</Form.Label>
+                  <Form.Control
+                    name="image"
+                    required
+                    onChange={updateFormik.handleChange}
+                    value={updateFormik.values.image}
+                    type="text"
+                  />
+                  {updateFormik.touched.image && updateFormik.errors.image ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.image}
+                    </div>
+                  ) : null}
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Content</Form.Label>
+                  <Form.Control
+                    name="content"
+                    required
+                    onChange={updateFormik.handleChange}
+                    value={updateFormik.values.content}
+                    type="text"
+                    as={"textarea"}
+                    rows={3}
+                  />
+                  {updateFormik.touched.content &&
+                  updateFormik.errors.content ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.content}
+                    </div>
+                  ) : null}
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Description</Form.Label>
+                  <Form.Control
+                    name="description"
+                    required
+                    onChange={updateFormik.handleChange}
+                    as={"textarea"}
+                    rows={4}
+                    value={updateFormik.values.description}
+                    type="text"
+                  />
+                  {updateFormik.touched.description &&
+                  updateFormik.errors.description ? (
+                    <div className="text-danger">
+                      {updateFormik.errors.description}
+                    </div>
+                  ) : null}
+                </Form.Group>
+
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={hideModel}>
+                    Close
+                  </Button>
+                  <Button
+                    className="d-flex align-items-center"
+                    variant="admingreen text-white"
+                    type="submit"
+                  >
+                    Update
+                  </Button>
+                </Modal.Footer>
+              </Form>
+            </Modal.Body>
+          </Modal>
+        )}
+      </motion.div>
     </div>
   );
 };
@@ -995,9 +1002,16 @@ type Props = {
   courseId?: string;
   topicId: number;
   getAllTopics: () => void;
+  isAssessment: boolean;
 };
 
-const OrderInput = ({ order, courseId, topicId, getAllTopics }: Props) => {
+const OrderInput = ({
+  order,
+  courseId,
+  topicId,
+  getAllTopics,
+  isAssessment,
+}: Props) => {
   const [currentOrder, setCurrentOrder] = React.useState(order);
   const dispatch = useAppDispatch();
 
@@ -1006,6 +1020,9 @@ const OrderInput = ({ order, courseId, topicId, getAllTopics }: Props) => {
 
     formData.set("course", `${courseId}`);
     formData.set("order", `${currentOrder}`);
+    if (isAssessment) {
+      formData.set("type", `assessment`);
+    }
     if (courseId) {
       customAxios
         .put(`/master/topic-update_module_title/${topicId}/`, formData)
