@@ -2,7 +2,7 @@ import React from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../../assets/sphechoLogo.png";
+import logo from "../../assets/logo-g.png";
 import { Container } from "react-bootstrap";
 import colorLogo from "../../assets/colorlogo.png";
 
@@ -59,7 +59,7 @@ const NavBar = ({ isDark }) => (
       <Navbar.Brand as={Link} to="/">
         <img
           src={isDark ? colorLogo : logo}
-          width={isDark ? "135rem" : "165rem"}
+          width={"45rem"}
         />
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -67,58 +67,58 @@ const NavBar = ({ isDark }) => (
         <Nav className="ms-auto">
           <Nav.Link
             className="b-700 link-nav"
-            style={{ color: isDark ? "#97d25a" : "white" }}
+            style={{ color: isDark ? "#69B447" : "black" }}
           >
             <Link
-              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400"}}
               to="/login"
             >
-              BLACKBOARD
+              <p>BLACKBOARD</p>
             </Link>
           </Nav.Link>
           <Nav.Link
             className=" b-700 link-nav"
-            style={{ color: isDark ? "#97d25a" : "white" }}
+            style={{ color: isDark ? "#69B447" : "black" }}
           >
             <Link
-              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
               to="/webinar"
             >
-              WEBINAR
+              <p>WEBINAR</p>
             </Link>
           </Nav.Link>
           <Nav.Link
             className="b-700 link-nav"
-            style={{ color: isDark ? "#97d25a" : "white" }}
+            style={{ color: isDark ? "#69B447" : "black" }}
           >
             <Link
-              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
               to="/features"
             >
-              FEATURES
+             <p>FEATURES</p> 
             </Link>
           </Nav.Link>
 
           <Nav.Link
             className="b-700 link-nav"
-            style={{ color: isDark ? "#97d25a" : "white" }}
+            style={{ color: isDark ? "#69B447" : "black" }}
           >
             <Link
-              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
               to="/privacy"
             >
-              PRIVACY
+              <p>PRIVACY</p>
             </Link>
           </Nav.Link>
           <Nav.Link
             className="b-700 link-nav"
-            style={{ color: isDark ? "#97d25a" : "white" }}
+            style={{ color: isDark ? "#69B447" : "black" }}
           >
             <Link
-              style={{ textDecoration: "none", fontSize: "1.4rem" }}
+              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
               to="/login"
             >
-              LOGIN
+              <p>LOGIN</p>
             </Link>
           </Nav.Link>
         </Nav>
@@ -149,7 +149,7 @@ const SmallNavBar = ({ isDark }) => (
         <Nav className="ms-auto" style={{ padding: "1rem" }}>
           <Nav.Link
             className="b-700 link-nav"
-            style={{ color: "#97d25a", textDecoration: "none" }}
+            style={{ color: "#69B447", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/login">
               BLACKBOARD
@@ -157,7 +157,7 @@ const SmallNavBar = ({ isDark }) => (
           </Nav.Link>
           <Nav.Link
             className=" b-700 link-nav"
-            style={{ color: "#97d25a", textDecoration: "none" }}
+            style={{ color: "#69B447", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/webinar">
               WEBINAR
@@ -165,18 +165,18 @@ const SmallNavBar = ({ isDark }) => (
           </Nav.Link>
           <Nav.Link
             className="b-700 link-nav"
-            style={{ color: "#97d25a", textDecoration: "none" }}
+            style={{ color: "#69B447", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/features">
               FEATURES
             </Link>
           </Nav.Link>
-          <Nav.Link className="b-700 link-nav" style={{ color: "#97d25a" }}>
+          <Nav.Link className="b-700 link-nav" style={{ color: "#69B447" }}>
             <Link style={{ textDecoration: "none" }} to="/privacy">
               PRIVACY
             </Link>
           </Nav.Link>
-          <Nav.Link className="b-700 link-nav" style={{ color: "#97d25a" }}>
+          <Nav.Link className="b-700 link-nav" style={{ color: "#69B447" }}>
             <Link style={{ textDecoration: "none" }} to="/login">
               LOGIN
             </Link>

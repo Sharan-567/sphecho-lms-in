@@ -10,7 +10,7 @@ import improve from "../../assets/improve.png";
 import noImage from "../../assets/no-img.png";
 import colorLogo from "../../assets/colorlogo.png";
 import lb1 from "../../assets/lb1.jpg";
-import lb2 from "../../assets/lb2.jpg";
+import feature from "../../assets/feature.png";
 
 import apple from "../../assets/apple.png";
 import fb from "../../assets/fb.png";
@@ -23,7 +23,12 @@ import yt from "../../assets/yt.png";
 import wave from "../../assets/wave.png";
 
 import "./home.scss";
+import Fade from "react-reveal/Fade";
 import Navbar from "./Navbar";
+
+import c1 from "../../assets/c1.png";
+import c2 from "../../assets/c2.png";
+import c3 from "../../assets/c3.png";
 
 // const Home = () => {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
@@ -36,8 +41,9 @@ const Home = () => {
       <div style={{ width: "100vw", overflowX: "hidden" }}>
         <Banner />
         <TitleContainer />
-        <BenfitsOfCertification />
-        <Board />
+        <FeatureSection />
+        <FeaturedCourses />
+        <Introduction />
         <Committe />
         <InternalCommitee />
         <FAQS />
@@ -51,7 +57,7 @@ const Home = () => {
 
 const Banner = () => {
   return (
-    <div className="position-relative">
+    <div>
       <div
         className="banner-container"
         style={{ height: "130vh", width: "100wh", position: "relative" }}
@@ -81,25 +87,34 @@ const Banner = () => {
                 alt="First slide"
               />
             </Carousel.Item>
-            <Carousel.Item>
+            {/* <Carousel.Item>
               <img
                 className="d-block coursel-img"
                 src={lb2}
                 alt="First slide"
               />
-            </Carousel.Item>
+            </Carousel.Item> */}
           </Carousel>
-          <div className="banner-title">
-            <h1 className="container">
-              <h1 style={{ fontWeight: "bold" }}>
-                LEARN CONTINUALLY- THERE’S ALWAYS{" "}
+          <Fade left>
+            <div className="banner-title">
+              <h1
+                className=" text-white"
+                style={{
+                  textAlign: "center",
+                  margin: "auto",
+                  paddingTop: "5rem",
+                }}
+              >
+                <h1 style={{ fontWeight: "bold" }}>
+                  LEARN CONTINUALLY- THERE’S ALWAYS{" "}
+                </h1>
+                <i>
+                  <b style={{ fontSize: "3rem" }}>“ONE MORE THING” </b>
+                </i>{" "}
+                TO LEARN.
               </h1>
-              <i>
-                <b style={{ fontSize: "3rem" }}>“ONE MORE THING” </b>
-              </i>{" "}
-              TO LEARN.
-            </h1>
-          </div>
+            </div>
+          </Fade>
         </div>
       </div>
       {/* <img
@@ -107,9 +122,9 @@ const Banner = () => {
         src={wave}
         style={{ width: "100%", position: "absolute", bottom: "0" }}
       /> */}
-      <div className="wave-container-banner ">
+      {/* <div className="wave-container-banner ">
         <div className="wave"></div>
-      </div>
+      </div> */}
     </div>
   );
 };
@@ -117,15 +132,16 @@ const Banner = () => {
 const TitleContainer = () => {
   return (
     <div className="title-content">
-      <p>
-        The SPHECHO curriculum and cerification program is for professionals who
-        are responsible for the support and/or services provided to people of
-        determination. The program's objective is to offer a comprehensive,
-        multidisciplinary training program and specialized credential to
-        professionals in order to supplement their existing knowledge, make sure
-        they are up to date on best practices and research, and ensure they
-        incorporate new knowledge into professional practice.
-      </p>
+      <Fade bottom>
+        <p>
+          Our training platform is a comprehensive learning management system
+          for all professionals and individuals who work alongside people of
+          determination. The Sphecho courses, which are constructed and
+          incorporated into this system, aids in developing professionals into
+          the finest in their field of telerehabilitation. Additionally, the
+          system is built to offer webinars and educational sessions.
+        </p>
+      </Fade>
     </div>
   );
 };
@@ -195,6 +211,339 @@ const BenfitsOfCertification = () => {
           d="M0,96L80,122.7C160,149,320,203,480,192C640,181,800,107,960,96C1120,85,1280,139,1360,165.3L1440,192L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
         ></path>
       </svg>
+    </div>
+  );
+};
+
+const FeatureSection = () => {
+  return (
+    <section style={{ position: "relative", marginBottom: "20rem" }}>
+      <div style={{ position: "relative" }}>
+        <Fade bottom>
+          <img
+            src={feature}
+            style={{
+              width: "100%",
+              height: "45rem",
+              objectFit: "cover",
+              borderRadius: "0 20rem 0 20rem ",
+            }}
+          />
+        </Fade>
+        <Fade left>
+          <div style={{ position: "absolute", top: "8rem", left: "6rem" }}>
+            <h1
+              style={{
+                fontWeight: "800",
+                marginBottom: "2rem",
+                color: "black",
+              }}
+            >
+              This below features are <br></br> currently available <br></br>
+              only for Sphecho <br></br> Providers.
+            </h1>
+            <CButton title={"Know more"} onClick={() => {}} />
+          </div>
+        </Fade>
+        <div style={{ position: "absolute", top: "40rem", left: "15rem" }}>
+          <FeatureButtons />
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const FeatureButtons = () => {
+  return (
+    <section
+      className="container"
+      style={{ marginTop: "-5rem", zIndex: "10999" }}
+    >
+      <Row>
+        <Col sm={4}>
+          <Fade bottom>
+            <div
+              style={{
+                background: "white",
+                width: "22rem",
+                padding: "1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                height: "22rem",
+                borderRadius: "3rem 0 3rem 0",
+                boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
+              }}
+            >
+              <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
+                My Blackboard
+              </h2>
+              <p className="text-center">
+                My Blackboard provides users with one location to view and act
+                on their capability development information. It aggregates
+                information from across the learning system for a user.
+              </p>
+            </div>
+          </Fade>
+        </Col>
+        {/* 2 */}
+        <Col sm={4}>
+          <Fade bottom>
+            <div
+              style={{
+                background: "white",
+                width: "22rem",
+                padding: "1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                height: "22rem",
+                borderRadius: "3rem 0 3rem 0",
+                boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
+              }}
+            >
+              <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
+                Courses
+              </h2>
+              <p className="text-center">
+                My Blackboard provides users with one location to view and act
+                on their capability development information. It aggregates
+                information from across the learning system for a user.
+              </p>
+            </div>
+          </Fade>
+        </Col>
+        {/* 3 */}
+        <Col sm={4}>
+          <Fade bottom>
+            <div
+              style={{
+                background: "white",
+                width: "22rem",
+                padding: "1rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexDirection: "column",
+                height: "22rem",
+                borderRadius: "3rem 0 3rem 0",
+                boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
+              }}
+            >
+              <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
+                My Blackboard
+              </h2>
+              <p className="text-center">
+                The Sphecho Courses allow Providers and parents to access course
+                materials online. A variety of free courses are available to
+                promote development and resourcefulness.
+              </p>
+            </div>
+          </Fade>
+        </Col>
+      </Row>
+    </section>
+  );
+};
+
+const FeaturedCourses = () => {
+  return (
+    <section
+      className="bg-primary"
+      style={{
+        borderRadius: "0 20rem 0rem 0",
+        marginRight: "1rem",
+        marginBottom: "5rem",
+      }}
+    >
+      <Fade left>
+        <h1 style={{ marginLeft: "3rem", paddingTop: "2rem", color: "white" }}>
+          Featured courses
+        </h1>
+      </Fade>
+      <Fade left>
+        <div className="" style={{ padding: "3rem" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              overflowX: "scroll",
+            }}
+          >
+            <FeatureCourseCard
+              img={c1}
+              title="Facilitator Course"
+              subTitle={"Online Training, Assessment, and Certification"}
+              isCommingSoon={true}
+            />
+            <FeatureCourseCard
+              img={c2}
+              title="Telepractice Course"
+              subTitle={"Online Training, Assessment, and Certification"}
+              isCommingSoon={true}
+            />
+            <FeatureCourseCard
+              img={c3}
+              title="Provider Onboarding Course"
+              subTitle={"Online Training, Assessment, and Certification"}
+            />
+          </div>
+        </div>
+      </Fade>
+    </section>
+  );
+};
+
+const FeatureCourseCard = ({
+  img,
+  title,
+  subTitle,
+  isCommingSoon,
+}: {
+  isCommingSoon?: boolean;
+  title: string;
+  img: string;
+  subTitle: string;
+}) => {
+  return (
+    <div
+      style={{
+        background: "white",
+        width: "24rem",
+        padding: "1rem",
+        borderRadius: "2rem",
+        minHeight: "28rem",
+        boxShadow: "0px 0px 20px 10px rgba(0,0,0, 0.1)",
+        margin: "0 2rem",
+      }}
+    >
+      <img
+        src={img}
+        style={{
+          width: "100%",
+          height: "15rem",
+          objectFit: "cover",
+          borderRadius: ".8rem",
+        }}
+      />
+      <p
+        style={{
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+          marginTop: "2rem",
+        }}
+      >
+        {title}
+      </p>
+      <p>{subTitle}</p>
+      {isCommingSoon ? (
+        <div
+          className="text-primary"
+          style={{
+            padding: "1rem",
+            borderRadius: "1rem",
+            fontWeight: "500",
+          }}
+        >
+          Comming soon
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+const CButton = ({ onClick, title }) => {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        cursor: "pointer",
+        border: "none",
+        padding: "1rem 2rem",
+        borderRadius: ".8rem",
+        background: "black",
+        color: "white",
+      }}
+    >
+      {title}
+    </button>
+  );
+};
+
+const Introduction = () => {
+  const learingOutcomes = [
+    "Enrich professional and clinical work experiences in pertinent fields.",
+    "Adapt to virtual patient client care environment in context of Covid's rapid advancement of integrative technologies.",
+    "Enhance existing prerequisite through solid understanding of telepractice.",
+    "Strategically use telepractice as a teaching methodology to ensure clinical competency.",
+    "Analyze how the current remote learning is affecting early intervention and education for people of determination.",
+    "Recognize telepractice as a service delivery paradigm that enhances parent coaching.",
+  ];
+
+  return (
+    <section
+      style={{
+        background: "#F1F0EE",
+        padding: "5rem 1rem",
+        borderRadius: "12rem 0rem 0 0",
+        position: "relative",
+        marginBottom: "10rem",
+      }}
+    >
+      <div className="container">
+        <div>
+          <Fade bottom>
+            <h1>Introduction</h1>
+            <p style={{ marginBottom: "5rem", maxWidth: "60rem" }}>
+              Among the many benefits of online learning, you'll find that
+              virtual education allows you to enjoy a more flexible schedule and
+              allows you to more easily develop your profession alongside
+              furthering your education. We at Sphecho intend to add a number of
+              courses to our Global Outreach Program in the forthcoming months.
+              For the year, Sphecho will be focusing primarily on their Provider
+              Onboarding Course to help professionals better comprehend online
+              telepractice and to boost their effectiveness in telepractice
+              through Sphecho platform participation.
+            </p>
+            <h1>Learning Outcomes</h1>
+            <p style={{ paddingBottom: "5rem" }}>
+              Upon completion of this course, learners will be able to:
+            </p>
+          </Fade>
+        </div>
+      </div>
+      <div style={{ position: "absolute", top: "30rem", left: "5rem" }}>
+        <Fade left>
+          <div className="d-flex align-items-center gap-3">
+            {learingOutcomes.map((title, idx) => {
+              return <IntroCard key={idx} title={title} />;
+            })}
+          </div>
+        </Fade>
+      </div>
+    </section>
+  );
+};
+
+const IntroCard = ({ title }) => {
+  return (
+    <div
+      style={{
+        borderRadius: "0 3rem 0 3remf ",
+        background: "#67b045",
+        padding: "1rem",
+        width: "15rem",
+        minHeight: "15rem",
+        boxShadow: "0 0 30 10px rgba(0,0,0,0.1)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "white",
+      }}
+    >
+      {title}
     </div>
   );
 };
