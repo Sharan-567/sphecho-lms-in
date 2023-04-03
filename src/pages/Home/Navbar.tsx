@@ -43,89 +43,125 @@ const NavBarTop = () => {
   );
 };
 
-const NavBar = ({ isDark }) => (
-  <Navbar
-    className="nav-bar-container"
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 100,
-    }}
-    expand="lg"
-  >
-    <Container>
-      <Navbar.Brand as={Link} to="/">
-        <img
-          src={isDark ? colorLogo : logo}
-          width={"45rem"}
-        />
-      </Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="ms-auto">
-          <Nav.Link
-            className="b-700 link-nav"
-            style={{ color: isDark ? "#69B447" : "black" }}
-          >
-            <Link
-              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400"}}
-              to="/login"
-            >
-              <p>BLACKBOARD</p>
-            </Link>
-          </Nav.Link>
-          <Nav.Link
-            className=" b-700 link-nav"
-            style={{ color: isDark ? "#69B447" : "black" }}
-          >
-            <Link
-              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
-              to="/webinar"
-            >
-              <p>WEBINAR</p>
-            </Link>
-          </Nav.Link>
-          <Nav.Link
-            className="b-700 link-nav"
-            style={{ color: isDark ? "#69B447" : "black" }}
-          >
-            <Link
-              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
-              to="/features"
-            >
-             <p>FEATURES</p> 
-            </Link>
-          </Nav.Link>
+const NavBar = ({ isDark }) => {
+  const [navColor, setNavColor] = React.useState("transparent");
+  React.useEffect(() => {
+    window.onscroll = () => {
+      if (
+        document.body.scrollTop > 80 ||
+        document.documentElement.scrollTop > 80
+      ) {
+        setNavColor("white");
+      } else {
+        setNavColor("transparent");
+      }
+    };
+  });
 
-          <Nav.Link
-            className="b-700 link-nav"
-            style={{ color: isDark ? "#69B447" : "black" }}
-          >
-            <Link
-              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
-              to="/privacy"
+  return (
+    <Navbar
+      className="nav-bar-container"
+      style={{
+        position: "sticky",
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 100,
+        background: navColor,
+        boxShadow:
+          navColor === "white" ? "0 0 20px 10px rgba(0,0,0,0.1)" : "inherit",
+      }}
+      expand="lg"
+    >
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+          <img src={isDark ? colorLogo : logo} width={"45rem"} />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto">
+            <Nav.Link
+              className="b-700 link-nav"
+              style={{ color: isDark ? "#69B447" : "black" }}
             >
-              <p>PRIVACY</p>
-            </Link>
-          </Nav.Link>
-          <Nav.Link
-            className="b-700 link-nav"
-            style={{ color: isDark ? "#69B447" : "black" }}
-          >
-            <Link
-              style={{ textDecoration: "none", fontSize: "1rem", fontWeight:"400" }}
-              to="/login"
+              <Link
+                style={{
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "400",
+                }}
+                to="/login"
+              >
+                <p>BLACKBOARD</p>
+              </Link>
+            </Nav.Link>
+            <Nav.Link
+              className=" b-700 link-nav"
+              style={{ color: isDark ? "#69B447" : "black" }}
             >
-              <p>LOGIN</p>
-            </Link>
-          </Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Container>
-  </Navbar>
-);
+              <Link
+                style={{
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "400",
+                }}
+                to="/webinar"
+              >
+                <p>WEBINAR</p>
+              </Link>
+            </Nav.Link>
+            <Nav.Link
+              className="b-700 link-nav"
+              style={{ color: isDark ? "#69B447" : "black" }}
+            >
+              <Link
+                style={{
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "400",
+                }}
+                to="/features"
+              >
+                <p>FEATURES</p>
+              </Link>
+            </Nav.Link>
+
+            <Nav.Link
+              className="b-700 link-nav"
+              style={{ color: isDark ? "#69B447" : "black" }}
+            >
+              <Link
+                style={{
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "400",
+                }}
+                to="/privacy"
+              >
+                <p>PRIVACY</p>
+              </Link>
+            </Nav.Link>
+            <Nav.Link
+              className="b-700 link-nav"
+              style={{ color: isDark ? "#69B447" : "black" }}
+            >
+              <Link
+                style={{
+                  textDecoration: "none",
+                  fontSize: "1rem",
+                  fontWeight: "400",
+                }}
+                to="/login"
+              >
+                <p>LOGIN</p>
+              </Link>
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+};
 
 const SmallNavBar = ({ isDark }) => (
   <Navbar

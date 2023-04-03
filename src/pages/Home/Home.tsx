@@ -30,6 +30,15 @@ import c1 from "../../assets/c1.png";
 import c2 from "../../assets/c2.png";
 import c3 from "../../assets/c3.png";
 
+import {
+  AiOutlineUserAdd,
+  AiOutlineFileDone,
+  AiOutlineVideoCamera,
+  AiOutlineQuestionCircle,
+  AiOutlineCheckCircle,
+  AiOutlineFileProtect,
+} from "react-icons/ai";
+
 // const Home = () => {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
 // }
@@ -38,14 +47,16 @@ const Home = () => {
   return (
     <>
       <Navbar />
-      <div style={{ width: "100vw", overflowX: "hidden" }}>
+      <div
+        style={{ width: "100vw", overflowX: "hidden", marginTop: "-6.4rem" }}
+      >
         <Banner />
         <TitleContainer />
         <FeatureSection />
         <FeaturedCourses />
         <Introduction />
-        <Committe />
-        <InternalCommitee />
+        <BenfitsOfCertification />
+        <CertificationProcess />
         <FAQS />
         <RequestForm />
         <NewLetter />
@@ -57,10 +68,15 @@ const Home = () => {
 
 const Banner = () => {
   return (
-    <div>
+    <div style={{ marginTop: 0 }}>
       <div
         className="banner-container"
-        style={{ height: "130vh", width: "100wh", position: "relative" }}
+        style={{
+          height: "130vh",
+          width: "100wh",
+          position: "relative",
+          marginTop: "",
+        }}
       >
         {/* <svg
         id="svgPath"
@@ -78,14 +94,13 @@ const Banner = () => {
           </clipPath>
         </defs>
       </svg> */}
-        <div className="clip-container position-relative">
+        <div
+          className=" position-relative"
+          style={{ marginTop: "-5rem", zIndex: 1 }}
+        >
           <Carousel>
             <Carousel.Item>
-              <img
-                className="d-block coursel-img"
-                src={lb1}
-                alt="First slide"
-              />
+              <img className=" coursel-img" src={lb1} alt="First slide" />
             </Carousel.Item>
             {/* <Carousel.Item>
               <img
@@ -171,26 +186,29 @@ const BenfitsOfCertification = () => {
   ];
 
   return (
-    <div>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
-        <path
-          fill="#F1F0EE"
-          d="M0,96L80,112C160,128,320,160,480,149.3C640,139,800,85,960,74.7C1120,64,1280,96,1360,112L1440,128L1440,320L1360,320C1280,320,1120,320,960,320C800,320,640,320,480,320C320,320,160,320,80,320L0,320Z"
-        ></path>
-      </svg>
-      <div
-        className="m-auto"
-        style={{ background: "#F1F0EE", marginTop: "-10%", zIndex: 19 }}
-      >
-        <h2 className="benefits-title bg-600 text-center mb-4">
-          BENEFITS OF CERTIFICATION
-        </h2>
+    <div
+      style={{
+        background: "#F1F0EE",
+        zIndex: 19,
+        padding: "5rem 1rem",
+        marginTop: "10rem",
+        borderRadius: "0rem 0rem 20rem 0rem",
+      }}
+    >
+      <h2 className="benefits-title bg-600 text-center mb-4">
+        BENEFITS OF CERTIFICATION
+      </h2>
+      <Fade bottom>
         <Row className="mt-4 w-75 m-auto">
           {benifits.map((benfit) => (
             <Col key={benfit.id} sm="3" className="p-2 px-4 mb-3">
               <div
-                className="bg-landingPrimary br-2 p-2 text-center d-flex flex-column align-items-center justify-content-center"
-                style={{ height: "12rem" }}
+                className="bg-landingPrimary  p-2 text-center d-flex flex-column align-items-center justify-content-center"
+                style={{
+                  height: "18rem",
+                  borderRadius: "0 7rem  0 0",
+                  boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
+                }}
               >
                 <img src={benfit.icon} style={{ width: "4rem" }} />
                 <p className="text-center text-white b-600 mt-3">
@@ -200,17 +218,7 @@ const BenfitsOfCertification = () => {
             </Col>
           ))}
         </Row>
-      </div>
-      <svg
-        style={{ marginTop: "-1rem", zIndex: "-400" }}
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1440 320"
-      >
-        <path
-          fill="#F1F0EE"
-          d="M0,96L80,122.7C160,149,320,203,480,192C640,181,800,107,960,96C1120,85,1280,139,1360,165.3L1440,192L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"
-        ></path>
-      </svg>
+      </Fade>
     </div>
   );
 };
@@ -487,16 +495,23 @@ const Introduction = () => {
       style={{
         background: "#F1F0EE",
         padding: "5rem 1rem",
-        borderRadius: "12rem 0rem 0 0",
+        borderRadius: "20rem 0rem 0 0",
         position: "relative",
-        marginBottom: "10rem",
+        marginBottom: "15rem",
       }}
     >
       <div className="container">
         <div>
-          <Fade bottom>
-            <h1>Introduction</h1>
-            <p style={{ marginBottom: "5rem", maxWidth: "60rem" }}>
+          <Fade left>
+            <h1 className="text-center">Introduction</h1>
+            <p
+              className="text-center"
+              style={{
+                margin: "auto",
+                paddingBottom: "5rem",
+                maxWidth: "60rem",
+              }}
+            >
               Among the many benefits of online learning, you'll find that
               virtual education allows you to enjoy a more flexible schedule and
               allows you to more easily develop your profession alongside
@@ -507,8 +522,8 @@ const Introduction = () => {
               telepractice and to boost their effectiveness in telepractice
               through Sphecho platform participation.
             </p>
-            <h1>Learning Outcomes</h1>
-            <p style={{ paddingBottom: "5rem" }}>
+            <h1 className="text-center">Learning Outcomes</h1>
+            <p className="text-center" style={{ paddingBottom: "3rem" }}>
               Upon completion of this course, learners will be able to:
             </p>
           </Fade>
@@ -531,16 +546,16 @@ const IntroCard = ({ title }) => {
   return (
     <div
       style={{
-        borderRadius: "0 3rem 0 3remf ",
-        background: "#67b045",
+        borderRadius: "0 3rem 0 3rem ",
+        background: "white",
         padding: "1rem",
         width: "15rem",
         minHeight: "15rem",
-        boxShadow: "0 0 30 10px rgba(0,0,0,0.1)",
+        boxShadow: "0 0 30px 10px rgba(0,0,0,0.1)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        color: "white",
+        color: "black ",
       }}
     >
       {title}
@@ -710,6 +725,73 @@ Speech & Hearing Rehabilitation Center`,
   );
 };
 
+const CertificationProcess = () => {
+  return (
+    <section style={{ marginTop: "5rem", marginBottom: "10rem" }}>
+      <div></div>
+      <div className="container" style={{ maxWidth: "50rem" }}>
+        <h1 className="text-center" style={{ fontWeight: "" }}>
+          Certification Process
+        </h1>
+        <p className="text-center mb-5">
+          The SPHECHO Certification program for non-SPHECHO Providers that is
+          created in union with its board i.e., the Regional Advisory Panel
+          Members and the Internal Review Committee consisting of clinical and
+          subject matter experts is evidence-based and is due to be launched by
+          January 2024.
+        </p>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "5rem",
+          }}
+        >
+          <CButton title={"Know more"} onClick={() => {}} />
+        </div>
+      </div>
+
+      <Fade cascade bottom>
+        <div
+          className="d-flex gap-3 container justify-content-between"
+          style={{ maxWidth: "80rem" }}
+        >
+          <div className="process-item">
+            <AiOutlineUserAdd className="process_icon" />
+            <p>Sign up online</p>
+            <div className="triangle">▶</div>
+          </div>
+          <div className="process-item">
+            <AiOutlineFileDone className="process_icon" />
+            <p>Complete application</p>
+            <div className="triangle">▶</div>
+          </div>
+          <div className="process-item">
+            <AiOutlineVideoCamera className="process_icon" />
+            <p>Online training</p>
+            <div className="triangle">▶</div>
+          </div>
+          <div className="process-item">
+            <AiOutlineQuestionCircle className="process_icon" />
+            <p>Certification exam</p>
+            <div className="triangle">▶</div>
+          </div>
+          <div className="process-item">
+            <AiOutlineCheckCircle className="process_icon" />
+            <p>Board approval</p>
+            <div className="triangle">▶</div>
+          </div>
+          <div className="process-item">
+            <AiOutlineFileProtect className="process_icon" />
+            <p>Certification issued</p>
+          </div>
+        </div>
+      </Fade>
+    </section>
+  );
+};
+
 const FAQS = () => {
   const faqs = [
     {
@@ -767,34 +849,35 @@ const FAQS = () => {
   return (
     <div
       className="container m-auto text-center"
-      style={{ marginBottom: "5rem" }}
+      style={{ marginBottom: "5rem", zoom: "90%" }}
     >
       <div className="w-75 m-auto ">
-        <h1 className="text-landingPrimary my-4 b-600">
-          FREQUENTLY ASKED QUESTIONS
-        </h1>
+        <h1 className="text-black my-4 b-600">FREQUENTLY ASKED QUESTIONS</h1>
         <p style={{ fontSize: "1.2rem", marginBottom: "6rem" }}>
           Please click on a topic below to view common questions. Once you have
           chosen your topic simply click any question to reveal the answer.
           Can’t find an answer to your question? Contact us today
         </p>
+
         <Accordion defaultActiveKey="0">
           {faqs.map((faq) => (
-            <Accordion.Item
-              key={faq.id}
-              eventKey={`${faq.id}`}
-              className="accordion-item"
-            >
-              <Accordion.Header className="accordin-h">
-                <p className="accordin-title">{faq.header}</p>
-              </Accordion.Header>
-              <Accordion.Body
-                className="accordin-content"
-                style={{ fontSize: "1.2rem" }}
+            <Fade bottom>
+              <Accordion.Item
+                key={faq.id}
+                eventKey={`${faq.id}`}
+                className="accordion-item"
               >
-                {faq.content}
-              </Accordion.Body>
-            </Accordion.Item>
+                <Accordion.Header className="accordin-h">
+                  <p className="accordin-title">{faq.header}</p>
+                </Accordion.Header>
+                <Accordion.Body
+                  className="accordin-content"
+                  style={{ fontSize: "1.2rem" }}
+                >
+                  {faq.content}
+                </Accordion.Body>
+              </Accordion.Item>
+            </Fade>
           ))}
         </Accordion>
       </div>
@@ -865,7 +948,10 @@ const RequestForm = () => {
 
 const NewLetter = () => {
   return (
-    <div className="mb-5 pb-4">
+    <div
+      className="mb-5 p-5 container"
+      style={{ zoom: "90%", background: "#f1f0ee", borderRadius: "2rem" }}
+    >
       <div className="container mb-4">
         <div className="m-auto w-75">
           <h2
