@@ -43,6 +43,11 @@ import {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
 // }
 
+export const LEARN_URL = "";
+export const SERVICE_URL = "";
+export const SHOP_URL = "";
+export const SCHOLAR_URL = "";
+
 const Home = () => {
   return (
     <div style={{ position: "relative" }}>
@@ -77,7 +82,7 @@ const StickyBar = () => {
         color: "white",
         cursor: "pointer",
         position: "fixed",
-        top: "60vh",
+        top: "45vh",
         right: "-1rem",
         zIndex: 999,
         borderRadius: "5rem 0 0 5rem",
@@ -273,7 +278,7 @@ const FeatureSection = () => {
               This below features are <br></br> currently available <br></br>
               only for Sphecho <br></br> Providers.
             </h1>
-            <CButton title={"Know more"} onClick={() => {}} />
+            <CButton title={"Join our network"} onClick={() => {}} />
           </div>
         </Fade>
         <div style={{ position: "absolute", top: "40rem", left: "15rem" }}>
@@ -761,7 +766,7 @@ Speech & Hearing Rehabilitation Center`,
 
 const CertificationProcess = () => {
   return (
-    <section style={{ marginTop: "5rem", marginBottom: "10rem" }}>
+    <section id="process" style={{ marginTop: "5rem", marginBottom: "10rem" }}>
       <div></div>
       <div className="container" style={{ maxWidth: "50rem" }}>
         <h1 className="text-center" style={{ fontWeight: "" }}>
@@ -1057,35 +1062,12 @@ const Footer = ({ setCurrentContent }) => {
       link: "http://sphecho-services.metahos.com",
     },
     {
-      title: "Sphecho Learn",
-      link: "http://sphecholms.metahos.com",
-    },
-    {
       title: "Sphecho Shop",
       link: "http://sphecho-shop.metahos.com",
     },
     {
       title: "Sphecho Scholar",
       link: "",
-    },
-  ];
-
-  const aboutUs = [
-    {
-      title: "Blog",
-      onClick: () => setCurrentContent("Blog"),
-    },
-    {
-      title: "Privacy Policy",
-      onClick: () => setCurrentContent("Privacy"),
-    },
-    // {
-    //   title: 'TERMS & CONDITIONS',
-    //   onClick: () => {},
-    // },
-    {
-      title: "FAQs",
-      onClick: () => setCurrentContent("Faqs"),
     },
   ];
 
@@ -1186,11 +1168,16 @@ const Footer = ({ setCurrentContent }) => {
                   >
                     ABOUT US
                   </h5>
-                  {aboutUs.map((l) => (
-                    <a key={l.title} onClick={l.onClick} className="link b-400">
-                      {l.title}
-                    </a>
-                  ))}
+
+                  <a href="#process" className="link b-400">
+                    Certification process
+                  </a>
+                  <Link to="/privacy" className="link b-400">
+                    Privacy Policy
+                  </Link>
+                  <a className="link b-400" href="#faqs">
+                    FAQS
+                  </a>
                 </Col>
               </Row>
             </div>
