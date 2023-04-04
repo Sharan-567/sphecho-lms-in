@@ -2,15 +2,23 @@ import React from "react";
 import NavBar from "./Navbar";
 
 const Privacy = () => {
+  React.useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
     <>
       <NavBar />
       <div
         style={{
-          width: "100vw",
+          maxWidth: "60rem",
           overflowX: "hidden",
+          margin: "auto",
           color: "#666666",
-          marginBottom: "5rem",
+          marginBottom: "9rem",
         }}
       >
         <div className="container" style={{ marginTop: "6rem" }}>

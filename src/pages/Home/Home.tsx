@@ -45,10 +45,10 @@ import {
 
 const Home = () => {
   return (
-    <>
+    <div style={{ position: "relative" }}>
       <Navbar />
       <div
-        style={{ width: "100vw", overflowX: "hidden", marginTop: "-6.4rem" }}
+        style={{ width: "100vw", overflowX: "hidden", marginTop: "-6.8rem" }}
       >
         <Banner />
         <TitleContainer />
@@ -60,9 +60,32 @@ const Home = () => {
         <FAQS />
         <RequestForm />
         <NewLetter />
+        <TagLine />
         <Footer />
       </div>
-    </>
+      <StickyBar />
+    </div>
+  );
+};
+
+const StickyBar = () => {
+  return (
+    <div
+      style={{
+        padding: "1.5rem 3rem",
+        background: "black",
+        color: "white",
+        cursor: "pointer",
+        position: "fixed",
+        top: "60vh",
+        right: "-1rem",
+        zIndex: 999,
+        borderRadius: "5rem 0 0 5rem",
+        boxShadow: "0px 0px 20px 10px rgba(0,0,0,0.2)",
+      }}
+    >
+      Join our network
+    </div>
   );
 };
 
@@ -316,9 +339,9 @@ const FeatureButtons = () => {
                 Courses
               </h2>
               <p className="text-center">
-                My Blackboard provides users with one location to view and act
-                on their capability development information. It aggregates
-                information from across the learning system for a user.
+                The Sphecho Courses allow Providers and parents to access course
+                materials online. A variety of free courses are available to
+                promote development and resourcefulness.
               </p>
             </div>
           </Fade>
@@ -341,12 +364,12 @@ const FeatureButtons = () => {
               }}
             >
               <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
-                My Blackboard
+                Certifications and Badges
               </h2>
               <p className="text-center">
-                The Sphecho Courses allow Providers and parents to access course
-                materials online. A variety of free courses are available to
-                promote development and resourcefulness.
+                Our digital certification and badging programs provide
+                recognition of skills and achievements through secure and
+                verifiable digital credentials.
               </p>
             </div>
           </Fade>
@@ -381,10 +404,9 @@ const FeaturedCourses = () => {
             }}
           >
             <FeatureCourseCard
-              img={c1}
-              title="Facilitator Course"
+              img={c3}
+              title="Provider Onboarding Course"
               subTitle={"Online Training, Assessment, and Certification"}
-              isCommingSoon={true}
             />
             <FeatureCourseCard
               img={c2}
@@ -393,14 +415,26 @@ const FeaturedCourses = () => {
               isCommingSoon={true}
             />
             <FeatureCourseCard
-              img={c3}
-              title="Provider Onboarding Course"
+              img={c1}
+              title="Facilitator Course"
               subTitle={"Online Training, Assessment, and Certification"}
+              isCommingSoon={true}
             />
           </div>
         </div>
       </Fade>
     </section>
+  );
+};
+
+const TagLine = () => {
+  return (
+    <div className="container" style={{ margin: "7rem 0rem" }}>
+      <h1 style={{ fontWeight: "900", color: "black", textAlign: "center" }}>
+        REVERBERATING YOUR NEEDS
+      </h1>
+      <p className="text-center">THROUGH DETERMINATION</p>
+    </div>
   );
 };
 
@@ -848,6 +882,7 @@ const FAQS = () => {
 
   return (
     <div
+      id="faqs"
       className="container m-auto text-center"
       style={{ marginBottom: "5rem", zoom: "90%" }}
     >
@@ -980,73 +1015,90 @@ const NewLetter = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ setCurrentContent }) => {
   const speechLinks = [
     {
-      title: "SPEECH THERAPY",
+      title: "Speech Therapy",
+      link: "http://sphecho-services.metahos.com/department/speech",
     },
     {
-      title: "EDUCATIONAL CONSULTATION",
+      title: "Eduational Consultation",
+      link: "http://sphecho-services.metahos.com/department/education",
     },
     {
-      title: "OCCUPATIONAL THERAPY",
+      title: "Ocuupational Therapy",
+      link: "http://sphecho-services.metahos.com/department/accupational",
     },
     {
-      title: "BEHAVIORAL & PSYCHOLOGICAL",
+      title: "Behavioral & Psychological",
+      link: "http://sphecho-services.metahos.com/department/behavioral",
     },
     {
-      title: "PHYSIOTHERAPY",
+      title: "Physiotherapy",
+      link: "http://sphecho-services.metahos.com/department/physiotherapy",
     },
     {
-      title: "COUNSELLING",
+      title: "Counselling",
+      link: "http://sphecho-services.metahos.com/department/counselling",
     },
     {
-      title: "AUDIOLOGY",
+      title: "Audiology",
+      link: "http://sphecho-services.metahos.com/department/audiology",
     },
   ];
 
   const usefullLinks = [
     {
-      title: "PROVIDERS",
+      title: "Providers",
+      link: "",
     },
     {
-      title: "SPHECHO SERVICE",
+      title: "Sphecho Service",
+      link: "http://sphecho-services.metahos.com",
     },
     {
-      title: "SPHECHO SHOP",
+      title: "Sphecho Learn",
+      link: "http://sphecholms.metahos.com",
     },
     {
-      title: "SPHECHO SCHOLAR",
+      title: "Sphecho Shop",
+      link: "http://sphecho-shop.metahos.com",
+    },
+    {
+      title: "Sphecho Scholar",
+      link: "",
     },
   ];
 
   const aboutUs = [
     {
-      title: "BLOG",
+      title: "Blog",
+      onClick: () => setCurrentContent("Blog"),
     },
     {
-      title: "PRIVACY POLICY",
+      title: "Privacy Policy",
+      onClick: () => setCurrentContent("Privacy"),
     },
+    // {
+    //   title: 'TERMS & CONDITIONS',
+    //   onClick: () => {},
+    // },
     {
-      title: "TERMS & CONDITIONS",
-    },
-    {
-      title: "RENEWAL POLICY",
-    },
-    {
-      title: "CERTIFICATION PROCESS",
-    },
-    {
-      title: "DIGITAL BADGES",
+      title: "FAQs",
+      onClick: () => setCurrentContent("Faqs"),
     },
   ];
 
   return (
-    <footer>
-      <div className="">
+    <footer className="footer-container" style={{ overflowX: "hidden" }}>
+      <div
+        style={{
+          backgroundColor: "#EAEAEA",
+        }}
+      >
         <Row>
-          <Col sm="3" className="p-4">
-            <div className="d-flex flex-column align-items-center">
+          <Col lg="3" style={{ paddingTop: "5rem" }}>
+            <div className="d-flex flex-column align-items-center ">
               <img src={colorLogo} width="126rem" />
               <div className="d-flex mt-2">
                 <img
@@ -1087,38 +1139,92 @@ const Footer = () => {
               />
             </div>
           </Col>
-          <Col sm="9">
-            <div className="navlinks-container-footer p-3">
+          <Col lg="9" className="footer-custome">
+            <div
+              style={{
+                backgroundImage: 'url("https://svgshare.com/i/pdj.svg")',
+                backgroundColor: "black",
+                borderRadius: "3rem 0 0 3rem ",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "123%",
+                padding: "5rem 2rem",
+              }}
+              className="navlinks-container-footer"
+            >
               <Row>
-                <Col sm="2"></Col>
-                <Col sm="4" className="p-2">
-                  <p className="b-700 mb-2 link-header">DEPARTMENTS</p>
-                  {speechLinks.map((link) => (
-                    <Link key={link.title} className="link b-400" to="/">
-                      {link.title}
-                    </Link>
+                <Col lg="2"></Col>
+                <Col lg="4" className="p-2">
+                  <h5
+                    className="mb-2 link-header text-white"
+                    style={{ fontWeight: "bold" }}
+                  >
+                    DEPARTMENTS
+                  </h5>
+                  {speechLinks.map((l) => (
+                    <a key={l.title} className="link b-400" href={l.link}>
+                      {l.title.charAt(0).toUpperCase() + l.title.slice(1)}
+                    </a>
                   ))}
                 </Col>
-                <Col sm="3">
-                  <p className="b-700 mb-2 link-header">USEFUL LINKS</p>
-                  {usefullLinks.map((link) => (
-                    <Link key={link.title} className="link b-400" to="/">
-                      {link.title}
-                    </Link>
+                <Col lg="3">
+                  <h5
+                    className="mb-2 link-header text-white"
+                    style={{ fontWeight: "bold" }}
+                  >
+                    USEFUL LINKS
+                  </h5>
+                  {usefullLinks.map((l) => (
+                    <a key={l.title} className="link b-400" href={l.link}>
+                      {l.title}
+                    </a>
                   ))}
                 </Col>
-                <Col sm="3">
-                  <p className="b-700 mb-2 link-header">ABOUT US</p>
-                  {aboutUs.map((link) => (
-                    <Link key={link.title} className="link b-400" to="/">
-                      {link.title}
-                    </Link>
+                <Col lg="3">
+                  <h5
+                    className="mb-2 link-header text-white"
+                    style={{ fontWeight: "bold" }}
+                  >
+                    ABOUT US
+                  </h5>
+                  {aboutUs.map((l) => (
+                    <a key={l.title} onClick={l.onClick} className="link b-400">
+                      {l.title}
+                    </a>
                   ))}
                 </Col>
               </Row>
             </div>
           </Col>
         </Row>
+      </div>
+      <div style={{ background: "white", padding: ".5rem" }}>
+        <div className="container" style={{ background: "white" }}>
+          {/* <p className="text-center" style={{ fontWeight: '500' }}>
+            If you are in a life threatening situation - don’t use this site.
+            Kindly contact your respective national helpline to get immediate
+            assistance.
+          </p> */}
+          <div
+            className="d-flex justify-content-between"
+            style={{ marginTop: "0rem" }}
+          >
+            <p>© 2023 All rights reserved. Teleoutreach Services Pvt. Ltd.</p>
+            <div className="d-flex">
+              <Link
+                style={{ margin: "0rem 1rem", cursor: "pointer" }}
+                to="/privacy"
+              >
+                Privacy Policy
+              </Link>
+              <a
+                style={{ margin: "0rem 1rem", cursor: "pointer" }}
+                href="#faqs"
+              >
+                FAQS
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </footer>
   );

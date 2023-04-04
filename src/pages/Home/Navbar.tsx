@@ -2,9 +2,8 @@ import React from "react";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import { Link, useLocation } from "react-router-dom";
-import logo from "../../assets/logo-g.png";
 import { Container } from "react-bootstrap";
-import colorLogo from "../../assets/colorlogo.png";
+import colorLogo from "../../assets/clogo.png";
 
 const NavBarTop = () => {
   const [navColor, setNavColor] = React.useState("transparent");
@@ -75,25 +74,25 @@ const NavBar = ({ isDark }) => {
     >
       <Container>
         <Navbar.Brand as={Link} to="/">
-          <img src={isDark ? colorLogo : logo} width={"45rem"} />
+          <img src={colorLogo} width={"150rem"} />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="ms-auto">
+          <Nav className="ms-auto pt-2 ">
             <Nav.Link
               className="b-700 link-nav"
               style={{ color: isDark ? "#69B447" : "black" }}
             >
-              <Link
+              <a
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
-                to="/login"
+                href="#f"
               >
-                <p>BLACKBOARD</p>
-              </Link>
+                <p>FEATURED COURSES</p>
+              </a>
             </Nav.Link>
             <Nav.Link
               className=" b-700 link-nav"
@@ -103,11 +102,11 @@ const NavBar = ({ isDark }) => {
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
                 to="/webinar"
               >
-                <p>WEBINAR</p>
+                <p>WEBINARS</p>
               </Link>
             </Nav.Link>
             <Nav.Link
@@ -118,11 +117,11 @@ const NavBar = ({ isDark }) => {
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
-                to="/features"
+                to="/login"
               >
-                <p>FEATURES</p>
+                <p>MY BLACKBOARD</p>
               </Link>
             </Nav.Link>
 
@@ -134,26 +133,11 @@ const NavBar = ({ isDark }) => {
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
-                  fontWeight: "400",
+                  fontWeight: "500",
                 }}
-                to="/privacy"
+                to="/register"
               >
-                <p>PRIVACY</p>
-              </Link>
-            </Nav.Link>
-            <Nav.Link
-              className="b-700 link-nav"
-              style={{ color: isDark ? "#69B447" : "black" }}
-            >
-              <Link
-                style={{
-                  textDecoration: "none",
-                  fontSize: "1rem",
-                  fontWeight: "400",
-                }}
-                to="/login"
-              >
-                <p>LOGIN</p>
+                <p>REGISTER</p>
               </Link>
             </Nav.Link>
           </Nav>
@@ -187,8 +171,8 @@ const SmallNavBar = ({ isDark }) => (
             className="b-700 link-nav"
             style={{ color: "#69B447", textDecoration: "none" }}
           >
-            <Link style={{ textDecoration: "none" }} to="/login">
-              BLACKBOARD
+            <Link style={{ textDecoration: "none" }} to="/featured">
+              FEATURED COURSES
             </Link>
           </Nav.Link>
           <Nav.Link
@@ -196,25 +180,20 @@ const SmallNavBar = ({ isDark }) => (
             style={{ color: "#69B447", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/webinar">
-              WEBINAR
+              WEBINARS
             </Link>
           </Nav.Link>
           <Nav.Link
             className="b-700 link-nav"
             style={{ color: "#69B447", textDecoration: "none" }}
           >
-            <Link style={{ textDecoration: "none" }} to="/features">
-              FEATURES
-            </Link>
-          </Nav.Link>
-          <Nav.Link className="b-700 link-nav" style={{ color: "#69B447" }}>
-            <Link style={{ textDecoration: "none" }} to="/privacy">
-              PRIVACY
+            <Link style={{ textDecoration: "none" }} to="/login">
+              MY BLACKBOARD
             </Link>
           </Nav.Link>
           <Nav.Link className="b-700 link-nav" style={{ color: "#69B447" }}>
             <Link style={{ textDecoration: "none" }} to="/login">
-              LOGIN
+              REGISTER
             </Link>
           </Nav.Link>
         </Nav>
