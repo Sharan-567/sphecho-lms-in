@@ -77,13 +77,13 @@ const SideNav = () => {
       // },
       {
         id: 2,
-        title: "My Courses",
+        title: "My courses",
         Icon: AiOutlineCalculator,
         to: "/courses",
       },
       {
         id: 3,
-        title: "My certificaties",
+        title: "My certificates",
         Icon: AiOutlineFileProtect,
         to: "/certification",
       },
@@ -291,7 +291,7 @@ const SideNav = () => {
                   onClick={() => handleTab(link.to, link.id)}
                   className={`${
                     currentSelectedTab == link.id ? "text-blue" : "text-white"
-                  } b-700 px-4 p-3 my-2`}
+                  } b-500 px-4 p-3 my-2`}
                   animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
                   variants={ButtonMotion}
                   initial="rest"

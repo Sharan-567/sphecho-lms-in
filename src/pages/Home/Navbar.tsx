@@ -80,6 +80,7 @@ const NavBar = ({ isDark }) => {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto pt-2 ">
             <Nav.Link
+              href="#feature-courses"
               className="b-700 link-nav"
               style={{ color: isDark ? "#69B447" : "black" }}
             >
@@ -89,7 +90,6 @@ const NavBar = ({ isDark }) => {
                   fontSize: "1rem",
                   fontWeight: "500",
                 }}
-                href="#f"
               >
                 <p>FEATURED COURSES</p>
               </a>
@@ -125,7 +125,7 @@ const NavBar = ({ isDark }) => {
               </Link>
             </Nav.Link>
 
-            <Nav.Link
+            {/* <Nav.Link
               className="b-700 link-nav"
               style={{ color: isDark ? "#69B447" : "black" }}
             >
@@ -139,7 +139,7 @@ const NavBar = ({ isDark }) => {
               >
                 <p>REGISTER</p>
               </Link>
-            </Nav.Link>
+            </Nav.Link> */}
           </Nav>
         </Navbar.Collapse>
       </Container>

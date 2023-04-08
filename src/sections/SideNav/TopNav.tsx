@@ -261,7 +261,7 @@ const TopNav = () => {
                   cursor: "pointer",
                   color: "white",
                   padding: ".5rem 0rem",
-                  fontWeight: "bold",
+                  fontWeight: "500",
                   display: "flex",
                   alignItems: "center",
                 }}

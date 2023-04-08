@@ -6,6 +6,7 @@ import type { Course } from "../../definations/course";
 import { useAppSelector } from "../../store";
 import Progress from "./Progress";
 import ButtonGroup from "./ButtonGroup";
+import logog from "../../assets/logo-g.png";
 
 type CourseContainer = {
   course: Course;
@@ -101,12 +102,14 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
             {course.trainer_name && (
               <img
                 alt=""
-                src={`https://${HOST}${course.trainer_image}`}
-                className="round-50 obj-fit-cover me-2"
+                src={logog}
+                className="round-50 obj-fit-contain me-2"
                 style={{
                   width: "3rem",
                   height: "3rem",
-                  border: "5px solid white",
+                  objectFit: "contain",
+                  padding: ".3rem",
+                  border: "4px solid white",
                 }}
               />
             )}

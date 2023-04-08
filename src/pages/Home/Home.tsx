@@ -29,6 +29,11 @@ import Navbar from "./Navbar";
 import c1 from "../../assets/c1.png";
 import c2 from "../../assets/c2.png";
 import c3 from "../../assets/c3.png";
+import {
+  JOIN_OUR_NETWORK,
+  QISH_HOST,
+  SERVICE_URLS,
+} from "../../features/settings";
 
 import {
   AiOutlineUserAdd,
@@ -75,7 +80,9 @@ const Home = () => {
 
 const StickyBar = () => {
   return (
-    <div
+    <a
+      href={JOIN_OUR_NETWORK}
+      target="__blank"
       style={{
         padding: "1.5rem 3rem",
         background: "black",
@@ -87,10 +94,11 @@ const StickyBar = () => {
         zIndex: 999,
         borderRadius: "5rem 0 0 5rem",
         boxShadow: "0px 0px 20px 10px rgba(0,0,0,0.2)",
+        textDecoration: "none",
       }}
     >
       Join our network
-    </div>
+    </a>
   );
 };
 
@@ -180,9 +188,10 @@ const TitleContainer = () => {
           Our training platform is a comprehensive learning management system
           for all professionals and individuals who work alongside people of
           determination. The Sphecho courses, which are constructed and
-          incorporated into this system, aids in developing professionals into
-          the finest in their field of telerehabilitation. Additionally, the
-          system is built to offer webinars and educational sessions.
+          incorporated into this <br></br> system, aids in developing
+          professionals into the finest in their field of telerehabilitation.
+          <br></br>Additionally, the system is built to offer webinars and
+          educational sessions.
         </p>
       </Fade>
     </div>
@@ -387,6 +396,7 @@ const FeatureButtons = () => {
 const FeaturedCourses = () => {
   return (
     <section
+      id="feature-courses"
       className="bg-primary"
       style={{
         borderRadius: "0 20rem 0rem 0",
@@ -412,6 +422,7 @@ const FeaturedCourses = () => {
               img={c3}
               title="Provider Onboarding Course"
               subTitle={"Online Training, Assessment, and Certification"}
+              joinournetwork={true}
             />
             <FeatureCourseCard
               img={c2}
@@ -448,11 +459,13 @@ const FeatureCourseCard = ({
   title,
   subTitle,
   isCommingSoon,
+  joinournetwork,
 }: {
   isCommingSoon?: boolean;
   title: string;
   img: string;
   subTitle: string;
+  joinournetwork?: boolean;
 }) => {
   return (
     <div
@@ -497,6 +510,21 @@ const FeatureCourseCard = ({
           Comming soon
         </div>
       ) : null}
+      {joinournetwork ? (
+        <a
+          href={JOIN_OUR_NETWORK}
+          target="__blank"
+          className="text-black "
+          style={{
+            padding: "1rem",
+            borderRadius: "1rem",
+            fontWeight: "500",
+            textDecoration: "none",
+          }}
+        >
+          Join our network
+        </a>
+      ) : null}
     </div>
   );
 };
@@ -537,6 +565,7 @@ const Introduction = () => {
         borderRadius: "20rem 0rem 0 0",
         position: "relative",
         marginBottom: "15rem",
+        zoom: "98%",
       }}
     >
       <div className="container">
@@ -607,13 +636,13 @@ const Board = () => {
     <div className="text-center w-75 m-auto">
       <h1 className="text-landingPrimary b-600 mb-4">SPHECHO BOARD</h1>
       <p className="my-4" style={{ fontSize: "1.2rem" }}>
-        The SPHECHO certification procedures and content undergo various reviews
+        The Sphecho certification procedures and content undergo various reviews
         and validation, pursuant to the professions that are eligible for
         certification, as well as standards established by content experts in
         the field across the globe. Please click on a topic below to view common
         questions. Once you have chosen your topic simply click any question to
         reveal the answer. Can’t find an answer to your question? Contact us
-        today. Our board at SPHECHO is commitied to ensuring the creation and
+        today. Our board at Sphecho is commitied to ensuring the creation and
         implementation of world-class training and certification programs that
         will enhance the general standard of care and instruction for
         professionals, parents, and caregivers. The Board is made up of a
@@ -773,13 +802,13 @@ const CertificationProcess = () => {
           Certification Process
         </h1>
         <p className="text-center mb-5">
-          The SPHECHO Certification program for non-SPHECHO Providers that is
+          The Sphecho Certification program for non-Sphecho Providers that is
           created in union with its board i.e., the Regional Advisory Panel
           Members and the Internal Review Committee consisting of clinical and
           subject matter experts is evidence-based and is due to be launched by
           January 2024.
         </p>
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -788,7 +817,7 @@ const CertificationProcess = () => {
           }}
         >
           <CButton title={"Know more"} onClick={() => {}} />
-        </div>
+        </div> */}
       </div>
 
       <Fade cascade bottom>
@@ -835,15 +864,15 @@ const FAQS = () => {
   const faqs = [
     {
       id: 1,
-      header: "What is the SPHECHO Certification Program",
+      header: "What is the Sphecho Certification Program",
       content:
-        "The SPHECHO certification program is intended to assess the knowledge, talents, and skills needed to carry out a certain job, and, upon passing a certification exam, to serve as a testament to an individual's level of professional competence.",
+        "The Sphecho certification program is intended to assess the knowledge, talents, and skills needed to carry out a certain job, and, upon passing a certification exam, to serve as a testament to an individual's level of professional competence.",
     },
     {
       id: 2,
-      header: "Who verifies the SPHECHO credentials?",
+      header: "Who verifies the Sphecho credentials?",
       content:
-        "Our credentials are governed and approved by our professional board that frequently reviews all policies and procedures of SPHECHO. The board is composed of a variety of specialists and experts, including clinical experts, therapists, special education professionals etc.",
+        "Our credentials are governed and approved by our professional board that frequently reviews all policies and procedures of Sphecho. The board is composed of a variety of specialists and experts, including clinical experts, therapists, special education professionals etc.",
     },
     {
       id: 3,
@@ -855,7 +884,7 @@ const FAQS = () => {
       id: 4,
       header: "What job can I get with this certification?",
       content:
-        "SPHECHO does not guarantee employment or specific job roles, however many professionals can utilize SPHECHO credentials on their professional resume to assist them in standing out among other applicants. All SPHECHO providers are certified.",
+        "Sphecho does not guarantee employment or specific job roles, however many professionals can utilize Sphecho credentials on their professional resume to assist them in standing out among other applicants. All Sphecho providers are certified.",
     },
     {
       id: 5,
@@ -868,7 +897,7 @@ const FAQS = () => {
       id: 6,
       header: "Is the online learning available on demand?",
       content:
-        "Yes, the SPHECHO learning management system is available 24/7 and is accessible as long as you have internet access. Once you have registered as a provider on the SPHECHO platform and paid for your program, you will be able to access the training modules online.",
+        "Yes, the Sphecho learning management system is available 24/7 and is accessible as long as you have internet access. Once you have registered as a provider on the Sphecho platform and paid for your program, you will be able to access the training modules online.",
     },
     {
       id: 7,
@@ -931,7 +960,7 @@ const RequestForm = () => {
       <div className="container p-2">
         <div className="m-auto text-center py-4 my-4" style={{ zIndex: 10 }}>
           <h2 className="text-white mb-3 b-700">
-            CONNECT WITH SPHECHO TO LEARN MORE ABOUT CERTIFICATION
+            CONNECT WITH Sphecho TO LEARN MORE ABOUT CERTIFICATION
           </h2>
           <p className="text-white mb-3">
             Fill out the form below to find out more about your certification
@@ -940,10 +969,10 @@ const RequestForm = () => {
           <div className="input-container">
             <Row>
               <Col sm="6" className="p-3">
-                <input className="input px-2" placeholder="Name" />
+                <input className="input px-2" placeholder="First name" />
               </Col>
               <Col sm={6} className="p-3">
-                <input className="input px-2" placeholder="Name" />
+                <input className="input px-2" placeholder="Last name" />
               </Col>
             </Row>
             <Row>
@@ -970,13 +999,15 @@ const RequestForm = () => {
             </Row>
             <Row>
               <Col className="p-2">
-                <p className="text-white">Additional Questions to Discuss</p>
+                <p className="text-white">Additional questions to discuss</p>
                 <textarea className="input px-4" style={{ height: "6rem" }} />
               </Col>
             </Row>
-            <Button className="bg-white text-black">Sumbit</Button>
+            <Button className="bg-white text-black px-5 py-3 br-4">
+              Sumbit
+            </Button>
             <p className="tiny text-white pt-2">
-              This site is protected by SPHECHO privacy policy and its terms and
+              This site is protected by Sphecho privacy policy and its terms and
               conditions
             </p>
           </div>
@@ -1024,46 +1055,46 @@ const Footer = ({ setCurrentContent }) => {
   const speechLinks = [
     {
       title: "Speech Therapy",
-      link: "http://sphecho-services.metahos.com/department/speech",
+      link: SERVICE_URLS.speech,
     },
     {
       title: "Eduational Consultation",
-      link: "http://sphecho-services.metahos.com/department/education",
+      link: SERVICE_URLS.education,
     },
     {
       title: "Ocuupational Therapy",
-      link: "http://sphecho-services.metahos.com/department/accupational",
+      link: SERVICE_URLS.occupation,
     },
     {
       title: "Behavioral & Psychological",
-      link: "http://sphecho-services.metahos.com/department/behavioral",
+      link: SERVICE_URLS.behavioral,
     },
     {
       title: "Physiotherapy",
-      link: "http://sphecho-services.metahos.com/department/physiotherapy",
+      link: SERVICE_URLS.physiotherapy,
     },
     {
       title: "Counselling",
-      link: "http://sphecho-services.metahos.com/department/counselling",
+      link: SERVICE_URLS.counselling,
     },
     {
       title: "Audiology",
-      link: "http://sphecho-services.metahos.com/department/audiology",
+      link: SERVICE_URLS.audiology,
     },
   ];
 
   const usefullLinks = [
     {
       title: "Providers",
-      link: "",
+      link: `https://${QISH_HOST}`,
     },
     {
       title: "Sphecho Service",
-      link: "http://sphecho-services.metahos.com",
+      link: `https://${QISH_HOST}`,
     },
     {
       title: "Sphecho Shop",
-      link: "http://sphecho-shop.metahos.com",
+      link: "http://Sphecho-shop.metahos.com",
     },
     {
       title: "Sphecho Scholar",
@@ -1129,7 +1160,7 @@ const Footer = ({ setCurrentContent }) => {
                 borderRadius: "3rem 0 0 3rem ",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "123%",
-                padding: "5rem 2rem",
+                padding: "3rem 2rem",
               }}
               className="navlinks-container-footer"
             >

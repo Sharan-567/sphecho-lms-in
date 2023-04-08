@@ -4,9 +4,9 @@ import { Button, Row, Col } from "react-bootstrap";
 import { motion, AnimatePresence } from "framer-motion";
 import PatientLogin from "./PatientLogin";
 
-import logo from "../../assets/white-logo.png";
-import circle from "../../assets/element-bg2.png";
-import bg from "../../assets/banner-bg.png";
+import logo from "../../assets/colorlogo.png";
+import bg from "../../assets/lb1.jpg";
+
 import "./Login.scss";
 import StaffMember from "./StaffMember";
 import Provider from "./Provider";
@@ -63,8 +63,13 @@ const Login = () => {
       <Row style={{}}>
         <Col
           sm={8}
-          className="p-2 d-flex flex-column justify-content-center align-items-center bg-primary title-container"
-          style={{ height: "100vh", position: "relative" }}
+          className="p-2 d-flex flex-column justify-content-center align-items-center title-container"
+          style={{
+            height: "100vh",
+            position: "relative",
+            backgroundImage: `url(${bg})`,
+            backgroundSize: "cover",
+          }}
         >
           {/* <div className="p-4">
             <Link to="/">
@@ -73,32 +78,22 @@ const Login = () => {
           </div> */}
           <div
             className="p-4"
-            style={{ position: "absolute", top: "1rem", left: "1rem" }}
+            style={{
+              position: "absolute",
+              top: "1rem",
+              left: "1rem",
+            }}
           >
             <Link to="/">
-              <img src={logo} width="159px" />
+              <img src={logo} width="120px" />
             </Link>
           </div>
-          <AnimatePresence exitBeforeEnter>
-            <motion.h1
-              key={"title"}
-              initial={{ y: 45, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -45, opacity: 0 }}
-              transition={{ duration: 0.5 }}
-              className="text-left text-white"
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: "5rem",
-              }}
-            >
-              Welcome to <br></br> SPHECHO
-            </motion.h1>
-          </AnimatePresence>
         </Col>
         <Col
           sm={4}
+          style={{
+            boxShadow: "-5px 0px 30xp 20px rgba(0,0,0,.7)",
+          }}
           className="p-5 pt-0 d-flex justify-content-center align-items-center"
         >
           <div className="login-wrapper m-auto p-2" style={{ width: "100%" }}>
@@ -106,15 +101,20 @@ const Login = () => {
               <>
                 <p
                   className="text-left text-primary mb-1 b-600"
-                  style={{ fontSize: "2rem" }}
+                  style={{
+                    fontSize: "3rem",
+                    fontWeight: "800",
+                    fontFamily: "inter",
+                  }}
                 >
-                  Select <br></br>
+                  Login to <br></br>
+                  My Blackboard
                 </p>
                 <p
                   className="text-left text-black mb-5"
-                  style={{ fontSize: "1.2rem" }}
+                  style={{ fontSize: "1.1rem" }}
                 >
-                  Sphecho login type.
+                  Select user login type.
                 </p>
                 {(loginTypes || []).map((item, idx) => (
                   <AnimatePresence exitBeforeEnter>
@@ -126,16 +126,16 @@ const Login = () => {
                       transition={{ duration: 0.4, delay: idx * 0.2 }}
                       style={{
                         fontSize: "1.1rem",
+                        borderRadius: "1.2rem 0 1.2rem 0",
                         border: "none",
-                        background: "#eeeeee",
+                        // boxShadow: "0px 0px 10px 0.5px rgba(0,0,0,0.1)",
                       }}
-                      className="w-100 mb-3 py-4 br-1 btn-login-an"
+                      className="w-100 mb-3 py-4  btn-login-an"
                       onClick={() => {
                         setLoginType(item.userState);
                         setCurrentSelectedAuth(item);
                         dispatch(clearError());
                       }}
-                      key={item.title}
                     >
                       {item.title}
                     </motion.button>
