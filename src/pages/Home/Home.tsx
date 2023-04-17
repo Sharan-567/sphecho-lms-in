@@ -31,8 +31,10 @@ import c2 from "../../assets/c2.png";
 import c3 from "../../assets/c3.png";
 import {
   JOIN_OUR_NETWORK,
-  QISH_HOST,
+  QISH_URL,
+  SCHOLAR_URL,
   SERVICE_URLS,
+  SHOP_URL,
 } from "../../features/settings";
 
 import {
@@ -43,17 +45,23 @@ import {
   AiOutlineCheckCircle,
   AiOutlineFileProtect,
 } from "react-icons/ai";
+import axios from "axios";
 
 // const Home = () => {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
 // }
 
-export const LEARN_URL = "";
-export const SERVICE_URL = "";
-export const SHOP_URL = "";
-export const SCHOLAR_URL = "";
-
 const Home = () => {
+  React.useEffect(() => {
+    const { pathname } = window.location;
+    const currentSection = pathname.split("/")[1];
+    const a = document.createElement("a");
+    if (currentSection === "features") {
+      a.href = "#feature-courses";
+    }
+    a.click();
+  }, []);
+
   return (
     <div style={{ position: "relative" }}>
       <Navbar />
@@ -287,7 +295,9 @@ const FeatureSection = () => {
               This below features are <br></br> currently available <br></br>
               only for Sphecho <br></br> Providers.
             </h1>
-            <CButton title={"Join our network"} onClick={() => {}} />
+            <a href={JOIN_OUR_NETWORK} target="_blank">
+              <CButton title={"Join our network"} onClick={() => {}} />
+            </a>
           </div>
         </Fade>
         <div style={{ position: "absolute", top: "40rem", left: "15rem" }}>
@@ -445,7 +455,7 @@ const FeaturedCourses = () => {
 
 const TagLine = () => {
   return (
-    <div className="container" style={{ margin: "7rem 0rem" }}>
+    <div className="container" style={{ margin: "7rem auto" }}>
       <h1 style={{ fontWeight: "900", color: "black", textAlign: "center" }}>
         REVERBERATING YOUR NEEDS
       </h1>
@@ -507,7 +517,7 @@ const FeatureCourseCard = ({
             fontWeight: "500",
           }}
         >
-          Comming soon
+          Coming soon
         </div>
       ) : null}
       {joinournetwork ? (
@@ -955,103 +965,319 @@ const FAQS = () => {
 };
 
 const RequestForm = () => {
+  const [pname, setPname] = React.useState("");
+  const [contact, setContact] = React.useState("");
+  const [message, setMessage] = React.useState("");
+  const [subject, setSubject] = React.useState("");
+  const [disbaled, setDisabled] = React.useState(false);
+
+  const [sucessMessage, setSuccessMessage] = React.useState("");
+
+  const clearFields = () => {
+    setPname("");
+    setContact("");
+    setMessage("");
+    setSubject("");
+  };
+
+  const clearMmessage = () => {
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 7000);
+  };
+
+  const handleSubmit = () => {
+    setDisabled(true);
+    axios
+      .post(`${QISH_URL}/leads/add`, {
+        callType: "contact-us",
+        contact,
+        subject,
+        message,
+        pname,
+        source: "lms",
+      })
+      .then(() => {
+        setDisabled(false);
+        clearFields();
+        setSuccessMessage("Your request successfully submitted.");
+        clearMmessage();
+      })
+      .catch((err: any) => {
+        setSuccessMessage("Network Error: Please try again later");
+        clearMmessage();
+        setDisabled(false);
+        console.log(err);
+      });
+  };
+
+  // return (
+  //   <div className="bg-image" style={{ margin: "8rem 0rem" }}>
+  //     <div className="container p-2">
+  //       <div className="m-auto text-center py-4 my-4" style={{ zIndex: 10 }}>
+  //         <h2 className="text-white mb-3 b-700">
+  //           CONNECT WITH Sphecho TO LEARN MORE ABOUT CERTIFICATION
+  //         </h2>
+  //         <p className="text-white mb-3">
+  //           Fill out the form below to find out more about your certification
+  //           options
+  //         </p>
+  //         <div className="input-container">
+  //           <Row>
+  //             <Col sm={12} className="p-3">
+  //               <input
+  //                 className="input px-2"
+  //                 placeholder="Name"
+  //                 value={pname}
+  //                 onChange={(e) => setPname(e.target.value)}
+  //               />
+  //             </Col>
+  //           </Row>
+  //           <Row>
+  //             <Col sm={4} className="p-3">
+  //               <input className="input" placeholder="Email address" />
+  //             </Col>
+  //             <Col sm={4} className="p-3">
+  //               <input className="input px-2" placeholder="mobile" />
+  //             </Col>
+  //             <Col sm={4} className="p-3">
+  //               <input className="input px-2" placeholder="Phone Number" />
+  //             </Col>
+  //           </Row>
+  //           <Row>
+  //             <Col sm="6" className="p-2">
+  //               <input className="input px-2" placeholder="Job Title" />
+  //             </Col>
+  //             <Col sm={6} className="p-2">
+  //               <input className="input px-2" placeholder="Organization" />
+  //             </Col>
+  //           </Row>
+  //           <Row>
+  //             <Col className="p-2">
+  //               <p className="text-white">Additional questions to discuss</p>
+  //               <textarea className="input px-4" style={{ height: "6rem" }} />
+  //             </Col>
+  //           </Row>
+  //           <Button className="bg-white text-black px-5 py-3 br-4">
+  //             Submit
+  //           </Button>
+  //           <p className="tiny text-white pt-2">
+  //             This site is protected by Sphecho privacy policy and its terms and
+  //             conditions
+  //           </p>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
   return (
     <div className="bg-image" style={{ margin: "8rem 0rem" }}>
       <div className="container p-2">
         <div className="m-auto text-center py-4 my-4" style={{ zIndex: 10 }}>
-          <h2 className="text-white mb-3 b-700">
-            CONNECT WITH Sphecho TO LEARN MORE ABOUT CERTIFICATION
-          </h2>
-          <p className="text-white mb-3">
-            Fill out the form below to find out more about your certification
-            options
-          </p>
+          <h2 className="text-white mb-3 b-700">CONTACT US</h2>
+          <h5 className="b-500 text-white">
+            Have any questions? We’d like to hear from you.
+          </h5>
+          <h5 className="text-white">
+            Please fill out the form below and we will do our best to respond
+            within 1 business day
+          </h5>
+          {sucessMessage ? (
+            <h6 className="text-white" style={{ fontWeight: "bold" }}>
+              {sucessMessage}
+            </h6>
+          ) : (
+            <h6>.</h6>
+          )}
           <div className="input-container">
             <Row>
               <Col sm="6" className="p-3">
-                <input className="input px-2" placeholder="First name" />
-              </Col>
-              <Col sm={6} className="p-3">
-                <input className="input px-2" placeholder="Last name" />
-              </Col>
-            </Row>
-            <Row>
-              <Col sm={4} className="p-3">
-                <input className="input" placeholder="Email address" />
-              </Col>
-              <Col sm={4} className="p-3">
-                <input className="input px-2" placeholder="Country" />
-              </Col>
-              <Col sm={4} className="p-3">
                 <input
                   className="input px-2"
-                  placeholder="Country Code + Phone Number"
+                  placeholder="Name"
+                  name="pname"
+                  value={pname}
+                  onChange={(e) => setPname(e.target.value)}
+                />
+              </Col>
+
+              <Col sm={6} className="p-3">
+                <input
+                  className="input"
+                  placeholder="Contact"
+                  name="contact"
+                  type="tel"
+                  value={contact}
+                  onChange={(e) => setContact(e.target.value)}
                 />
               </Col>
             </Row>
             <Row>
-              <Col sm="6" className="p-2">
-                <input className="input px-2" placeholder="Job Title" />
-              </Col>
-              <Col sm={6} className="p-2">
-                <input className="input px-2" placeholder="Organization" />
+              <Col sm={6} className="p-3">
+                <input
+                  className="input px-2"
+                  placeholder="Subject"
+                  name="subject"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                />
               </Col>
             </Row>
             <Row>
               <Col className="p-2">
-                <p className="text-white">Additional questions to discuss</p>
-                <textarea className="input px-4" style={{ height: "6rem" }} />
+                <h5 className="text-white">Your Message</h5>
+
+                <textarea
+                  className="input px-4"
+                  style={{ height: "6rem" }}
+                  name="message"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
               </Col>
             </Row>
-            <Button className="bg-white text-black px-5 py-3 br-4">
-              Sumbit
-            </Button>
-            <p className="tiny text-white pt-2">
-              This site is protected by Sphecho privacy policy and its terms and
-              conditions
-            </p>
+
+            <button
+              disabled={disbaled}
+              style={{
+                background: "white",
+                color: "black",
+                padding: "1rem 2rem",
+                borderRadius: "3rem",
+                fontWeight: 500,
+                cursor: "pointer",
+                border: "none",
+              }}
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
           </div>
+          <p className="text-white mt-1" style={{ fontSize: ".8" }}>
+            This site is protected by SPHECHO privacy policy and its terms and
+            conditions.
+          </p>
         </div>
       </div>
     </div>
   );
 };
 
+// const NewLetter = () => {
+//   return (
+//     <div
+//       className="mb-5 p-5 container"
+//       style={{ zoom: "90%", background: "#f1f0ee", borderRadius: "2rem" }}
+//     >
+//       <div className="container mb-4">
+//         <div className="m-auto w-75">
+//           <h2
+//             className=" text-center mb-4 b-700"
+//             style={{ color: "rgb(163, 160, 160)" }}
+//           >
+//             SUBSCRIBE TO OUR NEWSLETTER
+//           </h2>
+//           <Row>
+//             <Col sm="9" className="p-2">
+//               <input
+//                 className="newLetter-input"
+//                 placeholder="Enter your Email Address"
+//               ></input>
+//             </Col>
+//             <Col sm="3" className="p-2 m-auto">
+//               <Button className="newsLetter-btn">Subscribe</Button>
+//             </Col>
+//           </Row>
+//         </div>
+//         <p className="text-center pt-2">
+//           By subscribing, you consent to us sharing updates with you.
+//         </p>
+//       </div>
+//     </div>
+//   );
+// };
+
 const NewLetter = () => {
+  const [email, setEmail] = React.useState("");
+  const [message, setMessage] = React.useState("");
+  const isSmallScreen = window.screen.width < 990;
+
+  const handleSubmit = () => {
+    axios
+      .post(`${QISH_URL}/leads/newsletter`, { email })
+      .then((res) => {
+        setEmail("");
+        setMessage("Thank you for subscribing!");
+      })
+      .catch((err) => {
+        setMessage("");
+      });
+  };
+
   return (
     <div
-      className="mb-5 p-5 container"
-      style={{ zoom: "90%", background: "#f1f0ee", borderRadius: "2rem" }}
+      className="mb-5 pb-3"
+      style={{
+        marginTop: isSmallScreen ? "0" : "7rem",
+        zoom: "85%",
+      }}
     >
-      <div className="container mb-4">
+      <div
+        className="container mb-4"
+        style={{
+          background: "#F1F0EE",
+          padding: "5rem 1rem",
+          borderRadius: isSmallScreen ? 0 : "1.8rem",
+        }}
+      >
         <div className="m-auto w-75">
           <h2
             className=" text-center mb-4 b-700"
-            style={{ color: "rgb(163, 160, 160)" }}
+            style={{
+              fontFamily: "inter",
+              fontWeight: "900",
+              color: "#A2A0A0",
+              fontSize: "2.4rem",
+            }}
           >
             SUBSCRIBE TO OUR NEWSLETTER
           </h2>
+          {message && (
+            <p
+              className="text-center"
+              style={{ fontSize: "1.3rem", fontWeight: "500" }}
+            >
+              {message}
+            </p>
+          )}
           <Row>
             <Col sm="9" className="p-2">
               <input
+                style={{ color: "black" }}
+                onChange={(e) => setEmail(e.target.value)}
                 className="newLetter-input"
                 placeholder="Enter your Email Address"
               ></input>
             </Col>
             <Col sm="3" className="p-2 m-auto">
-              <Button className="newsLetter-btn">Subscribe</Button>
+              <Button className="newsLetter-btn m-auto" onClick={handleSubmit}>
+                Subscribe
+              </Button>
             </Col>
           </Row>
+          <h5
+            className="text-center"
+            style={{ color: "gray", fontSize: ".9rem" }}
+          >
+            By subscribing, you consent to us sharing updates with you
+          </h5>
         </div>
-        <p className="text-center pt-2">
-          By subscribing, you consent to us sharing updates with you.
-        </p>
       </div>
     </div>
   );
 };
 
-const Footer = ({ setCurrentContent }) => {
+const Footer = () => {
   const speechLinks = [
     {
       title: "Speech Therapy",
@@ -1086,19 +1312,19 @@ const Footer = ({ setCurrentContent }) => {
   const usefullLinks = [
     {
       title: "Providers",
-      link: `https://${QISH_HOST}`,
+      link: `${QISH_URL}`,
     },
     {
       title: "Sphecho Service",
-      link: `https://${QISH_HOST}`,
+      link: `${QISH_URL}`,
     },
     {
       title: "Sphecho Shop",
-      link: "http://Sphecho-shop.metahos.com",
+      link: `${SHOP_URL}`,
     },
     {
       title: "Sphecho Scholar",
-      link: "",
+      link: `${SCHOLAR_URL}`,
     },
   ];
 
@@ -1174,7 +1400,12 @@ const Footer = ({ setCurrentContent }) => {
                     DEPARTMENTS
                   </h5>
                   {speechLinks.map((l) => (
-                    <a key={l.title} className="link b-400" href={l.link}>
+                    <a
+                      key={l.title}
+                      target="_blank"
+                      className="link b-400"
+                      href={l.link}
+                    >
                       {l.title.charAt(0).toUpperCase() + l.title.slice(1)}
                     </a>
                   ))}
@@ -1187,7 +1418,12 @@ const Footer = ({ setCurrentContent }) => {
                     USEFUL LINKS
                   </h5>
                   {usefullLinks.map((l) => (
-                    <a key={l.title} className="link b-400" href={l.link}>
+                    <a
+                      key={l.title}
+                      target="_blank"
+                      className="link b-400"
+                      href={l.link}
+                    >
                       {l.title}
                     </a>
                   ))}
@@ -1201,7 +1437,7 @@ const Footer = ({ setCurrentContent }) => {
                   </h5>
 
                   <a href="#process" className="link b-400">
-                    Certification process
+                    Certification Process
                   </a>
                   <Link to="/privacy" className="link b-400">
                     Privacy Policy
@@ -1217,11 +1453,11 @@ const Footer = ({ setCurrentContent }) => {
       </div>
       <div style={{ background: "white", padding: ".5rem" }}>
         <div className="container" style={{ background: "white" }}>
-          {/* <p className="text-center" style={{ fontWeight: '500' }}>
+          <p className="text-center" style={{ fontWeight: "500" }}>
             If you are in a life threatening situation - don’t use this site.
             Kindly contact your respective national helpline to get immediate
             assistance.
-          </p> */}
+          </p>
           <div
             className="d-flex justify-content-between"
             style={{ marginTop: "0rem" }}

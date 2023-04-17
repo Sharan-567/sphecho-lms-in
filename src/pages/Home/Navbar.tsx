@@ -79,45 +79,39 @@ const NavBar = ({ isDark }) => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ms-auto pt-2 ">
-            <Nav.Link
-              href="#feature-courses"
-              className="b-700 link-nav"
-              style={{ color: isDark ? "#69B447" : "black" }}
-            >
+            <Nav.Link href="#feature-courses" className="b-700 link-nav">
               <a
+                href="/features"
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
                   fontWeight: "500",
+                  color: "black",
                 }}
               >
                 <p>FEATURED COURSES</p>
               </a>
             </Nav.Link>
-            <Nav.Link
-              className=" b-700 link-nav"
-              style={{ color: isDark ? "#69B447" : "black" }}
-            >
+            <Nav.Link className=" b-700 link-nav">
               <Link
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
                   fontWeight: "500",
+                  color: "black",
                 }}
                 to="/webinar"
               >
                 <p>WEBINARS</p>
               </Link>
             </Nav.Link>
-            <Nav.Link
-              className="b-700 link-nav"
-              style={{ color: isDark ? "#69B447" : "black" }}
-            >
+            <Nav.Link className="b-700 link-nav">
               <Link
                 style={{
                   textDecoration: "none",
                   fontSize: "1rem",
                   fontWeight: "500",
+                  color: "black",
                 }}
                 to="/login"
               >
@@ -127,7 +121,7 @@ const NavBar = ({ isDark }) => {
 
             {/* <Nav.Link
               className="b-700 link-nav"
-              style={{ color: isDark ? "#69B447" : "black" }}
+              
             >
               <Link
                 style={{
@@ -160,7 +154,7 @@ const SmallNavBar = ({ isDark }) => (
     }}
     expand="lg"
   >
-    <Container style={{ padding: "0rem 1rem" }}>
+    <Container style={{ padding: "0rem 1rem", background: "white" }}>
       <Navbar.Brand as={Link} to="/">
         <img src={colorLogo} width={"135rem"} />
       </Navbar.Brand>
@@ -168,34 +162,34 @@ const SmallNavBar = ({ isDark }) => (
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="ms-auto" style={{ padding: "1rem" }}>
           <Nav.Link
-            className="b-700 link-nav"
-            style={{ color: "#69B447", textDecoration: "none" }}
+            className="b-700 ps-2 mt-3 link-nav"
+            style={{ color: "black", textDecoration: "none" }}
           >
-            <Link style={{ textDecoration: "none" }} to="/featured">
+            <Link style={{ textDecoration: "none" }} to="/features">
               FEATURED COURSES
             </Link>
           </Nav.Link>
           <Nav.Link
-            className=" b-700 link-nav"
-            style={{ color: "#69B447", textDecoration: "none" }}
+            className=" b-700 ps-2 mt-3 link-nav"
+            style={{ color: "black", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/webinar">
               WEBINARS
             </Link>
           </Nav.Link>
           <Nav.Link
-            className="b-700 link-nav"
-            style={{ color: "#69B447", textDecoration: "none" }}
+            className="b-700 ps-2 mt-3 link-nav"
+            style={{ color: "black", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/login">
               MY BLACKBOARD
             </Link>
           </Nav.Link>
-          <Nav.Link className="b-700 link-nav" style={{ color: "#69B447" }}>
+          {/* <Nav.Link className="b-700 link-nav" style={{ color: "black" }}>
             <Link style={{ textDecoration: "none" }} to="/login">
               REGISTER
             </Link>
-          </Nav.Link>
+          </Nav.Link> */}
         </Nav>
       </Navbar.Collapse>
     </Container>

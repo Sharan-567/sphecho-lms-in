@@ -15,6 +15,7 @@ import SuperUser from "./SuperUser";
 import type { UserState, Auth } from "../../definations/Auth";
 import { clearError } from "../../features/auth";
 import { useAppDispatch } from "../../store";
+import loginGIF from "../../assets/login.gif";
 
 const Login = () => {
   const [loginType, setLoginType] = useState<UserState>();
@@ -29,7 +30,7 @@ const Login = () => {
 
   const loginTypes: Auth[] = [
     {
-      title: "Patient",
+      title: "Client" || "Patient",
       userState: "Patient",
       user_type: "",
       type: "2",
@@ -99,10 +100,11 @@ const Login = () => {
           <div className="login-wrapper m-auto p-2" style={{ width: "100%" }}>
             {!loginType ? (
               <>
+                <img src={loginGIF} style={{ width: "30rem" }} />
                 <p
                   className="text-left text-primary mb-1 b-600"
                   style={{
-                    fontSize: "3rem",
+                    fontSize: "2rem",
                     fontWeight: "800",
                     fontFamily: "inter",
                   }}
@@ -110,6 +112,7 @@ const Login = () => {
                   Login to <br></br>
                   My Blackboard
                 </p>
+
                 <p
                   className="text-left text-black mb-5"
                   style={{ fontSize: "1.1rem" }}

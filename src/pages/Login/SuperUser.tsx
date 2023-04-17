@@ -5,6 +5,7 @@ import { login, makeLogin } from "../../features/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { motion, AnimatePresence } from "framer-motion";
 import { customAxios } from "../../services/utils";
+import loginGIF from "../../assets/login.gif";
 
 type UserState = "Patient" | "Provider" | "SuperUser" | "staffMember";
 type Auth = {
@@ -123,6 +124,7 @@ const StaffMember = ({ setLoginType, currentSelectedAuth }: Props) => {
         transition={{ duration: 0.5 }}
         className="px-2 "
       >
+        <img src={loginGIF} style={{ width: "30rem" }} />
         {error ? <p className="text-danger">{error}</p> : null}
         <h1 className="mb-5 text-primary text-center">SuperUser Login</h1>
         <input

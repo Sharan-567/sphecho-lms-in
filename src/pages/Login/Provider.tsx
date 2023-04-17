@@ -6,7 +6,7 @@ import { login, makeLogin } from "../../features/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { motion, AnimatePresence } from "framer-motion";
 import { customAxios } from "../../services/utils";
-
+import loginGIF from "../../assets/login.gif";
 type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
   currentSelectedAuth: Auth | undefined;
@@ -115,6 +115,7 @@ const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
         transition={{ duration: 0.5 }}
         className="px-2 "
       >
+        <img src={loginGIF} style={{ width: "30rem" }} />
         {error ? <p className="text-danger">{error}</p> : null}
         <h1 className="mb-5 text-primary text-center">Provider Login</h1>
         <input

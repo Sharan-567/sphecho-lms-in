@@ -7,6 +7,9 @@ import authService from "../../services/auth.service";
 import type { Patient } from "../../definations/patients";
 import NewPatient from "./NewPatient";
 import { makeLogin } from "../../features/auth";
+import { UserState } from "../../definations/Auth";
+import loginGIF from "../../assets/login.gif";
+
 type Usertype = "Patient" | "Provider" | "SuperUser";
 type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
@@ -92,7 +95,8 @@ const PatientLogin = ({ setLoginType }: Props) => {
 
   return (
     <div className="px-2 ">
-      <h1 className="text-primary text-center mb-5">Patient Login</h1>
+      <img src={loginGIF} style={{ width: "30rem" }} />
+      <h1 className="text-primary text-center mb-5">Client Login</h1>
       {error ? <p className="text-danger">{error}</p> : null}
       {stage === "NUMBER" ? (
         <>
