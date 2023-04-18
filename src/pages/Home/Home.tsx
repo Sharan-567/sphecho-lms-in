@@ -607,12 +607,14 @@ const Introduction = () => {
           </Fade>
         </div>
       </div>
-      <div style={{ position: "absolute", top: "30rem", left: "5rem" }}>
+      <div style={{ position: "absolute", top: "30rem", width: "100%" }}>
         <Fade left>
-          <div className="d-flex align-items-center gap-3">
-            {learingOutcomes.map((title, idx) => {
-              return <IntroCard key={idx} title={title} />;
-            })}
+          <div className="container">
+            <div className="d-flex align-items-center gap-3">
+              {learingOutcomes.map((title, idx) => {
+                return <IntroCard key={idx} title={title} />;
+              })}
+            </div>
           </div>
         </Fade>
       </div>

@@ -17,6 +17,8 @@ import { clearError } from "../../features/auth";
 import { useAppDispatch } from "../../store";
 import loginGIF from "../../assets/login.gif";
 
+const isSmallScreen = window.screen.width < 990;
+
 const Login = () => {
   const [loginType, setLoginType] = useState<UserState>();
   const [currentSelectedAuth, setCurrentSelectedAuth] = useState<Auth>();
@@ -61,7 +63,7 @@ const Login = () => {
 
   return (
     <div className=" bg-container">
-      <Row style={{}}>
+      <Row>
         <Col
           sm={8}
           className="p-2 d-flex flex-column justify-content-center align-items-center title-container"
@@ -100,7 +102,14 @@ const Login = () => {
           <div className="login-wrapper m-auto p-2" style={{ width: "100%" }}>
             {!loginType ? (
               <>
-                <img src={loginGIF} style={{ width: "30rem" }} />
+                <img
+                  src={loginGIF}
+                  style={{
+                    width: isSmallScreen ? "30rem" : "30rem",
+                    objectFit: "contain",
+                    marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
+                  }}
+                />
                 <p
                   className="text-left text-primary mb-1 b-600"
                   style={{

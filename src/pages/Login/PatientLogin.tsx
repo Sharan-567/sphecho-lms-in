@@ -8,7 +8,7 @@ import type { Patient } from "../../definations/patients";
 import NewPatient from "./NewPatient";
 import { makeLogin } from "../../features/auth";
 import { UserState } from "../../definations/Auth";
-import loginGIF from "../../assets/login.gif";
+import loginGIF from "../../assets/lock.gif";
 
 type Usertype = "Patient" | "Provider" | "SuperUser";
 type Props = {
@@ -20,6 +20,8 @@ type DataType = {
   userState: string;
 };
 type StageType = "NUMBER" | "OTP" | "PATIENTS_LIST";
+
+const isSmallScreen = window.screen.width < 990;
 
 const PatientLogin = ({ setLoginType }: Props) => {
   const [stage, setStage] = useState<StageType>("NUMBER");
@@ -95,7 +97,14 @@ const PatientLogin = ({ setLoginType }: Props) => {
 
   return (
     <div className="px-2 ">
-      <img src={loginGIF} style={{ width: "30rem" }} />
+      <img
+        src={loginGIF}
+        style={{
+          width: isSmallScreen ? "30rem" : "30rem",
+          objectFit: "contain",
+          marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
+        }}
+      />
       <h1 className="text-primary text-center mb-5">Client Login</h1>
       {error ? <p className="text-danger">{error}</p> : null}
       {stage === "NUMBER" ? (
