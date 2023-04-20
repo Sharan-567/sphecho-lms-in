@@ -123,7 +123,7 @@ const StaffMember = ({ setLoginType, currentSelectedAuth }: Props) => {
           style={{
             width: isSmallScreen ? "30rem" : "30rem",
             objectFit: "contain",
-            marginLeft: isSmallScreen ? "-3rem" : "inherit",
+            marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
           }}
         />
         {error ? <p className="text-danger">{error}</p> : null}

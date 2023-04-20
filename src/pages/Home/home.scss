@@ -279,6 +279,17 @@ footer {
   color: $primary;
 }
 
+@media only screen and (max-width: 600px) {
+  .triangle {
+    bottom: -10rem;
+    right: 10rem;
+    transform: rotate(90deg);
+  }
+  .process-item {
+    margin-bottom: 3rem;
+  }
+}
+
 .process-item p {
   text-align: center;
 }

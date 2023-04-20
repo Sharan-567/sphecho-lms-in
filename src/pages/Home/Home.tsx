@@ -51,6 +51,8 @@ import axios from "axios";
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
 // }
 
+const isSmallScreen = window.innerWidth < 999;
+
 const Home = () => {
   React.useEffect(() => {
     const { pathname } = window.location;
@@ -300,7 +302,7 @@ const FeatureSection = () => {
             </a>
           </div>
         </Fade>
-        <div style={{ position: "absolute", top: "40rem", left: "15rem" }}>
+        <div style={{ position: "absolute", top: "40rem", width: "100%" }}>
           <FeatureButtons />
         </div>
       </div>
@@ -311,8 +313,13 @@ const FeatureSection = () => {
 const FeatureButtons = () => {
   return (
     <section
-      className="container"
-      style={{ marginTop: "-5rem", zIndex: "10999" }}
+      className=""
+      style={{
+        marginTop: "-5rem",
+        zIndex: "10999",
+        maxWidth: "1000px",
+        margin: "auto",
+      }}
     >
       <Row>
         <Col sm={4}>
@@ -327,8 +334,10 @@ const FeatureButtons = () => {
                 justifyContent: "center",
                 flexDirection: "column",
                 height: "22rem",
+                margin: "auto",
                 borderRadius: "3rem 0 3rem 0",
                 boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
+                marginBottom: "1rem",
               }}
             >
               <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
@@ -354,9 +363,11 @@ const FeatureButtons = () => {
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "column",
+                margin: "auto",
                 height: "22rem",
                 borderRadius: "3rem 0 3rem 0",
                 boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
+                marginBottom: "1rem",
               }}
             >
               <h2 style={{ textAlign: "center", marginBottom: "1rem" }}>
@@ -378,11 +389,13 @@ const FeatureButtons = () => {
                 background: "white",
                 width: "22rem",
                 padding: "1rem",
+                marginBottom: "1rem",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 flexDirection: "column",
                 height: "22rem",
+                margin: "auto",
                 borderRadius: "3rem 0 3rem 0",
                 boxShadow: "0 0 20px 10px rgba(0,0,0,0.1)",
               }}
@@ -409,9 +422,10 @@ const FeaturedCourses = () => {
       id="feature-courses"
       className="bg-primary"
       style={{
-        borderRadius: "0 20rem 0rem 0",
+        borderRadius: isSmallScreen ? "0 10rem 0 0" : "0 20rem 0rem 0",
         marginRight: "1rem",
         marginBottom: "5rem",
+        marginTop: isSmallScreen ? "70rem" : "3rem",
       }}
     >
       <Fade left>
@@ -426,6 +440,7 @@ const FeaturedCourses = () => {
               display: "flex",
               alignItems: "center",
               overflowX: "scroll",
+              flexDirection: isSmallScreen ? "column" : "inherit",
             }}
           >
             <FeatureCourseCard
@@ -481,12 +496,13 @@ const FeatureCourseCard = ({
     <div
       style={{
         background: "white",
-        width: "24rem",
+        width: isSmallScreen ? "100%" : "24rem",
         padding: "1rem",
         borderRadius: "2rem",
         minHeight: "28rem",
         boxShadow: "0px 0px 20px 10px rgba(0,0,0, 0.1)",
-        margin: "0 2rem",
+        margin: isSmallScreen ? "0rem" : "0 2rem",
+        marginBottom: "2rem",
       }}
     >
       <img
@@ -572,10 +588,11 @@ const Introduction = () => {
       style={{
         background: "#F1F0EE",
         padding: "5rem 1rem",
-        borderRadius: "20rem 0rem 0 0",
+        borderRadius: isSmallScreen ? "10rem 0 0 0 " : "20rem 0rem 0 0",
         position: "relative",
         marginBottom: "15rem",
         zoom: "98%",
+        minHeight: isSmallScreen ? "1870px" : "inherit",
       }}
     >
       <div className="container">
@@ -607,10 +624,19 @@ const Introduction = () => {
           </Fade>
         </div>
       </div>
-      <div style={{ position: "absolute", top: "30rem", width: "100%" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: isSmallScreen ? "40rem" : "30rem",
+          width: "100%",
+        }}
+      >
         <Fade left>
           <div className="container">
-            <div className="d-flex align-items-center gap-3">
+            <div
+              className="d-flex align-items-center gap-3"
+              style={{ flexDirection: isSmallScreen ? "column" : "row" }}
+            >
               {learingOutcomes.map((title, idx) => {
                 return <IntroCard key={idx} title={title} />;
               })}
@@ -835,7 +861,11 @@ const CertificationProcess = () => {
       <Fade cascade bottom>
         <div
           className="d-flex gap-3 container justify-content-between"
-          style={{ maxWidth: "80rem" }}
+          style={{
+            maxWidth: "80rem",
+            flexDirection: isSmallScreen ? "column" : "row",
+            alignItems: isSmallScreen ? "center" : "inherit",
+          }}
         >
           <div className="process-item">
             <AiOutlineUserAdd className="process_icon" />
@@ -1385,7 +1415,7 @@ const Footer = () => {
               style={{
                 backgroundImage: 'url("https://svgshare.com/i/pdj.svg")',
                 backgroundColor: "black",
-                borderRadius: "3rem 0 0 3rem ",
+                borderRadius: isSmallScreen ? "0" : "3rem 0 0 3rem ",
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "123%",
                 padding: "3rem 2rem",
