@@ -28,7 +28,7 @@ const ListItem = <T extends {}>(props: ListItem<T>) => {
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: -25, opacity: 0 }}
         transition={{ duration: 0.4, delay: props.idx ? props.idx * 0.1 : 0 }}
-        className="br-1 p-2 bg-graydark my-2"
+        className="br-1 p-2 bg-graydark my-2 item-container"
       >
         <Row className="d-flex justify-content-between">
           <Col
@@ -43,12 +43,15 @@ const ListItem = <T extends {}>(props: ListItem<T>) => {
             }}
           >
             <div className="p-2">
-              <p className="mt-2 ps-2" style={{ fontSize: "1.1rem" }}>
+              <p
+                className="mt-2 ps-2"
+                style={{ fontSize: "1.1rem", wordBreak: "break-word" }}
+              >
                 {props.title &&
                   props.title.charAt(0).toUpperCase() + props.title.slice(1)}
               </p>
               {props.subTitle && (
-                <p className="tiny">
+                <p style={{ wordBreak: "break-word" }} className="tiny">
                   {props.subTitle.charAt(0).toUpperCase() +
                     props.subTitle.slice(1)}
                 </p>

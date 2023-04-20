@@ -8,6 +8,7 @@ import { convertToObject } from "./helpers";
 import Empty from "../Empty";
 import LoadingEl from "../Loading";
 import { motion, AnimatePresence } from "framer-motion";
+import { Document, pdfjs, Page } from "react-pdf";
 
 type Certification = {
   id: number;
@@ -30,6 +31,8 @@ const Certification = () => {
   const [certificationList, setCertificationList] = useState<Certification[]>(
     []
   );
+  const [numPages, setNumPages] = useState(null);
+  const [pageNumber, setPageNumber] = useState(1);
   const [badgeList, setBadgeList] = useState<Badge[]>();
   const [error, setError] = useState("");
   const [showCertificate, setShowCertificate] = useState(false);
@@ -69,6 +72,7 @@ const Certification = () => {
       const headers = {
         Authorization: "token " + token,
       };
+
       fetch(`${BASE_URL}/student/certificate/${id}/`, {
         method: "GET",
         headers,
@@ -119,6 +123,10 @@ const Certification = () => {
     );
   }
 
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
+
   if (showCertificate) {
     return (
       <div
@@ -133,12 +141,27 @@ const Certification = () => {
           <BsArrowLeft size="25" className="text-primary" />
           <p>Back</p>
         </Button>
-        <embed
-          width={"100%"}
-          height="100%"
+        {/* <embed
+          width={"80%"}
+          height={"97%"}
           src={pdf + "#toolbar=0&navpanes=0&scrollbar=0"}
           type="application/pdf"
-        />
+        /> */}
+        <div
+          className="pdf-container"
+          style={{
+            margin: "auto",
+            maxWidth: "90%",
+            overflow: "hidden",
+            color: "white",
+            background: "white",
+            overflowY: "hidden",
+          }}
+        >
+          <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
+            <Page pageNumber={pageNumber} />
+          </Document>
+        </div>
       </div>
     );
   }
@@ -187,28 +210,39 @@ const Certification = () => {
         )}
       </div>
 
-      <div className="d-flex flex-wrap justify-content-around">
-        {(badgeList || []).map((badge) => (
-          <div
-            key={badge.id}
-            className="br-1 mb-2 text-center m-5"
-            style={{
-              cursor: "pointer",
-              borderRadius: "1rem",
-              border: "2.5px solid #81A31B",
-              padding: "2rem 4rem",
-            }}
-          >
-            <img
-              src={`https://${HOST}/open_api_v_0_0_1/shared_data/media/${badge.badge__image}`}
-              width={100}
-              style={{ marginBottom: "1rem" }}
-            />
-            <p>
-              {badge.badge__title}
-              <span className="text-primary b-700"> x{badge.badge}</span>
-            </p>
-          </div>
+      <div className="d-flex flex-wrap">
+        {(badgeList || []).map((badge, idx) => (
+          <AnimatePresence exitBeforeEnter>
+            <motion.div
+              key={idx + "1"}
+              initial={{ y: 25, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -25, opacity: 0 }}
+              transition={{
+                duration: 0.4,
+                delay: idx * 0.1,
+              }}
+              className="br-1 mb-2 text-center m-5 bg-graydark"
+              style={{
+                cursor: "pointer",
+                borderRadius: "1rem",
+                padding: "2rem 4rem",
+                width: "14rem",
+                height: "100%",
+              }}
+            >
+              <img
+                src={`https://${HOST}/media/${badge.badge__image}`}
+                width={100}
+                style={{ marginBottom: "1rem" }}
+              />
+
+              <p>
+                {badge.badge__title}
+                <span className="text-primary b-700"> x{badge.badge}</span>
+              </p>
+            </motion.div>
+          </AnimatePresence>
         ))}
       </div>
     </div>

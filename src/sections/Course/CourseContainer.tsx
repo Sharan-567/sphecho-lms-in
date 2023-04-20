@@ -6,6 +6,7 @@ import type { Course } from "../../definations/course";
 import { useAppSelector } from "../../store";
 import Progress from "./Progress";
 import ButtonGroup from "./ButtonGroup";
+import logog from "../../assets/logo-g.png";
 
 type CourseContainer = {
   course: Course;
@@ -101,30 +102,34 @@ const CourseContainer = ({ course, no_of_topics, type }: CourseContainer) => {
             {course.trainer_name && (
               <img
                 alt=""
-                src={`https://${HOST}${course.trainer_image}`}
-                className="round-50 obj-fit-cover me-2"
+                src={logog}
+                className="round-50 obj-fit-contain me-2"
                 style={{
                   width: "3rem",
                   height: "3rem",
-                  border: "5px solid white",
+                  objectFit: "contain",
+                  padding: ".3rem",
+                  border: "4px solid white",
                 }}
               />
             )}
             <h4>{course.trainer_name}</h4>
           </div>
           <div className="d-flex align-items-center justify-content-between mb-1">
-            <Link to={`/courses/${course.id}`}>
-              <Button
-                className="bg-green text-white"
-                style={{
-                  width: "100%",
-                  padding: ".6rem 1rem",
-                  fontSize: ".9rem",
-                }}
-              >
-                Enter this Course
-              </Button>
-            </Link>
+            {no_of_topics && no_of_topics > 0 && (
+              <Link to={`/courses/${course.id}`}>
+                <Button
+                  className="bg-green text-white"
+                  style={{
+                    width: "100%",
+                    padding: ".6rem 1rem",
+                    fontSize: ".9rem",
+                  }}
+                >
+                  Enter this Course
+                </Button>
+              </Link>
+            )}
             {type === "allCourses" && (
               <h3 className="text-skyBlue b-800">
                 {Number(course.full_amount).toFixed(0) === "0"

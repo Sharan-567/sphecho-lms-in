@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 $gray: #f1f0ee;
 $primary: #67b045;
 
@@ -5,43 +6,8 @@ $primary: #67b045;
 //   outline: 1px solid red;
 // }
 
-@font-face {
-  font-family: bs;
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Black.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Black.ttf") format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Bold.ttf") format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.woff")
-      format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-BlackItalic.ttf")
-      format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Light.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Light.ttf") format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Medium.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Medium.ttf") format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Regular.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Regular.ttf") format("truetype");
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Thin.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Thin.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: bs;
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Bold.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Bold.ttf") format("truetype");
-  font-weight: bold;
-}
-
-@font-face {
-  font-family: regular;
-  src: url("../../assets/fonts/BwSeidoRoundDEMO-Regular.woff") format("woff"),
-    url("../../assets/fonts/BwSeidoRoundDEMO-Regular.ttf") format("truetype");
-  font-weight: normal;
-}
-
 * {
-  font-family: regular;
-  font-weight: normal;
+  font-family: inter;
 }
 
 .banner-title {
@@ -70,41 +36,42 @@ $primary: #67b045;
 }
 
 .link-nav {
-  font-size: 1.2rem !important;
+  font-size: 1.2rem;
   margin-right: 1em !important;
 }
 
+.link-nav:hover p {
+  color: $primary;
+}
+
 .coursel-img {
-  height: 140vh;
+  height: 100vh;
   width: 100%;
   object-fit: cover;
+  border-radius: 0 0 0 20rem;
 }
 
 .banner-container {
   position: relative;
   overflow: hidden;
   width: 100%;
-  clip-path: url(#clipPath);
+  border-radius: 0 0 0 20rem;
+  overflow: hidden;
 }
 
-#svgPath {
-  height: 0;
-  width: 0;
-}
-
-.banner-container::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(
-    to bottom right,
-    #67b045 20%,
-    rgba(255, 255, 255, 0) 70%
-  );
-}
+// .banner-container::after {
+//   content: "";
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   bottom:30%;
+//   background-image: linear-gradient(
+//     to bottom right,
+//     #67b045 20%,
+//     rgba(255, 255, 255, 0) 70%
+//   );
+// }
 
 // title content
 
@@ -112,7 +79,9 @@ $primary: #67b045;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem 1rem;
+  padding: 0rem 1rem;
+  margin-top: -15rem;
+  margin-bottom: 5rem;
   p {
     display: block;
     width: 70%;
@@ -287,4 +256,45 @@ footer {
   .wave {
     height: 140px;
   }
+}
+
+.process-item {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  width: 10rem;
+  box-shadow: 0px 0px 20px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  position: relative;
+}
+
+.triangle {
+  position: absolute;
+  top: 2.8rem;
+  right: -3rem;
+  font-size: 2.5rem;
+  color: $primary;
+}
+
+@media only screen and (max-width: 600px) {
+  .triangle {
+    bottom: -10rem;
+    right: 10rem;
+    transform: rotate(90deg);
+  }
+  .process-item {
+    margin-bottom: 3rem;
+  }
+}
+
+.process-item p {
+  text-align: center;
+}
+.process_icon {
+  font-size: 3rem;
+  color: $primary;
+  margin-bottom: 0.5rem;
 }

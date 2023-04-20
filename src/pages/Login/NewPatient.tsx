@@ -9,6 +9,8 @@ type NewPatientProps = {
   mobile: string;
 };
 
+const isSmallScreen = window.screen.width < 990;
+
 const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
   const [fName, setFname] = React.useState("");
   const [age, setAge] = React.useState("");

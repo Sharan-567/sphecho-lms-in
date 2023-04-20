@@ -12,7 +12,7 @@ import Card from "../../components/Card";
 import "react-calendar/dist/Calendar.css";
 import "./Main.scss";
 import { logout } from "../../features/auth";
-import {
+import courses, {
   addAllCourses,
   addUserCourses,
   addUserTopic,
@@ -176,6 +176,7 @@ const Main = () => {
   const logoutHandler = () => {
     dispatch(logout());
   };
+  const userState = localStorage.getItem("userState");
 
   const isAdmin = () => {
     const userState = localStorage.getItem("userState");
@@ -189,6 +190,9 @@ const Main = () => {
     }
     return false;
   };
+
+  const name = localStorage.getItem("name");
+  const email = localStorage.getItem("email");
 
   return (
     <div className="py-4 w-100 container">
@@ -240,13 +244,17 @@ const Main = () => {
               paddingBottom: "3rem",
             }}
           >
-            {/* <h4 className="text-blue">Hello Clara! Its good to see you again</h4>
-        <p
-          style={{ fontWeight: "500", lineHeight: ".8rem" }}
-          className="small text-blue"
-        >
-          You have tauth 6 hours yesterday
-        </p> */}
+            <h4 className="text-blue">
+              Hello {name && name}! Its good to see you again
+            </h4>
+            <p
+              style={{ fontWeight: "500", lineHeight: ".8rem" }}
+              className="small text-blue"
+            >
+              {(userState === "SuperUser" && "Super user ") ||
+                (userState === "Provider" && "Provider ") ||
+                (userState === "staffMember" && "Staff member ")}
+            </p>
             <Col sm={4} className="p-3">
               <div className="p-3 bg-graydark br-2 h-100 ">
                 {/* <h5 className="b-700 mb-4">Rating</h5> */}
@@ -366,9 +374,13 @@ const Main = () => {
                         className="bg-skyBlue text-white p-2 b-900"
                       >{`>`}</span>
                     )}
-                    items={(latestCourses || []).map((course) => (
-                      <Card key={course.id} course={course} />
-                    ))}
+                    items={(latestCourses || []).map((course) =>
+                      course.featured ? (
+                        <Card key={course.id} course={course} />
+                      ) : (
+                        ""
+                      )
+                    )}
                   />
                 </div>
               </Col>

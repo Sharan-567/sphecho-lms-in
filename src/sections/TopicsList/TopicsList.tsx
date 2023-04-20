@@ -70,14 +70,6 @@ const TopicsList = () => {
     }
   }, [courseId]);
 
-  useEffect(() => {
-    getAllTopics();
-    getAllProgress();
-    return () => {
-      dispatch(resetTopics());
-    };
-  }, [courseId]);
-
   const getAllProgress = () => {
     customAxios
       .get(`student/student-progress/`)
@@ -96,13 +88,22 @@ const TopicsList = () => {
   };
 
   useEffect(() => {
+    getAllTopics();
+    getAllProgress();
+    return () => {
+      dispatch(resetTopics());
+    };
+  }, [courseId]);
+
+  useEffect(() => {
     let added = false;
-    if (modules && modules.length > 0) {
-      modules.forEach((module) => {
-        module.topics.forEach((topic) => {
+    getAllProgress();
+    if (modules && modules?.length > 0) {
+      modules?.forEach((module) => {
+        module?.topics.forEach((topic) => {
           if (!added && !isCompleted(topic)) {
             added = true;
-            setDropDownId(module.module_name);
+            setDropDownId(module?.module_name);
             setCurrentTopic(topic);
           }
         });
@@ -110,7 +111,7 @@ const TopicsList = () => {
     }
   }, [modules]);
 
-  const isCompleted = (topic: Topic | Assessment): boolean => {
+  const isCompleted = (topic: Topic | Assessment) => {
     if (courseId && `${courseId}` in progress) {
       if ("content" in topic && progress[courseId].topics.includes(topic.id)) {
         return true;
@@ -121,17 +122,19 @@ const TopicsList = () => {
     return false;
   };
 
-  const isModuleCompleted = (module: Module): boolean => {
-    for (let i = 0; i < module.topics.length; i++) {
-      let completed = isCompleted(module.topics[i]);
-      if (!completed) {
-        return false;
+  const isModuleCompleted = (module: Module) => {
+    if (module && module?.topics) {
+      for (let i = 0; i < module?.topics.length; i++) {
+        let completed = isCompleted(module?.topics[i]);
+        if (!completed) {
+          return false;
+        }
       }
+      return true;
     }
-    return true;
   };
 
-  if (modules.length === 0) {
+  if (modules?.length === 0) {
     return (
       <div>
         <NotFound />
@@ -163,13 +166,13 @@ const TopicsList = () => {
                 <ListGroup className="p-2 ">
                   {(modules || []).map((module, id) => {
                     return (
-                      <div key={module.module_name}>
+                      <div key={module?.module_name}>
                         <ListGroup.Item
                           onClick={() => {
-                            if (dropDownId === module.module_name) {
+                            if (dropDownId === module?.module_name) {
                               setDropDownId("");
                             } else {
-                              setDropDownId(module.module_name);
+                              setDropDownId(module?.module_name);
                             }
                           }}
                           key={id}
@@ -213,10 +216,10 @@ const TopicsList = () => {
                               fontWeight: "bold",
                             }}
                           >
-                            {module.module_name}
+                            {module?.module_name}
                           </button>
                           <div className="ms-1">
-                            {dropDownId === module.module_name ? (
+                            {dropDownId === module?.module_name ? (
                               <BsChevronUp
                                 size={20}
                                 className={`b-600 text-white`}
@@ -232,13 +235,13 @@ const TopicsList = () => {
                         <motion.div
                           animate={{
                             height:
-                              dropDownId !== module.module_name
+                              dropDownId !== module?.module_name
                                 ? "0px"
                                 : "100%",
                           }}
                           style={{ overflow: "hidden" }}
                         >
-                          {(module.topics || []).map((topic, id) => (
+                          {(module?.topics || []).map((topic, id) => (
                             <ListGroup.Item
                               onClick={() => setCurrentTopic(topic)}
                               key={id}

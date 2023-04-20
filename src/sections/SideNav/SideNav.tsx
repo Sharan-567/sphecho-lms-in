@@ -77,23 +77,16 @@ const SideNav = () => {
       // },
       {
         id: 2,
-        title: "My Courses",
+        title: "My courses",
         Icon: AiOutlineCalculator,
         to: "/courses",
       },
       {
         id: 3,
-        title: "certification",
+        title: "My certificates",
         Icon: AiOutlineFileProtect,
         to: "/certification",
       },
-      // {
-      //   id: 3,
-      //   Icon: AiOutlineNotification,
-      //   title: "Webinars",
-      //   to: "/webinars",
-      // },
-
       // {
       //   id: 4,
       //   Icon: AiOutlineComment,
@@ -140,16 +133,16 @@ const SideNav = () => {
       },
       {
         id: 101,
-        title: "Certification",
+        title: "My certificates",
         Icon: AiOutlineFileProtect,
         to: "/certification",
       },
-      // {
-      //   id: 3,
-      //   Icon: AiOutlineNotification,
-      //   title: "Webinars",
-      //   to: "/webinars",
-      // },
+      {
+        id: 3,
+        Icon: AiOutlineNotification,
+        title: "Webinars",
+        to: "/webinars",
+      },
       {
         id: 5,
         Icon: AiOutlineUser,
@@ -298,7 +291,7 @@ const SideNav = () => {
                   onClick={() => handleTab(link.to, link.id)}
                   className={`${
                     currentSelectedTab == link.id ? "text-blue" : "text-white"
-                  } b-700 px-4 p-3 my-2`}
+                  } b-500 px-4 p-3 my-2`}
                   animate={{ margin: `${closeNav ? "-1.55rem" : "0rem"}` }}
                   variants={ButtonMotion}
                   initial="rest"

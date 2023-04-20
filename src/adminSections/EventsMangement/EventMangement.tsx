@@ -24,6 +24,9 @@ import NotFound from "../../sections/NotFound";
 import DatePicker from "react-datepicker";
 import { customAxios } from "../../services/utils";
 import AllUsers from "../AllUsers";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 //create validation
 const createSchema = Yup.object().shape({
@@ -86,6 +89,9 @@ const EventManagment = () => {
 
   // modal handlers
   const [show, setShow] = useState(false);
+  const [searchTxt, setSearchTxt] = useState("");
+  const fuse = new Fuse(events || [], { keys: ["title"] });
+  const result = fuse.search(searchTxt);
 
   // update
   const [updatedItem, setUpdatedItem] = useState<Topic>();
@@ -280,14 +286,21 @@ const EventManagment = () => {
   return (
     <Container style={{ maxWidth: "820px" }}>
       <div className="bg-white py-2 px-1 br-2">
-        <div className="d-flex justify-content-between mb-3 mt-2 p-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container">
           <h3 className="b-700">Events</h3>
-          <Button
-            className="bg-adminteritory text-white br-2"
-            onClick={createEventOpenModal}
-          >
-            Create Event
-          </Button>
+          <div className="d-flex justify-content-between">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder={"Search events"}
+            />
+            <Button
+              className="bg-adminteritory text-white br-2"
+              onClick={createEventOpenModal}
+            >
+              Create Event
+            </Button>
+          </div>
         </div>
         {showSpinner === "list" ? (
           <Loading />
@@ -299,6 +312,21 @@ const EventManagment = () => {
             </h3>
             <p className="text-center">Please try again later</p>
           </>
+        ) : searchTxt.length > 0 ? (
+          result.map(({ item }, idx) => {
+            return (
+              <ListItem
+                //@ts-ignore
+                item={item}
+                title={item.title}
+                key={item.id}
+                NoEdit
+                openModel={openModel}
+                sm={7}
+                idx={idx}
+              ></ListItem>
+            );
+          })
         ) : (
           events.map((item, idx) => {
             return (
@@ -476,12 +504,49 @@ const EventManagment = () => {
               <Modal.Title>Detail of Event</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
-                <div key={k} className="d-flex">
-                  <p className="b-700 me-2">{k}: </p>
-                  <p>{(v || "").toString()}</p>
-                </div>
-              ))}
+              {Object.entries(currentSelectedItem || {}).map(([k, v]) =>
+                v ? (
+                  <>
+                    <div key={k} className="d-flex my-2">
+                      <div
+                        className="b-700 me-2 p-3 text- bg-graydark"
+                        style={{
+                          minWidth: "30%",
+                          borderRadius: "0.5rem",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {k === "caption_file_url"
+                          ? "Caption Url"
+                          : k === "assement_required"
+                          ? "Assessment required"
+                          : k === "min_marks_to_qualify"
+                          ? "Min Marks "
+                          : k === "max_marks"
+                          ? "Max marks "
+                          : k}
+                      </div>
+
+                      <div
+                        className="b-700 me-2 p-3 w-100 add-hover "
+                        style={{
+                          borderRadius: "0.5rem",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {k === "info_image" ? (
+                          <img
+                            src={`https://${HOST}${v}`}
+                            style={{ width: "15rem" }}
+                          />
+                        ) : (
+                          (v || "").toString()
+                        )}
+                      </div>
+                    </div>
+                  </>
+                ) : null
+              )}
             </Modal.Body>
             <Modal.Footer>
               <Button

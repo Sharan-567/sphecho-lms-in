@@ -79,6 +79,10 @@ export type Certificate = {
   topic: number;
   course: number;
   assesment: number;
+  sign1_title?: string;
+  sign2_title?: string;
+  signature_1?: string;
+  signature_2?: string;
 };
 
 export type Module = {

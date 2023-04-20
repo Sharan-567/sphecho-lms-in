@@ -1,0 +1,18 @@
+@media only screen and (max-width: 768px) {
+  .header-container {
+    display: flex;
+    flex-direction: column !important;
+  }
+}
+
+.clear {
+  * {
+    all: initial !important;
+  }
+}
+
+.c-editor {
+  p {
+    background-color: red;
+  }
+}

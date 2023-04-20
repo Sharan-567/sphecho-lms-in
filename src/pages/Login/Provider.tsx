@@ -2,39 +2,106 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Auth, UserState } from "../../definations/Auth";
-import { login } from "../../features/auth";
+import { login, makeLogin } from "../../features/auth";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { motion, AnimatePresence } from "framer-motion";
-
+import { customAxios } from "../../services/utils";
+import loginGIF from "../../assets/lock.gif";
 type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
   currentSelectedAuth: Auth | undefined;
 };
+const isSmallScreen = window.screen.width < 990;
 
 const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { err: error } = useAppSelector((state) => state.auth);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  // const handleProviderLogin = () => {
+  //   if (currentSelectedAuth) {
+  //     const { type, userState, user_type, lmsAuthorizeType } =
+  //       currentSelectedAuth;
+  //     dispatch(
+  //       login({
+  //         username,
+  //         password,
+  //         type,
+  //         userState,
+  //         user_type,
+  //         lmsAuthorizeType,
+  //       })
+  //     )
+  //       .unwrap()
+  //       .then((res) => {
+  //         navigate("/");
+  //       });
+  //   }
+  // };
+
   const handleProviderLogin = () => {
+    setError("");
+    setLoading(true);
     if (currentSelectedAuth) {
       const { type, userState, user_type, lmsAuthorizeType } =
         currentSelectedAuth;
-      dispatch(
-        login({
-          username,
-          password,
-          type,
-          userState,
-          user_type,
-          lmsAuthorizeType,
-        })
-      )
-        .unwrap()
+      const formData = new FormData();
+      formData.append("username", username);
+      formData.append("password", password);
+      formData.append("type", type); // for meta login type is 1
+      formData.append("user_type", user_type); // for type of user
+      customAxios
+        .post("/accounts/auth/", formData)
         .then((res) => {
-          navigate("/");
+          setLoading(false);
+          if (res.data.error) {
+            setError(res.data.error);
+          } else {
+            let token = res.data.token;
+            customAxios
+              .get(`/accounts/authorize/?token=${token}&type=2`)
+              .then((resLms) => {
+                if (resLms.data.user) {
+                  if (resLms.data.user.role === 2) {
+                    //  <===== provider role 2
+                    localStorage.setItem("token", resLms.data.token);
+                    localStorage.setItem("email", resLms.data.user.email);
+                    localStorage.setItem("userState", userState);
+                    localStorage.setItem(
+                      "is_superuser",
+                      resLms.data.user.is_superuser
+                    );
+                    localStorage.setItem("name", resLms.data.user.name);
+                    localStorage.setItem("m16_id", resLms.data.user.m16_id);
+                    localStorage.setItem("lms_id", resLms.data.user.id);
+                    localStorage.setItem("role", resLms.data.user.role);
+                    dispatch(makeLogin());
+                    navigate("/");
+                  } else {
+                    setError("Invalid credentials..try again");
+                  }
+                }
+              })
+              .catch((err) => {
+                setLoading(false);
+                if (err.message) {
+                  setError(err.message);
+                } else {
+                  setError("Something went wrong");
+                }
+              });
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          if (err.message) {
+            setError(err.message);
+          } else {
+            setError("Something went wrong");
+          }
         });
     }
   };
@@ -49,6 +116,14 @@ const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
         transition={{ duration: 0.5 }}
         className="px-2 "
       >
+        <img
+          src={loginGIF}
+          style={{
+            width: isSmallScreen ? "30rem" : "30rem",
+            objectFit: "contain",
+            marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
+          }}
+        />
         {error ? <p className="text-danger">{error}</p> : null}
         <h1 className="mb-5 text-primary text-center">Provider Login</h1>
         <input
@@ -82,7 +157,7 @@ const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
           style={{ width: "10rem" }}
           onClick={handleProviderLogin}
         >
-          LOGIN
+          {loading ? "Loading ..." : "LOGIN"}
         </Button>
         <Button
           className="p-2 px-4 br-1 py-3 bg-black mt-4 text-white ms-2"

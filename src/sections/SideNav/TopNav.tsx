@@ -61,7 +61,7 @@ const TopNav = () => {
     },
     {
       id: 3,
-      title: "My certification",
+      title: "My certificates",
       Icon: AiOutlineFileProtect,
       to: "/certification",
     },
@@ -108,7 +108,7 @@ const TopNav = () => {
     },
     {
       id: 3,
-      title: "Certification",
+      title: "My certificates",
       Icon: AiOutlineFileProtect,
       to: "/certification",
     },
@@ -261,7 +261,7 @@ const TopNav = () => {
                   cursor: "pointer",
                   color: "white",
                   padding: ".5rem 0rem",
-                  fontWeight: "bold",
+                  fontWeight: "500",
                   display: "flex",
                   alignItems: "center",
                 }}

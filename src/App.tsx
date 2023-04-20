@@ -47,7 +47,7 @@ function App() {
             <Route path="/">
               <Route index element={<Home />} />
               <Route path="webinar" element={<Webinar />} />
-              <Route path="features" element={<Features />} />
+              <Route path="features" element={<Home />} />
               <Route path="privacy" element={<Privacy />} />
               <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />

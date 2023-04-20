@@ -23,6 +23,11 @@ import NotFound from "../../sections/NotFound";
 import Spinner from "../Spinner";
 import CourseContainer from "./CourseContainer";
 import { useNavigate } from "react-router-dom";
+import { customAxios } from "../../services/utils";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
+
 type CourseCreateType = Record<string, string>;
 
 //create validation
@@ -59,6 +64,8 @@ const CourseMangement = () => {
   >("none");
   //success
   const [success, setSuccess] = useState("");
+  const [showCreateBtn, setShowCreateBtn] = useState(true);
+  const [showDeleteBtn, setShowDeleteBtn] = useState(true);
 
   const createInitialValues = {
     name: "",
@@ -108,9 +115,12 @@ const CourseMangement = () => {
   const [updatedItem, setUpdatedItem] = useState<Course>();
   const [updateStatusSuccess, setUpdateStatusSuccess] = useState("");
   const [updateError, setUpdateError] = useState("");
+  const [searchTxt, setSearchTxt] = useState("");
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const fuse = new Fuse(courses, { keys: ["name"] });
+  const result = fuse.search(searchTxt);
 
   const openModel = (
     course: Course,
@@ -131,6 +141,8 @@ const CourseMangement = () => {
     setShow(false);
     setError("");
     setSuccess("");
+    setShowCreateBtn(true);
+    setShowDeleteBtn(true);
     creatFormik.setValues(createInitialValues);
   };
   const handleShow = () => {
@@ -143,10 +155,6 @@ const CourseMangement = () => {
   useEffect(() => {
     getCourseList();
   }, []);
-
-  const deleteCourse = () => {
-    handleClose();
-  };
 
   //get course list
   const getCourseList = () => {
@@ -231,17 +239,50 @@ const CourseMangement = () => {
         resetForm();
         setSuccess("Course is created successfully");
         getCourseList();
+        setShowCreateBtn(false);
         setErrorType("none");
       })
       .catch((err) => {
         setShowSpinner("none");
         setSuccess("");
+        setShowCreateBtn(true);
         setErrorType("create");
         setError(err.message);
         dispatch(
           showToast({
             type: "danger",
             message: err.message + " : admin : while update create",
+          })
+        );
+      });
+  };
+
+  // create course
+  const deleteCourse = () => {
+    setShowSpinner("delete");
+
+    const formData = new FormData();
+    formData.append("course", `${currentSelectedItem.id}`);
+    customAxios
+      .post(`/master/course-delete/`, formData)
+      .then((res) => {
+        setShowSpinner("none");
+
+        setSuccess("Course is Deleted successfully");
+        getCourseList();
+        setShowDeleteBtn(false);
+        setErrorType("none");
+      })
+      .catch((err) => {
+        setShowSpinner("none");
+        setSuccess("");
+        setShowDeleteBtn(true);
+        setErrorType("delete");
+        setError(err.message);
+        dispatch(
+          showToast({
+            type: "danger",
+            message: err.message + " : admin : while deleting course",
           })
         );
       });
@@ -262,7 +303,29 @@ const CourseMangement = () => {
       {error && errorType === "list" && (
         <ErrorMessage setError={setError}>{error}</ErrorMessage>
       )}
+      {success && (
+        <SuccessMessage setSuccess={setSuccess}>{success}</SuccessMessage>
+      )}
+
       <div className="bg-white py-2 px-1 br-2">
+        <div className="d-flex justify-content-between mb-3 mt-2 p-2 header-container">
+          <h3 className="b-700">Courses</h3>
+          <div className="d-flex justify-content-between">
+            <SearchBtn
+              searchtxt={searchTxt}
+              setSearchTxt={setSearchTxt}
+              placeholder={"Search Courses"}
+            />
+            {userState === "staffMember" || userState === "SuperUser" ? (
+              <Button
+                className="bg-adminteritory text-white br-2"
+                onClick={createCourseOpenModal}
+              >
+                Create course
+              </Button>
+            ) : null}
+          </div>
+        </div>
         {showSpinner === "list" ? (
           <Loading />
         ) : courses.length === 0 ? (
@@ -275,36 +338,47 @@ const CourseMangement = () => {
           </>
         ) : (
           <>
-            <div className="d-flex justify-content-between mb-3 mt-2 p-2">
-              <h3 className="b-700">Courses</h3>
-              {userState === "staffMember" || userState === "SuperUser" ? (
-                <Button
-                  className="bg-adminteritory text-white br-2"
-                  onClick={createCourseOpenModal}
-                >
-                  Create course
-                </Button>
-              ) : null}
-            </div>
-            {courses.map((item, idx) => {
-              return (
-                <div>
-                  <ListItem
-                    item={item}
-                    title={item.name}
-                    key={item.id}
-                    openModel={openModel}
-                    NoDelete
-                    isClickable={true}
-                    id={item.id}
-                    idx={idx}
-                    titleOnClickHandler={(id) => {
-                      navigate(`/coursesMangement/${item.id}/${item.name}/`);
-                    }}
-                  ></ListItem>
-                </div>
-              );
-            })}
+            {searchTxt.length > 0
+              ? (result || []).map(({ item }, idx) => {
+                  return (
+                    <div>
+                      <ListItem
+                        item={item}
+                        title={item.name}
+                        key={item.id}
+                        openModel={openModel}
+                        isClickable={true}
+                        id={item.id}
+                        idx={idx}
+                        titleOnClickHandler={(id) => {
+                          navigate(
+                            `/coursesMangement/${item.id}/${item.name}/`
+                          );
+                        }}
+                      ></ListItem>
+                    </div>
+                  );
+                })
+              : courses.map((item, idx) => {
+                  return (
+                    <div>
+                      <ListItem
+                        item={item}
+                        title={item.name}
+                        key={item.id}
+                        openModel={openModel}
+                        isClickable={true}
+                        id={item.id}
+                        idx={idx}
+                        titleOnClickHandler={(id) => {
+                          navigate(
+                            `/coursesMangement/${item.id}/${item.name}/`
+                          );
+                        }}
+                      ></ListItem>
+                    </div>
+                  );
+                })}
           </>
         )}
       </div>
@@ -322,161 +396,165 @@ const CourseMangement = () => {
               <Modal.Title>Create course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form noValidate onSubmit={creatFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Course name</Form.Label>
+              <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                <Form noValidate onSubmit={creatFormik.handleSubmit}>
+                  <Row className="mb-3">
+                    <Form.Group as={Col}>
+                      <Form.Label>Course name</Form.Label>
+                      <Form.Control
+                        name="name"
+                        value={creatFormik.values.name}
+                        onChange={creatFormik.handleChange}
+                        type="text"
+                        required
+                        placeholder="Enter Course Name"
+                      />
+                      {creatFormik.touched.name && creatFormik.errors.name ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.name}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+
+                    <Form.Group as={Col}>
+                      <Form.Label>Tags</Form.Label>
+                      <Form.Control
+                        name="tags"
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.tags}
+                        type="text"
+                        required
+                        placeholder="Enter play,example.."
+                      />
+                      {creatFormik.touched.tags && creatFormik.errors.tags ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.tags}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+                  </Row>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Info image</Form.Label>
                     <Form.Control
-                      name="name"
-                      value={creatFormik.values.name}
-                      onChange={creatFormik.handleChange}
-                      type="text"
+                      name="info_image"
+                      type="file"
                       required
-                      placeholder="Enter Course Name"
+                      placeholder="Upload info image"
+                      onChange={(e) =>
+                        creatFormik.setFieldValue(
+                          "info_image",
+                          //@ts-ignore
+                          e.currentTarget.files[0]
+                        )
+                      }
+                      // value={creatFormik.values.info_image}
                     />
-                    {creatFormik.touched.name && creatFormik.errors.name ? (
+                    {creatFormik.touched.info_image &&
+                    creatFormik.errors.info_image ? (
                       <div className="text-danger">
-                        {creatFormik.errors.name}
+                        {creatFormik.errors.info_image}
                       </div>
                     ) : null}
                   </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>Tags</Form.Label>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Description</Form.Label>
                     <Form.Control
-                      name="tags"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.tags}
-                      type="text"
+                      name="description"
+                      rows={5}
+                      as="textarea"
                       required
-                      placeholder="Enter play,example.."
+                      onChange={creatFormik.handleChange}
+                      value={creatFormik.values.description}
+                      placeholder="Add the course description.."
                     />
-                    {creatFormik.touched.tags && creatFormik.errors.tags ? (
+                    {creatFormik.touched.description &&
+                    creatFormik.errors.description ? (
                       <div className="text-danger">
-                        {creatFormik.errors.tags}
+                        {creatFormik.errors.description}
                       </div>
                     ) : null}
                   </Form.Group>
-                </Row>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Info image</Form.Label>
-                  <Form.Control
-                    name="info_image"
-                    type="file"
-                    required
-                    placeholder="Upload info image"
-                    onChange={(e) =>
-                      creatFormik.setFieldValue(
-                        "info_image",
-                        //@ts-ignore
-                        e.currentTarget.files[0]
-                      )
-                    }
-                    // value={creatFormik.values.info_image}
-                  />
-                  {creatFormik.touched.info_image &&
-                  creatFormik.errors.info_image ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.info_image}
-                    </div>
-                  ) : null}
-                </Form.Group>
-
-                <Form.Group className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    name="description"
-                    rows={5}
-                    as="textarea"
-                    required
-                    onChange={creatFormik.handleChange}
-                    value={creatFormik.values.description}
-                    placeholder="Add the course description.."
-                  />
-                  {creatFormik.touched.description &&
-                  creatFormik.errors.description ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.description}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Trainer name</Form.Label>
-                  <Form.Control
-                    name="trainer_name"
-                    required
-                    onChange={creatFormik.handleChange}
-                    value={creatFormik.values.trainer_name}
-                    type="text"
-                  />
-                  {creatFormik.touched.trainer_name &&
-                  creatFormik.errors.trainer_name ? (
-                    <div className="text-danger">
-                      {creatFormik.errors.trainer_name}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Row className="mb-3">
                   <Form.Group as={Col}>
-                    <Form.Label>View all</Form.Label>
-                    <Form.Select
+                    <Form.Label>Trainer name</Form.Label>
+                    <Form.Control
+                      name="trainer_name"
                       required
-                      name="view_all"
                       onChange={creatFormik.handleChange}
-                      value={creatFormik.values.view_all}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {creatFormik.touched.view_all &&
-                    creatFormik.errors.view_all ? (
+                      value={creatFormik.values.trainer_name}
+                      type="text"
+                    />
+                    {creatFormik.touched.trainer_name &&
+                    creatFormik.errors.trainer_name ? (
                       <div className="text-danger">
-                        {creatFormik.errors.view_all}
+                        {creatFormik.errors.trainer_name}
                       </div>
                     ) : null}
                   </Form.Group>
+                  <Row className="mb-3">
+                    <Form.Group as={Col}>
+                      <Form.Label>View all</Form.Label>
+                      <Form.Select
+                        required
+                        name="view_all"
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.view_all}
+                      >
+                        <option value={"True"}>Yes</option>
+                        <option value={"False"}>No</option>
+                      </Form.Select>
+                      {creatFormik.touched.view_all &&
+                      creatFormik.errors.view_all ? (
+                        <div className="text-danger">
+                          {creatFormik.errors.view_all}
+                        </div>
+                      ) : null}
+                    </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>Enroll all</Form.Label>
-                    <Form.Select
-                      name="enroll_all"
-                      required
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.enroll_all}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
+                    <Form.Group as={Col}>
+                      <Form.Label>Enroll all</Form.Label>
+                      <Form.Select
+                        name="enroll_all"
+                        required
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.enroll_all}
+                      >
+                        <option value={"True"}>Yes</option>
+                        <option value={"False"}>No</option>
+                      </Form.Select>
+                    </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>Featured</Form.Label>
-                    <Form.Select
-                      required
-                      name="featured"
-                      onChange={creatFormik.handleChange}
-                      value={creatFormik.values.featured}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Row>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "create" && <Spinner />}
-                    Create
-                  </Button>
-                </Modal.Footer>
-              </Form>
+                    <Form.Group as={Col}>
+                      <Form.Label>Featured</Form.Label>
+                      <Form.Select
+                        required
+                        name="featured"
+                        onChange={creatFormik.handleChange}
+                        value={creatFormik.values.featured}
+                      >
+                        <option value={"True"}>Yes</option>
+                        <option value={"False"}>No</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Row>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      Close
+                    </Button>
+                    {showCreateBtn && (
+                      <Button
+                        className="d-flex align-items-center"
+                        variant="admingreen text-white"
+                        type="submit"
+                      >
+                        {showSpinner === "create" && <Spinner />}
+                        Create
+                      </Button>
+                    )}
+                  </Modal.Footer>
+                </Form>
+              </div>
             </Modal.Body>
           </>
         )}
@@ -485,14 +563,22 @@ const CourseMangement = () => {
             <Modal.Header closeButton>
               <Modal.Title>Delete course</Modal.Title>
             </Modal.Header>
-            <Modal.Body></Modal.Body>
+
+            <Modal.Body>
+              <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                Are you sure want to delete this Course
+                <h5> {currentSelectedItem?.name}</h5>
+              </div>
+            </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
                 Close
               </Button>
-              <Button variant="danger text-white" onClick={deleteCourse}>
-                delete
-              </Button>
+              {showDeleteBtn ? (
+                <Button variant="danger text-white" onClick={deleteCourse}>
+                  delete
+                </Button>
+              ) : null}
             </Modal.Footer>
           </>
         )}
@@ -502,12 +588,37 @@ const CourseMangement = () => {
               <Modal.Title>Detail of course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              {Object.entries(currentSelectedItem || {}).map(([k, v]) => (
-                <div key={k} className="d-flex">
-                  <p className="b-700 me-2">{k}: </p>
-                  <p>{(v || "").toString()}</p>
-                </div>
-              ))}
+              <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                {Object.entries(currentSelectedItem || {}).map(([k, v]) =>
+                  v ? (
+                    <div key={k} className="d-flex my-2">
+                      <div
+                        className="b-700 me-2 p-3 text-black bg-graydark"
+                        style={{ minWidth: "25%", borderRadius: "0.5rem" }}
+                      >
+                        {k}
+                      </div>
+
+                      <div
+                        className="b-700 me-2 p-3 w-100 add-hover"
+                        style={{
+                          borderRadius: "0.5rem",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {k === "info_image" || k === "trainer_image" ? (
+                          <img
+                            src={`https://${HOST}${v}`}
+                            style={{ width: "15rem" }}
+                          />
+                        ) : (
+                          (v || "").toString()
+                        )}
+                      </div>
+                    </div>
+                  ) : null
+                )}
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button
@@ -519,7 +630,6 @@ const CourseMangement = () => {
             </Modal.Footer>
           </>
         )}
-
         {currentModal === "update" && (
           <>
             {error && errorType === "update" && (
@@ -532,176 +642,180 @@ const CourseMangement = () => {
               <Modal.Title>Update course</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Form noValidate onSubmit={updateFormik.handleSubmit}>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>Course name</Form.Label>
+              <div style={{ maxWidth: "50rem", margin: "auto" }}>
+                <Form noValidate onSubmit={updateFormik.handleSubmit}>
+                  <Row className="mb-3">
+                    <Form.Group as={Col}>
+                      <Form.Label>Course name</Form.Label>
+                      <Form.Control
+                        name="name"
+                        value={updateFormik.values.name}
+                        onChange={updateFormik.handleChange}
+                        type="text"
+                        required
+                        placeholder="Enter Course Name"
+                      />
+                      {updateFormik.touched.name && updateFormik.errors.name ? (
+                        <div className="text-danger">
+                          {updateFormik.errors.name}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+
+                    <Form.Group as={Col}>
+                      <Form.Label>Tags</Form.Label>
+                      <Form.Control
+                        name="tags"
+                        onChange={updateFormik.handleChange}
+                        value={updateFormik.values.tags}
+                        type="text"
+                        required
+                        placeholder="Enter play,example.."
+                      />
+                      {updateFormik.touched.tags && updateFormik.errors.tags ? (
+                        <div className="text-danger">
+                          {updateFormik.errors.tags}
+                        </div>
+                      ) : null}
+                    </Form.Group>
+                  </Row>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Info image</Form.Label>
                     <Form.Control
-                      name="name"
-                      value={updateFormik.values.name}
-                      onChange={updateFormik.handleChange}
-                      type="text"
+                      name="info_image"
+                      type="file"
                       required
-                      placeholder="Enter Course Name"
+                      placeholder="Upload info image"
+                      onChange={(e) =>
+                        updateFormik.setFieldValue(
+                          "info_image",
+                          //@ts-ignore
+                          e.currentTarget.files[0]
+                        )
+                      }
+                      // value={updateFormik.values.info_image}
                     />
-                    {updateFormik.touched.name && updateFormik.errors.name ? (
+                    {typeof updateFormik.values.info_image === "string" && (
+                      <img
+                        className="mt-3"
+                        style={{ width: "8rem" }}
+                        src={`https://${HOST}${updateFormik.values.info_image}`}
+                      />
+                    )}
+                    {/* @ts-ignore */}
+                    {updateFormik.values.info_image instanceof File && (
+                      <img
+                        className="mt-3"
+                        style={{ width: "8rem" }}
+                        src={URL.createObjectURL(
+                          updateFormik.values.info_image
+                        )}
+                      />
+                    )}
+                    {updateFormik.touched.info_image &&
+                    updateFormik.errors.info_image ? (
                       <div className="text-danger">
-                        {updateFormik.errors.name}
+                        {updateFormik.errors.info_image}
                       </div>
                     ) : null}
                   </Form.Group>
 
-                  <Form.Group as={Col}>
-                    <Form.Label>Tags</Form.Label>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Description</Form.Label>
                     <Form.Control
-                      name="tags"
+                      name="description"
+                      rows={5}
+                      as="textarea"
+                      required
                       onChange={updateFormik.handleChange}
-                      value={updateFormik.values.tags}
+                      value={updateFormik.values.description}
+                      placeholder="Add the course description.."
+                    />
+                    {updateFormik.touched.description &&
+                    updateFormik.errors.description ? (
+                      <div className="text-danger">
+                        {updateFormik.errors.description}
+                      </div>
+                    ) : null}
+                  </Form.Group>
+                  <Form.Group as={Col}>
+                    <Form.Label>Trainer name</Form.Label>
+                    <Form.Control
+                      name="trainer_name"
+                      required
+                      onChange={updateFormik.handleChange}
+                      value={updateFormik.values.trainer_name}
                       type="text"
-                      required
-                      placeholder="Enter play,example.."
                     />
-                    {updateFormik.touched.tags && updateFormik.errors.tags ? (
+                    {updateFormik.touched.trainer_name &&
+                    updateFormik.errors.trainer_name ? (
                       <div className="text-danger">
-                        {updateFormik.errors.tags}
+                        {updateFormik.errors.trainer_name}
                       </div>
                     ) : null}
                   </Form.Group>
-                </Row>
+                  <Row className="mb-3">
+                    <Form.Group as={Col}>
+                      <Form.Label>View all</Form.Label>
+                      <Form.Select
+                        required
+                        name="view_all"
+                        onChange={updateFormik.handleChange}
+                        value={updateFormik.values.view_all.toString()}
+                      >
+                        <option value={"True"}>Yes</option>
+                        <option value={"False"}>No</option>
+                      </Form.Select>
+                      {updateFormik.touched.view_all &&
+                      updateFormik.errors.view_all ? (
+                        <div className="text-danger">
+                          {updateFormik.errors.view_all.toString()}
+                        </div>
+                      ) : null}
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Info image</Form.Label>
-                  <Form.Control
-                    name="info_image"
-                    type="file"
-                    required
-                    placeholder="Upload info image"
-                    onChange={(e) =>
-                      updateFormik.setFieldValue(
-                        "info_image",
-                        //@ts-ignore
-                        e.currentTarget.files[0]
-                      )
-                    }
-                    // value={updateFormik.values.info_image}
-                  />
-                  {typeof updateFormik.values.info_image === "string" && (
-                    <img
-                      className="mt-3"
-                      style={{ width: "8rem" }}
-                      src={`https://${HOST}${updateFormik.values.info_image}`}
-                    />
-                  )}
-                  {/* @ts-ignore */}
-                  {updateFormik.values.info_image instanceof File && (
-                    <img
-                      className="mt-3"
-                      style={{ width: "8rem" }}
-                      src={URL.createObjectURL(updateFormik.values.info_image)}
-                    />
-                  )}
-                  {updateFormik.touched.info_image &&
-                  updateFormik.errors.info_image ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.info_image}
-                    </div>
-                  ) : null}
-                </Form.Group>
+                    <Form.Group as={Col}>
+                      <Form.Label>Enroll all</Form.Label>
+                      <Form.Select
+                        name="enroll_all"
+                        required
+                        onChange={updateFormik.handleChange}
+                        value={updateFormik.values.enroll_all.toString()}
+                      >
+                        <option value={"True"}>Yes</option>
+                        <option value={"False"}>No</option>
+                      </Form.Select>
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Description</Form.Label>
-                  <Form.Control
-                    name="description"
-                    rows={5}
-                    as="textarea"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.description}
-                    placeholder="Add the course description.."
-                  />
-                  {updateFormik.touched.description &&
-                  updateFormik.errors.description ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.description}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Form.Group as={Col}>
-                  <Form.Label>Trainer name</Form.Label>
-                  <Form.Control
-                    name="trainer_name"
-                    required
-                    onChange={updateFormik.handleChange}
-                    value={updateFormik.values.trainer_name}
-                    type="text"
-                  />
-                  {updateFormik.touched.trainer_name &&
-                  updateFormik.errors.trainer_name ? (
-                    <div className="text-danger">
-                      {updateFormik.errors.trainer_name}
-                    </div>
-                  ) : null}
-                </Form.Group>
-                <Row className="mb-3">
-                  <Form.Group as={Col}>
-                    <Form.Label>View all</Form.Label>
-                    <Form.Select
-                      required
-                      name="view_all"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.view_all.toString()}
+                    <Form.Group as={Col}>
+                      <Form.Label>Featured</Form.Label>
+                      <Form.Select
+                        required
+                        name="featured"
+                        onChange={updateFormik.handleChange}
+                        value={updateFormik.values.featured.toString()}
+                      >
+                        <option value={"True"}>Yes</option>
+                        <option value={"False"}>No</option>
+                      </Form.Select>
+                    </Form.Group>
+                  </Row>
+                  <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                      Close
+                    </Button>
+                    <Button
+                      className="d-flex align-items-center"
+                      variant="admingreen text-white"
+                      type="submit"
                     >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                    {updateFormik.touched.view_all &&
-                    updateFormik.errors.view_all ? (
-                      <div className="text-danger">
-                        {updateFormik.errors.view_all.toString()}
-                      </div>
-                    ) : null}
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Enroll all</Form.Label>
-                    <Form.Select
-                      name="enroll_all"
-                      required
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.enroll_all.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-
-                  <Form.Group as={Col}>
-                    <Form.Label>Featured</Form.Label>
-                    <Form.Select
-                      required
-                      name="featured"
-                      onChange={updateFormik.handleChange}
-                      value={updateFormik.values.featured.toString()}
-                    >
-                      <option value={"True"}>Yes</option>
-                      <option value={"False"}>No</option>
-                    </Form.Select>
-                  </Form.Group>
-                </Row>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button
-                    className="d-flex align-items-center"
-                    variant="admingreen text-white"
-                    type="submit"
-                  >
-                    {showSpinner === "update" && <Spinner />}
-                    Update
-                  </Button>
-                </Modal.Footer>
-              </Form>
+                      {showSpinner === "update" && <Spinner />}
+                      Update
+                    </Button>
+                  </Modal.Footer>
+                </Form>
+              </div>
             </Modal.Body>
           </>
         )}

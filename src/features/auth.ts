@@ -49,12 +49,21 @@ export const login = createAsyncThunk<
       typeId: reqData.lmsAuthorizeType,
     });
 
+    if (data.use.role !== reqData.lmsAuthorizeType) {
+      return thunkAPI.rejectWithValue("Not authorized");
+    }
+
     if (data.user) {
+      console.log("role: ====>", data.user.role);
+      console.log("lsmauthtype: ====>", reqData.lmsAuthorizeType);
+
       localStorage.setItem("email", data.user.email);
       localStorage.setItem("is_superuser", data.user.is_superuser);
       localStorage.setItem("m16_id", data.user.m16_id);
       localStorage.setItem("name", data.user.name);
       localStorage.setItem("lms_id", data.user.id);
+    } else {
+      return thunkAPI.rejectWithValue("Something went wrong.");
     }
 
     const token = data.token;

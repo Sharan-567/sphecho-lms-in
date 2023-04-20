@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
 import { BsCheckCircleFill } from "react-icons/bs";
+import { AiOutlineExpand } from "react-icons/ai";
 import { Button } from "react-bootstrap";
 import AssesmentComp from "../../sections/Assessment";
 import { Assessment } from "../../definations/assessment";
@@ -12,6 +13,7 @@ import { showToast } from "../../features/toast";
 import { customAxios, NormalizeProgressData } from "../../services/utils";
 import "./topics.scss";
 import { motion, AnimatePresence } from "framer-motion";
+import PdfPanel from "./PdfPanel";
 
 type TopicProp = {
   topic?: Assessment | TopicType;
@@ -24,6 +26,7 @@ const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
   const [completed, setCompleted] = useState(false);
   const dispatch = useAppDispatch();
   const { progress } = useAppSelector((state) => state.progress);
+  const [showExpand, setShowExpand] = useState(false);
 
   useEffect(() => {
     if (topic?.id && courseId) {
@@ -132,8 +135,36 @@ const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
           //   <BsFillFileEarmarkPdfFill color="red" size="24" />
           //   <p className="ms-3 mt-2">{topic.pdf}</p>
           // </a>
-          <iframe src={topic?.pdf} width="100%" height="580"></iframe>
+          <div style={{ position: "relative" }}>
+            <div>
+              <iframe src={topic?.pdf} width="100%" height="580"></iframe>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                width: "7rem",
+                height: "1.7rem",
+                background: "#444444",
+                right: 0,
+                marginTop: "-2.3rem",
+                zIndex: 1,
+              }}
+            ></div>
+            <Button
+              onClick={() => setShowExpand(true)}
+              className="text-white mt-2 ms-auto d-flex align-items-center"
+            >
+              <AiOutlineExpand className="me-2" /> Expand
+            </Button>
+          </div>
         )}
+        {showExpand ? (
+          <PdfPanel
+            topicName={topic.name.charAt(0).toUpperCase() + topic.name.slice(1)}
+            setShowExpand={setShowExpand}
+            pdf={topic.pdf}
+          />
+        ) : null}
       </motion.div>
     );
   } else if (topic && "max_marks" in topic) {
@@ -144,8 +175,6 @@ const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
         )}
       </div>
     );
-  } else {
-    <div className="p-3  br-1 bg-gray">something went wrong</div>;
   }
 };
 

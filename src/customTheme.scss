@@ -4,6 +4,8 @@ $theme-colors: (
   "secondary": #a9c465,
   "danger": #ff6347,
   "blue": #1e254f,
+  "success": #6ab447,
+  "info": #0e9cf0,
   "skyBlue": #0e9cf0,
   "sky": rgb(194, 233, 255),
   "green": #6ab447,
@@ -117,6 +119,12 @@ $skyBlue: rgb(14, 156, 240);
 }
 
 // drop shadow
+
+.add-hover {
+  &:hover {
+    background-color: #cccccc I !important;
+  }
+}
 
 .shadow {
   -webkit-box-shadow: 10px 10px 58px 13px rgba(245, 245, 245, 1);

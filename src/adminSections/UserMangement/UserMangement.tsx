@@ -13,6 +13,9 @@ import Loading from "../../sections/Loading";
 import { showToast } from "../../features/toast";
 import NotFound from "../../sections/NotFound";
 import { motion, AnimatePresence } from "framer-motion";
+import SearchBtn from "../SearchBtn";
+import Fuse from "fuse.js";
+import "../main.scss";
 
 type User = {
   users: Patient[];
@@ -35,6 +38,12 @@ const UserMangement = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const dispatch = useAppDispatch();
+  const [searchTxt, setSearchTxt] = React.useState("");
+
+  const fuse = new Fuse(users?.doctors || [], {
+    keys: ["Name", "Email", "Contact"],
+  });
+  const ProviderResult = fuse.search(searchTxt);
 
   const getListOfUser = React.useCallback(() => {
     setLoading(true);
@@ -126,51 +135,91 @@ const UserMangement = () => {
           </div>
         ))}
       </div> */}
-      <>
-        <h1 className="mb-2">Providers</h1>
+      <div>
+        <div className="d-flex justify-content-between mb-3 header-container">
+          <h1 className="mb-2 me-3 w-100">Providers</h1>
+          <SearchBtn
+            searchtxt={searchTxt}
+            setSearchTxt={setSearchTxt}
+            placeholder="Search name, contact, email"
+          />
+        </div>
         <div>
           {loading ? (
             <Loading />
           ) : (
             <>
-              {(users?.doctors || []).map((user, idx) => (
-                <div key={user._id}>
-                  <AnimatePresence exitBeforeEnter>
-                    <motion.div
-                      key={idx}
-                      initial={{ y: 55, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: -55, opacity: 0 }}
-                      transition={{
-                        duration: 0.4,
-                        delay: idx * 0.1,
-                      }}
-                    >
-                      <ListItem
-                        title={user.Name || user?.Email}
-                        email={user.Email}
-                        contact={user.Contact}
-                        update={() => {
-                          setState("updateUser");
-                          setCurrentSelectedUser(user);
+              {searchTxt.length > 0
+                ? (ProviderResult || []).map(({ item }, idx) => (
+                    <div key={item._id}>
+                      <motion.div
+                        key={idx}
+                        initial={{ y: 55, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: -55, opacity: 0 }}
+                        transition={{
+                          duration: 0.4,
+                          delay: idx * 0.1,
                         }}
-                        addUserToCourseHandler={() => {
-                          setState("addUserToCourse");
-                          setCurrentSelectedUser(user);
-                        }}
-                        addStudentToCourseHandler={() => {
-                          setState("addStudentToCourse");
-                          setCurrentSelectedUser(user);
-                        }}
-                      />
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              ))}
+                      >
+                        <ListItem
+                          title={item.Name || item?.Email}
+                          email={item.Email}
+                          contact={item.Contact}
+                          update={() => {
+                            setState("updateUser");
+                            setCurrentSelectedUser(item);
+                          }}
+                          addUserToCourseHandler={() => {
+                            setState("addUserToCourse");
+                            setCurrentSelectedUser(item);
+                          }}
+                          addStudentToCourseHandler={() => {
+                            setState("addStudentToCourse");
+                            setCurrentSelectedUser(item);
+                          }}
+                        />
+                      </motion.div>
+                    </div>
+                  ))
+                : (users?.doctors || []).map((user, idx) => (
+                    <div key={user._id}>
+                      <AnimatePresence exitBeforeEnter>
+                        <motion.div
+                          key={idx}
+                          initial={{ y: 55, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: -55, opacity: 0 }}
+                          transition={{
+                            duration: 0.4,
+                            delay: idx * 0.1,
+                          }}
+                        >
+                          <ListItem
+                            title={user.Name || user?.Email}
+                            email={user.Email}
+                            contact={user.Contact}
+                            update={() => {
+                              setState("updateUser");
+                              setCurrentSelectedUser(user);
+                            }}
+                            addUserToCourseHandler={() => {
+                              setState("addUserToCourse");
+                              setCurrentSelectedUser(user);
+                            }}
+                            addStudentToCourseHandler={() => {
+                              setState("addStudentToCourse");
+                              setCurrentSelectedUser(user);
+                            }}
+                          />
+                        </motion.div>
+                      </AnimatePresence>
+                    </div>
+                  ))}
             </>
           )}
         </div>
-      </>
+      </div>
     </div>
   );
 };
