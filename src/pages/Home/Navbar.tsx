@@ -115,7 +115,7 @@ const NavBar = ({ isDark }) => {
                 }}
                 to="/login"
               >
-                <p>MY BLACKBOARD</p>
+                <p>LOGIN</p>
               </Link>
             </Nav.Link>
 
@@ -182,7 +182,7 @@ const SmallNavBar = ({ isDark }) => (
             style={{ color: "black", textDecoration: "none" }}
           >
             <Link style={{ textDecoration: "none" }} to="/login">
-              MY BLACKBOARD
+              LOGIN
             </Link>
           </Nav.Link>
           {/* <Nav.Link className="b-700 link-nav" style={{ color: "black" }}>
