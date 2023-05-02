@@ -3,6 +3,7 @@ import DatePicker from "react-datepicker";
 import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { Patient } from "../../definations/patients";
+import { QISH_URL } from "../../features/settings";
 
 type NewPatientProps = {
   setSelectedPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
@@ -19,7 +20,7 @@ const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
 
   const createPatient = () => {
     axios
-      .post("https://qish.metahos.com/patient/createPatientRecord", {
+      .post(QISH_URL + "/patient/createPatientRecord", {
         fName,
         age,
         dob,
