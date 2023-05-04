@@ -298,3 +298,13 @@ footer {
   color: $primary;
   margin-bottom: 0.5rem;
 }
+
+// sticky button
+.stic-btn {
+  background-color: black;
+}
+
+.stic-btn:hover {
+  font-weight: 600;
+  background-color: #636363;
+}

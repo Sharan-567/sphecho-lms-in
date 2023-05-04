@@ -33,6 +33,7 @@ import {
 import Webinar from "./pages/Home/Webinar";
 import Features from "./pages/Home/Features";
 import Privacy from "./pages/Home/Privacy";
+import Terms from "./pages/Home/Terms";
 import CourseContainer from "./adminSections/courseMangement/CourseContainer";
 import EventManagment from "./adminSections/EventsMangement/EventMangement";
 
@@ -48,7 +49,10 @@ function App() {
               <Route index element={<Home />} />
               <Route path="webinar" element={<Webinar />} />
               <Route path="features" element={<Home />} />
+              <Route path="contact" element={<Home />} />
               <Route path="privacy" element={<Privacy />} />
+              <Route path="tandc" element={<Terms />} />
+
               <Route path="login" element={<Login />} />
               <Route path="profession" element={<Profession />} />
               <Route path="curriculum" element={<Curriculum />} />

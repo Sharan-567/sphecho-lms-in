@@ -8,34 +8,19 @@ import discover from "../../assets/discover.png";
 import enhance from "../../assets/enhance.png";
 import improve from "../../assets/improve.png";
 import noImage from "../../assets/no-img.png";
-import colorLogo from "../../assets/colorlogo.png";
+
 import lb1 from "../../assets/lb1.jpg";
 import feature from "../../assets/feature.png";
 
-import apple from "../../assets/apple.png";
-import fb from "../../assets/fb.png";
-import ig from "../../assets/ig.png";
-import ins from "../../assets/in.png";
-import playstore from "../../assets/playstore.png";
-import tw from "../../assets/tw.png";
-import yt from "../../assets/yt.png";
-
-import wave from "../../assets/wave.png";
-
-import "./home.scss";
 import Fade from "react-reveal/Fade";
 import Navbar from "./Navbar";
 
 import c1 from "../../assets/c1.png";
 import c2 from "../../assets/c2.png";
 import c3 from "../../assets/c3.png";
-import {
-  JOIN_OUR_NETWORK,
-  QISH_URL,
-  SCHOLAR_URL,
-  SERVICE_URLS,
-  SHOP_URL,
-} from "../../features/settings";
+import { JOIN_OUR_NETWORK, QISH_URL } from "../../features/settings";
+
+import Footer from "./Footer";
 
 import {
   AiOutlineUserAdd,
@@ -47,19 +32,23 @@ import {
 } from "react-icons/ai";
 import axios from "axios";
 
+import "./home.scss";
+
 // const Home = () => {
 //   return <iframe style={{width: '100vw', height: "100vh"}} src="HTML/index.html"></iframe>
 // }
 
-const isSmallScreen = window.innerWidth < 999;
-
 const Home = () => {
+  const isSmallScreen = window.innerWidth < 999;
+
   React.useEffect(() => {
     const { pathname } = window.location;
     const currentSection = pathname.split("/")[1];
     const a = document.createElement("a");
     if (currentSection === "features") {
       a.href = "#feature-courses";
+    } else if (currentSection === "contact") {
+      a.href = "#contact";
     }
     a.click();
   }, []);
@@ -72,11 +61,11 @@ const Home = () => {
       >
         <Banner />
         <TitleContainer />
-        <FeatureSection />
-        <FeaturedCourses />
-        <Introduction />
-        <BenfitsOfCertification />
-        <CertificationProcess />
+        <FeatureSection isSmallScreen={isSmallScreen} />
+        <FeaturedCourses isSmallScreen={isSmallScreen} />
+        <Introduction {...{ isSmallScreen }} />
+        <BenfitsOfCertification {...{ isSmallScreen }} />
+        <CertificationProcess {...{ isSmallScreen }} />
         <FAQS />
         <RequestForm />
         <NewLetter />
@@ -208,7 +197,7 @@ const TitleContainer = () => {
   );
 };
 
-const BenfitsOfCertification = () => {
+const BenfitsOfCertification = ({ isSmallScreen }) => {
   const benifits = [
     {
       id: 1,
@@ -270,7 +259,7 @@ const BenfitsOfCertification = () => {
   );
 };
 
-const FeatureSection = () => {
+const FeatureSection = ({ isSmallScreen }) => {
   return (
     <section style={{ position: "relative", marginBottom: "20rem" }}>
       <div style={{ position: "relative" }}>
@@ -416,7 +405,7 @@ const FeatureButtons = () => {
   );
 };
 
-const FeaturedCourses = () => {
+const FeaturedCourses = ({ isSmallScreen }) => {
   return (
     <section
       id="feature-courses"
@@ -448,18 +437,21 @@ const FeaturedCourses = () => {
               title="Provider Onboarding Course"
               subTitle={"Online Training, Assessment, and Certification"}
               joinournetwork={true}
+              {...{ isSmallScreen }}
             />
             <FeatureCourseCard
               img={c2}
               title="Telepractice Course"
               subTitle={"Online Training, Assessment, and Certification"}
               isCommingSoon={true}
+              {...{ isSmallScreen }}
             />
             <FeatureCourseCard
               img={c1}
               title="Facilitator Course"
               subTitle={"Online Training, Assessment, and Certification"}
               isCommingSoon={true}
+              {...{ isSmallScreen }}
             />
           </div>
         </div>
@@ -485,12 +477,14 @@ const FeatureCourseCard = ({
   subTitle,
   isCommingSoon,
   joinournetwork,
+  isSmallScreen,
 }: {
   isCommingSoon?: boolean;
   title: string;
   img: string;
   subTitle: string;
   joinournetwork?: boolean;
+  isSmallScreen: boolean;
 }) => {
   return (
     <div
@@ -573,7 +567,7 @@ const CButton = ({ onClick, title }) => {
   );
 };
 
-const Introduction = () => {
+const Introduction = ({ isSmallScreen }) => {
   const learingOutcomes = [
     "Enrich professional and clinical work experiences in pertinent fields.",
     "Adapt to virtual patient client care environment in context of Covid's rapid advancement of integrative technologies.",
@@ -831,7 +825,7 @@ Speech & Hearing Rehabilitation Center`,
   );
 };
 
-const CertificationProcess = () => {
+const CertificationProcess = ({ isSmallScreen }) => {
   return (
     <section id="process" style={{ marginTop: "5rem", marginBottom: "10rem" }}>
       <div></div>
@@ -1103,7 +1097,7 @@ const RequestForm = () => {
   //   </div>
   // );
   return (
-    <div className="bg-image" style={{ margin: "8rem 0rem" }}>
+    <div id="contact" className="bg-image" style={{ margin: "8rem 0rem" }}>
       <div className="container p-2">
         <div className="m-auto text-center py-4 my-4" style={{ zIndex: 10 }}>
           <h2 className="text-white mb-3 b-700">CONTACT US</h2>
@@ -1306,213 +1300,6 @@ const NewLetter = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const Footer = () => {
-  const speechLinks = [
-    {
-      title: "Speech Therapy",
-      link: SERVICE_URLS.speech,
-    },
-    {
-      title: "Eduational Consultation",
-      link: SERVICE_URLS.education,
-    },
-    {
-      title: "Ocuupational Therapy",
-      link: SERVICE_URLS.occupation,
-    },
-    {
-      title: "Behavioral & Psychological",
-      link: SERVICE_URLS.behavioral,
-    },
-    {
-      title: "Physiotherapy",
-      link: SERVICE_URLS.physiotherapy,
-    },
-    {
-      title: "Counselling",
-      link: SERVICE_URLS.counselling,
-    },
-    {
-      title: "Audiology",
-      link: SERVICE_URLS.audiology,
-    },
-  ];
-
-  const usefullLinks = [
-    {
-      title: "Providers",
-      link: `${QISH_URL}`,
-    },
-    {
-      title: "Sphecho Service",
-      link: `${QISH_URL}`,
-    },
-    {
-      title: "Sphecho Shop",
-      link: `${SHOP_URL}`,
-    },
-    {
-      title: "Sphecho Scholar",
-      link: `${SCHOLAR_URL}`,
-    },
-  ];
-
-  return (
-    <footer className="footer-container" style={{ overflowX: "hidden" }}>
-      <div
-        style={{
-          backgroundColor: "#EAEAEA",
-        }}
-      >
-        <Row>
-          <Col lg="3" style={{ paddingTop: "5rem" }}>
-            <div className="d-flex flex-column align-items-center ">
-              <img src={colorLogo} width="126rem" />
-              <div className="d-flex mt-2">
-                <img
-                  src={fb}
-                  width="35rem"
-                  style={{ margin: ".5rem", cursor: "pointer" }}
-                />
-                <img
-                  src={ig}
-                  width="35rem"
-                  style={{ margin: ".5rem", cursor: "pointer" }}
-                />
-                <img
-                  src={ins}
-                  width="35rem"
-                  style={{ margin: ".5rem", cursor: "pointer" }}
-                />
-                <img
-                  src={tw}
-                  width="35rem"
-                  style={{ margin: ".5rem", cursor: "pointer" }}
-                />
-                <img
-                  src={yt}
-                  width="35rem"
-                  style={{ margin: ".5rem", cursor: "pointer" }}
-                />
-              </div>
-              <img
-                src={playstore}
-                width="150rem"
-                style={{ display: "block", marginTop: "1rem" }}
-              />
-              <img
-                src={apple}
-                width="150rem"
-                style={{ display: "block", marginTop: "1rem" }}
-              />
-            </div>
-          </Col>
-          <Col lg="9" className="footer-custome">
-            <div
-              style={{
-                backgroundImage: 'url("https://svgshare.com/i/pdj.svg")',
-                backgroundColor: "black",
-                borderRadius: isSmallScreen ? "0" : "3rem 0 0 3rem ",
-                backgroundRepeat: "no-repeat",
-                backgroundSize: "123%",
-                padding: "3rem 2rem",
-              }}
-              className="navlinks-container-footer"
-            >
-              <Row>
-                <Col lg="2"></Col>
-                <Col lg="4" className="p-2">
-                  <h5
-                    className="mb-2 link-header text-white"
-                    style={{ fontWeight: "bold" }}
-                  >
-                    DEPARTMENTS
-                  </h5>
-                  {speechLinks.map((l) => (
-                    <a
-                      key={l.title}
-                      target="_blank"
-                      className="link b-400"
-                      href={l.link}
-                    >
-                      {l.title.charAt(0).toUpperCase() + l.title.slice(1)}
-                    </a>
-                  ))}
-                </Col>
-                <Col lg="3">
-                  <h5
-                    className="mb-2 link-header text-white"
-                    style={{ fontWeight: "bold" }}
-                  >
-                    USEFUL LINKS
-                  </h5>
-                  {usefullLinks.map((l) => (
-                    <a
-                      key={l.title}
-                      target="_blank"
-                      className="link b-400"
-                      href={l.link}
-                    >
-                      {l.title}
-                    </a>
-                  ))}
-                </Col>
-                <Col lg="3">
-                  <h5
-                    className="mb-2 link-header text-white"
-                    style={{ fontWeight: "bold" }}
-                  >
-                    ABOUT US
-                  </h5>
-
-                  <a href="#process" className="link b-400">
-                    Certification Process
-                  </a>
-                  <Link to="/privacy" className="link b-400">
-                    Privacy Policy
-                  </Link>
-                  <a className="link b-400" href="#faqs">
-                    FAQS
-                  </a>
-                </Col>
-              </Row>
-            </div>
-          </Col>
-        </Row>
-      </div>
-      <div style={{ background: "white", padding: ".5rem" }}>
-        <div className="container" style={{ background: "white" }}>
-          <p className="text-center" style={{ fontWeight: "500" }}>
-            If you are in a life threatening situation - don’t use this site.
-            Kindly contact your respective national helpline to get immediate
-            assistance.
-          </p>
-          <div
-            className="d-flex justify-content-between"
-            style={{ marginTop: "0rem" }}
-          >
-            <p>© 2023 All rights reserved. Teleoutreach Services Pvt. Ltd.</p>
-            <div className="d-flex">
-              <Link
-                style={{ margin: "0rem 1rem", cursor: "pointer" }}
-                to="/privacy"
-              >
-                Privacy Policy
-              </Link>
-              <a
-                style={{ margin: "0rem 1rem", cursor: "pointer" }}
-                href="#faqs"
-              >
-                FAQS
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </footer>
   );
 };
 
