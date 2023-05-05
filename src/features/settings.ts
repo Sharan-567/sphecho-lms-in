@@ -3,8 +3,8 @@ export const LOCAL = "localhost:8000";
 // change this on production
 export const BASE_URL = `https://${HOST}/lms_api_v1`;
 export const QISH_URL = "https://service.sphecho.com";
-export const SHOP_URL = "https://qishcommerce.metahos.com";
-export const SCHOLAR_URL = "https://service.sphecho.com/scholar";
+export const SHOP_URL = "https://service.sphecho.com/comingsoon";
+export const SCHOLAR_URL = "https://service.sphecho.com/comingsoon";
 
 export const SERVICE_URLS = {
   speech: `${QISH_URL}/service/departments/speech`,
