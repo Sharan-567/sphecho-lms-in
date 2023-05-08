@@ -29,8 +29,8 @@ const NewPatient = ({
 }: NewPatientProps) => {
   const [fName, setFname] = React.useState("");
   const [age, setAge] = React.useState("");
+  const [gender, setGender] = React.useState("");
   const [dob, setDob] = React.useState<Date>();
-  const [createdOn, setCreatedOn] = React.useState("");
 
   const years = range(1990, new Date().getFullYear() + 1, 1);
   const months = [
@@ -65,7 +65,7 @@ const NewPatient = ({
         mobile,
         createdOn: new Date(),
         lean: "true",
-        gender: "male",
+        gender,
       })
       .then(({ data }) => {
         setSelectedPatient(data.patient);
@@ -174,6 +174,8 @@ const NewPatient = ({
         id="gender"
         className="input"
         placeholder="Age"
+        value={gender}
+        onChange={(e) => setGender(e.target.value)}
         style={{ width: "14rem" }}
       >
         <option value="" disabled>
