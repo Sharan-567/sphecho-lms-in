@@ -4,11 +4,13 @@ import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { Patient } from "../../definations/patients";
 import { QISH_URL } from "../../features/settings";
+import { UserState } from "../../definations/Auth";
 import "./Login.scss";
 
 type NewPatientProps = {
   setSelectedPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
   mobile: string;
+  setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
 };
 const range = (start, end, step) => {
   const result: any[] = [];
@@ -20,7 +22,11 @@ const range = (start, end, step) => {
 
 const isSmallScreen = window.screen.width < 990;
 
-const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
+const NewPatient = ({
+  mobile,
+  setSelectedPatient,
+  setLoginType,
+}: NewPatientProps) => {
   const [fName, setFname] = React.useState("");
   const [age, setAge] = React.useState("");
   const [dob, setDob] = React.useState<Date>();
@@ -177,9 +183,11 @@ const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
         <option value="audi">Female</option>
         <option value="audi">Other</option>
       </Form.Select>
-
       <Button className="btn-login" onClick={createPatient}>
         Create Account
+      </Button>
+      <Button className="go-back-btn" onClick={() => setLoginType(undefined)}>
+        Go back
       </Button>
     </div>
   );

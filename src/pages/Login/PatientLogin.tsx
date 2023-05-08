@@ -146,19 +146,25 @@ const PatientLogin = ({ setLoginType }: Props) => {
             numInputs={4}
             separator={<span> - </span>}
           />
+          <Button
+            className="go-back-btn"
+            onClick={() => setLoginType(undefined)}
+          >
+            Go back
+          </Button>
         </div>
       ) : null}
 
       {stage === "PATIENTS_LIST" ? (
         <div>
           {patientList.length > 0 ? (
-            <div>
-              <p className="b-500 my-1">Select the Patient</p>
+            <div className="d-flex align-items-center justify-content-center flex-column">
+              <p className="b-500 my-1 text-center">Select the Patient</p>
               {(patientList || []).map((patient) => {
                 return (
                   <div
                     className="bg-green my-2 p-3 br-1 text-white"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer", width: "90%" }}
                     key={patient._id}
                     onClick={() => setSelectedPatient(patient)}
                   >
@@ -167,9 +173,16 @@ const PatientLogin = ({ setLoginType }: Props) => {
                   </div>
                 );
               })}
+              <Button
+                className="go-back-btn"
+                onClick={() => setLoginType(undefined)}
+              >
+                Go back
+              </Button>
             </div>
           ) : (
             <NewPatient
+              setLoginType={setLoginType}
               mobile={number}
               setSelectedPatient={setSelectedPatient}
             />
