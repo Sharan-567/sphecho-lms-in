@@ -39,6 +39,7 @@ const Main = () => {
   const [noOfBadgesEarned, setNoOfBadgesEarned] = useState("--");
   const [noOfCertificatesEarned, setNoOfCertificatesEarned] = useState("--");
   const [performance, setPerformance] = useState(0);
+  const isSmallScreen = window.screen.width < 999;
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -154,7 +155,7 @@ const Main = () => {
           totalTopics + courseObj.noOfTopics + courseObj.noOfAssessments;
         completedTopics =
           completedTopics +
-          progress[courseObj.courseId].assesments.length +
+          // progress[courseObj.courseId].assesments.length +
           progress[courseObj.courseId].topics.length;
       }
     }
@@ -208,33 +209,42 @@ const Main = () => {
           }}
         >
           <Row className="px-5">
-            <Col
-              sm={4}
-              className="d-flex px-4 align-items-center justify-content-between w-100"
-            >
-              <div className="none"></div>
-              <Search />
-              <div className="none">
-                <Link to="/cart">
-                  <AiOutlineShopping width={"2rem"} size={"2rem"} />
-                  <Badge
-                    bg="danger"
-                    text="white"
-                    pill
-                    style={{ marginLeft: "-.7em", marginBottom: "-.2em" }}
+            {isSmallScreen ? (
+              <Col
+                sm={4}
+                className="d-flex px-4 align-items-center justify-content-center w-100 mb-4"
+              >
+                <Search />
+              </Col>
+            ) : (
+              <Col
+                sm={4}
+                className="d-flex px-4 align-items-center justify-content-between w-100"
+              >
+                <div></div>
+                <Search />
+                <div>
+                  <Link to="/cart">
+                    <AiOutlineShopping width={"2rem"} size={"2rem"} />
+                    <Badge
+                      bg="danger"
+                      text="white"
+                      pill
+                      style={{ marginLeft: "-.7em", marginBottom: "-.2em" }}
+                    >
+                      {items.length}
+                    </Badge>
+                  </Link>
+                  <Button
+                    className="bg-primary text-white px-4 py-2 b-700 ms-4"
+                    style={{ border: "none" }}
+                    onClick={logoutHandler}
                   >
-                    {items.length}
-                  </Badge>
-                </Link>
-                <Button
-                  className="bg-primary text-white px-4 py-2 b-700 ms-4"
-                  style={{ border: "none" }}
-                  onClick={logoutHandler}
-                >
-                  Logout
-                </Button>
-              </div>
-            </Col>
+                    Logout
+                  </Button>
+                </div>
+              </Col>
+            )}
           </Row>
           <Row
             className="main__row_1"
@@ -277,12 +287,12 @@ const Main = () => {
                   arcWidth={0.5}
                   arcsLength={[0.2, 0.5, 0.3]}
                   colors={["#EA4228", "#F5CD19", "#0cae00"]}
-                  percent={performance}
+                  percent={Math.min(performance, 0.96)}
                   arcPadding={0.02}
                   hideText
                 />
                 <h5 className="text-center text-green mt-4">
-                  {(performance * 100).toFixed(0)}% performace
+                  {Math.min(performance * 100, 96).toFixed(0)}% performace
                 </h5>
                 <p className="tiny text-center">
                   completed courses per no.of courses taken up

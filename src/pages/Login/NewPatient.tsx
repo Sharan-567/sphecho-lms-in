@@ -4,10 +4,18 @@ import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { Patient } from "../../definations/patients";
 import { QISH_URL } from "../../features/settings";
+import "./Login.scss";
 
 type NewPatientProps = {
   setSelectedPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
   mobile: string;
+};
+const range = (start, end, step) => {
+  const result: any[] = [];
+  for (let i = start; i <= end; i += step) {
+    result.push(i);
+  }
+  return result;
 };
 
 const isSmallScreen = window.screen.width < 990;
@@ -17,6 +25,30 @@ const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
   const [age, setAge] = React.useState("");
   const [dob, setDob] = React.useState<Date>();
   const [createdOn, setCreatedOn] = React.useState("");
+
+  const years = range(1990, new Date().getFullYear() + 1, 1);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const getYear = (date) => {
+    return date.getFullYear();
+  };
+
+  const getMonth = (date) => {
+    return date.getMonth();
+  };
 
   const createPatient = () => {
     axios
@@ -36,66 +68,119 @@ const NewPatient = ({ mobile, setSelectedPatient }: NewPatientProps) => {
   };
 
   return (
-    <div className="m-auto">
+    <div className="d-flex align-items-center justify-content-center flex-column">
       <input
         value={fName}
         onChange={(e) => setFname(e.target.value)}
-        className="py-3 text-center b-600 br-2"
+        className="input"
         placeholder="First Name"
-        style={{
-          fontSize: "1.2rem",
-          border: "1px solid #81a31b",
-          display: "block",
-        }}
+        style={{}}
         type="text"
       />
       <input
         value={age}
         onChange={(e) => setAge(e.target.value)}
-        className="py-3 text-center b-600 br-2 my-3"
+        className="input"
         placeholder="Age"
-        style={{
-          fontSize: "1.2rem",
-          border: "1px solid #81a31b",
-          display: "block",
-        }}
         type="tel"
         maxLength={2}
       />
-      <DatePicker
-        style={{ background: "red" }}
-        name="start_date"
-        dateFomart="DD/MM/YYYY"
-        customInput={
-          <CustomInput value={dob} onClick={(date: Date) => setDob(date)} />
-        }
-        selected={dob}
-        onChange={(date: Date) => setDob(date)}
-      />
+      <div style={{ width: "15rem", marginLeft: "1rem" }}>
+        <DatePicker
+          style={{ width: "100%" }}
+          name="start_date"
+          dateFomart="DD/MM/YYYY"
+          customInput={
+            <CustomInput value={dob} onClick={(date: Date) => setDob(date)} />
+          }
+          selected={dob}
+          onChange={(date: Date) => setDob(date)}
+          renderCustomHeader={({
+            date,
+            changeYear,
+            changeMonth,
+            decreaseMonth,
+            increaseMonth,
+            prevMonthButtonDisabled,
+            nextMonthButtonDisabled,
+          }) => (
+            <div
+              style={{
+                margin: 10,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <button
+                onClick={decreaseMonth}
+                disabled={prevMonthButtonDisabled}
+                style={{
+                  background: "#6ab447",
+                  color: "white",
+                  border: "none",
+                  padding: ".5rem",
+                }}
+              >
+                {"<"}
+              </button>
+              <select
+                value={getYear(date)}
+                onChange={({ target: { value } }) => changeYear(value)}
+              >
+                {years.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={months[getMonth(date)]}
+                onChange={({ target: { value } }) =>
+                  changeMonth(months.indexOf(value))
+                }
+              >
+                {months.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+
+              <button
+                style={{
+                  background: "#6ab447",
+                  color: "white",
+                  border: "none",
+                  padding: ".5rem",
+                }}
+                onClick={increaseMonth}
+                disabled={nextMonthButtonDisabled}
+              >
+                {">"}
+              </button>
+            </div>
+          )}
+        />
+      </div>
       <Form.Select
         name="Gender"
         id="gender"
-        className="py-3 px-1 text-center b-600 br-2 my-3"
+        className="input"
         placeholder="Age"
-        style={{
-          fontSize: "1.2rem",
-          border: "1px solid #81a31b",
-          display: "block",
-          margin: "auto",
-        }}
+        style={{ width: "14rem" }}
       >
+        <option value="" disabled>
+          Please select gender
+        </option>
         <option value="mercedes">Male</option>
         <option value="audi">Female</option>
         <option value="audi">Other</option>
       </Form.Select>
-      <div className="w-100 ps-2">
-        <Button
-          className="p-2 px-4 br-1 py-3 bg-primary mt-4 text-white ms-2"
-          onClick={createPatient}
-        >
-          Create Account
-        </Button>
-      </div>
+
+      <Button className="btn-login" onClick={createPatient}>
+        Create Account
+      </Button>
     </div>
   );
 };
@@ -114,13 +199,8 @@ const CustomInput = React.forwardRef(
       required
       type="text"
       onClick={onClick}
-      className="py-3 text-center b-600 br-2"
+      className="input"
       placeholder="pick date"
-      style={{
-        fontSize: "1.2rem",
-        border: "1px solid #81a31b",
-        display: "block",
-      }}
       maxLength={2}
     />
   )

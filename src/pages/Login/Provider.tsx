@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { motion, AnimatePresence } from "framer-motion";
 import { customAxios } from "../../services/utils";
 import loginGIF from "../../assets/lock.gif";
+import "./Login.scss";
 type Props = {
   setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
   currentSelectedAuth: Auth | undefined;
@@ -124,47 +125,39 @@ const Provider = ({ setLoginType, currentSelectedAuth }: Props) => {
             marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
           }}
         />
-        {error ? <p className="text-danger">{error}</p> : null}
+
         <h1 className="mb-5 text-primary text-center">Provider Login</h1>
-        <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="py-3 mb-3 text-center b-600 br-1"
-          placeholder="Mobile Number"
-          style={{
-            fontSize: "1.2rem",
-            border: "1px solid #81a31b",
-            display: "block",
-            width: "100%",
-          }}
-          type="text"
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="py-3 mb-3 text-center b-600 br-1"
-          placeholder="Password"
-          style={{
-            fontSize: "1.2rem",
-            border: "1px solid #81a31b",
-            display: "block",
-            width: "100%",
-          }}
-          type="password"
-        />
-        <Button
-          className="p-2 px-4 br-1 py-3 mt-4 text-white "
-          style={{ width: "10rem" }}
-          onClick={handleProviderLogin}
-        >
-          {loading ? "Loading ..." : "LOGIN"}
-        </Button>
-        <Button
-          className="p-2 px-4 br-1 py-3 bg-black mt-4 text-white ms-2"
-          onClick={() => setLoginType(undefined)}
-        >
-          G0 back
-        </Button>
+        <div className="d-flex align-items-center justify-content-center flex-column">
+          {error ? <p className="text-danger text-center">{error}</p> : null}
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="input"
+            placeholder="Mobile Number"
+            type="text"
+          />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            className="input"
+            type="password"
+          />
+
+          <Button
+            className="btn-login"
+            style={{ width: "10rem" }}
+            onClick={handleProviderLogin}
+          >
+            {loading ? "Loading ..." : "LOGIN"}
+          </Button>
+          <Button
+            className="go-back-btn"
+            onClick={() => setLoginType(undefined)}
+          >
+            Go back
+          </Button>
+        </div>
       </motion.div>
     </AnimatePresence>
   );

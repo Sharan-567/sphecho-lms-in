@@ -64,34 +64,42 @@ const Login = () => {
   return (
     <div className=" bg-container">
       <Row>
-        <Col
-          sm={8}
-          className="p-2 d-flex flex-column justify-content-center align-items-center title-container"
-          style={{
-            height: "100vh",
-            position: "relative",
-            backgroundImage: `url(${bg})`,
-            backgroundSize: "cover",
-          }}
-        >
-          {/* <div className="p-4">
-            <Link to="/">
-              <img src={logo} width="159px" />
-            </Link>
-          </div> */}
-          <div
-            className="p-4"
-            style={{
-              position: "absolute",
-              top: "1rem",
-              left: "1rem",
-            }}
-          >
+        {isSmallScreen ? (
+          <div className="w-100 ps-5 pt-5">
             <Link to="/">
               <img src={logo} width="120px" />
             </Link>
           </div>
-        </Col>
+        ) : (
+          <Col
+            sm={8}
+            className="p-2 d-flex flex-column justify-content-center align-items-center title-container"
+            style={{
+              height: "100vh",
+              position: "relative",
+              backgroundImage: `url(${bg})`,
+              backgroundSize: "cover",
+            }}
+          >
+            {/* <div className="p-4">
+            <Link to="/">
+              <img src={logo} width="159px" />
+            </Link>
+          </div> */}
+            <div
+              className="p-4"
+              style={{
+                position: "absolute",
+                top: "1rem",
+                left: "1rem",
+              }}
+            >
+              <Link to="/">
+                <img src={logo} width="120px" />
+              </Link>
+            </div>
+          </Col>
+        )}
         <Col
           sm={4}
           style={{
@@ -101,13 +109,13 @@ const Login = () => {
         >
           <div className="login-wrapper m-auto p-2" style={{ width: "100%" }}>
             {!loginType ? (
-              <>
+              <div className="d-flex align-items-center justify-content-center flex-column">
                 <img
                   src={loginGIF}
                   style={{
-                    width: isSmallScreen ? "30rem" : "30rem",
+                    width: isSmallScreen ? "11rem" : "14rem",
                     objectFit: "contain",
-                    marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
+                    marginLeft: isSmallScreen ? "0rem" : "inherit",
                   }}
                 />
                 <p
@@ -116,10 +124,10 @@ const Login = () => {
                     fontSize: "2rem",
                     fontWeight: "800",
                     fontFamily: "inter",
+                    textAlign: "center",
                   }}
                 >
-                  Login to <br></br>
-                  My Blackboard
+                  Login to My Blackboard
                 </p>
 
                 <p
@@ -153,7 +161,7 @@ const Login = () => {
                     </motion.button>
                   </AnimatePresence>
                 ))}
-              </>
+              </div>
             ) : (
               <div
                 className="d-flex br-3 justify-content-center align-items-center w-100 bg-white"

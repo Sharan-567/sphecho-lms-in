@@ -106,45 +106,47 @@ const PatientLogin = ({ setLoginType }: Props) => {
         }}
       />
       <h1 className="text-primary text-center mb-5">Client Login</h1>
-      {error ? <p className="text-danger">{error}</p> : null}
+
       {stage === "NUMBER" ? (
-        <>
+        <div className="d-flex align-items-center justify-content-center flex-column">
+          {error ? <p className="text-danger">{error}</p> : null}
           <input
             value={number}
             onChange={(e) => setNumber(e.target.value)}
-            className="py-3 mb-3 text-center b-600 br-1"
+            className="input"
             placeholder="Mobile Number"
-            style={{
-              fontSize: "1.2rem",
-              border: "1px solid #81a31b",
-              display: "block",
-              width: "100%",
-            }}
             type="tel"
             maxLength={10}
           />
-          <Button
-            className="p-2 px-4 br-1 py-3 mt-4 text-white "
-            style={{ width: "10rem" }}
-            onClick={handleGetOTP}
-          >
+          <Button className="btn-login" onClick={handleGetOTP}>
             GET OTP
           </Button>
-        </>
+          <Button
+            className="go-back-btn"
+            onClick={() => setLoginType(undefined)}
+          >
+            Go back
+          </Button>
+        </div>
       ) : null}
       {stage === "OTP" ? (
-        <>
+        <div className="d-flex align-items-center justify-content-center flex-column">
           {token ? <p></p> : <p className="text-danger">{otpError}</p>}
           <p className="my-1 b-500">Please Enter the Otp</p>
           <OtpInput
             containerStyle={{ padding: "1rem" }}
-            inputStyle={{ padding: "1rem .7rem", width: "4rem" }}
+            inputStyle={{
+              padding: "1rem .7rem",
+              width: "4rem",
+              border: "2px solid #6ab447",
+              borderRadius: ".5rem",
+            }}
             value={otp}
             onChange={setOtp}
             numInputs={4}
             separator={<span> - </span>}
           />
-        </>
+        </div>
       ) : null}
 
       {stage === "PATIENTS_LIST" ? (
@@ -174,13 +176,6 @@ const PatientLogin = ({ setLoginType }: Props) => {
           )}
         </div>
       ) : null}
-
-      <Button
-        className="p-2 px-4 br-1 py-3 bg-black mt-4 text-white ms-2"
-        onClick={() => setLoginType(undefined)}
-      >
-        G0 back
-      </Button>
     </div>
   );
 };

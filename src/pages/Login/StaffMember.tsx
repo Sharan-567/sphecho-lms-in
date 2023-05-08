@@ -126,48 +126,35 @@ const StaffMember = ({ setLoginType, currentSelectedAuth }: Props) => {
             marginLeft: isSmallScreen ? "-3.5rem" : "inherit",
           }}
         />
-        {error ? <p className="text-danger">{error}</p> : null}
-        <h1 className="mb-5 text-primary text-center">Staff Member Login</h1>
-        <input
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="py-3 mb-3 text-center b-600 br-1"
-          placeholder="UserName"
-          style={{
-            fontSize: "1.2rem",
-            border: "1px solid #81a31b",
-            display: "block",
-            width: "100%",
-          }}
-          type="text"
-        />
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="py-3 text-center b-600 br-1 mb-3"
-          placeholder="Password"
-          style={{
-            fontSize: "1.2rem",
-            border: "1px solid #81a31b",
-            display: "block",
-            width: "100%",
-          }}
-          type="password"
-        />
 
-        <Button
-          className="p-2 px-4 br-1 py-3 mt-4 text-white "
-          style={{ width: "10rem" }}
-          onClick={handleProviderLogin}
-        >
-          {loading ? "Loading ..." : "LOGIN"}
-        </Button>
-        <Button
-          className="p-2 px-4 br-1 py-3 bg-black mt-4 text-white ms-2"
-          onClick={() => setLoginType(undefined)}
-        >
-          G0 back
-        </Button>
+        <h1 className="mb-5 text-primary text-center">Staff Member Login</h1>
+        <div className="d-flex align-items-center justify-content-center flex-column">
+          {error ? <p className="text-danger text-center">{error}</p> : null}
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="input"
+            placeholder="UserName"
+            type="text"
+          />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="input"
+            placeholder="Password"
+            type="password"
+          />
+
+          <Button className="btn-login" onClick={handleProviderLogin}>
+            {loading ? "Loading ..." : "LOGIN"}
+          </Button>
+          <Button
+            className="go-back-btn"
+            onClick={() => setLoginType(undefined)}
+          >
+            Go back
+          </Button>
+        </div>
       </motion.div>
     </AnimatePresence>
   );
