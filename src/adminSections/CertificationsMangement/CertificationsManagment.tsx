@@ -1104,10 +1104,11 @@ const CertificationManagment = () => {
                   <div
                     style={{
                       marginTop: "2rem",
-                      height: "47rem",
                       overflow: "hidden",
                       color: "white",
                       background: "white",
+                      zoom: "130%",
+                      height: "34rem",
                     }}
                   >
                     <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>

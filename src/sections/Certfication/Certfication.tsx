@@ -156,6 +156,7 @@ const Certification = () => {
             color: "white",
             background: "white",
             overflowY: "hidden",
+            zoom: "130%",
           }}
         >
           <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>

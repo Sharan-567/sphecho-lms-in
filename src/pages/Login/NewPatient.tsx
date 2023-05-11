@@ -12,15 +12,6 @@ type NewPatientProps = {
   mobile: string;
   setLoginType: React.Dispatch<React.SetStateAction<UserState | undefined>>;
 };
-const range = (start, end, step) => {
-  const result: any[] = [];
-  for (let i = start; i <= end; i += step) {
-    result.push(i);
-  }
-  return result;
-};
-
-const isSmallScreen = window.screen.width < 990;
 
 const NewPatient = ({
   mobile,
@@ -31,6 +22,16 @@ const NewPatient = ({
   const [age, setAge] = React.useState("");
   const [gender, setGender] = React.useState("");
   const [dob, setDob] = React.useState<Date>();
+
+  const isSmallScreen = window.screen.width < 990;
+
+  const range = (start, end, step) => {
+    const result: any[] = [];
+    for (let i = start; i <= end; i += step) {
+      result.push(i);
+    }
+    return result;
+  };
 
   const years = range(1990, new Date().getFullYear() + 1, 1);
   const months = [
