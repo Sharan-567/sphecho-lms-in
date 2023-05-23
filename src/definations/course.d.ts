@@ -81,8 +81,10 @@ export type Certificate = {
   assesment: number;
   sign1_title?: string;
   sign2_title?: string;
+  sign3_title?: string;
   signature_1?: string;
   signature_2?: string;
+  signature_3?: string;
 };
 
 export type Module = {

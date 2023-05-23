@@ -53,6 +53,7 @@ const createSchema = Yup.object().shape({
   // text: Yup.string().required("Text is required"),
   sig1_title: Yup.string(),
   sig2_title: Yup.string(),
+  text: Yup.string(),
 });
 
 const CertificationManagment = () => {
@@ -102,9 +103,11 @@ const CertificationManagment = () => {
     // course: "",
     signature_1: "",
     signature_2: "",
+    signature_3: "",
     sig1_title: "",
     sig2_title: "",
-    // text: "",
+    sig3_title: "",
+    text: "",
   };
 
   const updateInitialValues = {
@@ -119,16 +122,22 @@ const CertificationManagment = () => {
     signature_2: currentSelectedItem?.signature_2
       ? currentSelectedItem.signature_2
       : "",
+    signature_3: currentSelectedItem?.signature_3
+      ? currentSelectedItem.signature_3
+      : "",
     sign1_title: currentSelectedItem?.sign1_title
       ? currentSelectedItem.sign1_title
       : "",
     sign2_title: currentSelectedItem?.sign2_title
       ? currentSelectedItem.sign2_title
       : "",
+    sign3_title: currentSelectedItem?.sign3_title
+      ? currentSelectedItem.sign3_title
+      : "",
     course: currentSelectedItem?.course ? currentSelectedItem.course : "",
     on_complition: "True",
     on_attend: "True",
-    text: "",
+    text: currentSelectedItem?.text ? currentSelectedItem.text : "",
   };
 
   const updateFormik = useFormik({
@@ -153,7 +162,6 @@ const CertificationManagment = () => {
     validationSchema: createSchema,
     validate: createValidate,
     onSubmit: (data, { resetForm }) => {
-      data["text"] = "";
       createCertificate(data, resetForm);
     },
   });
@@ -261,7 +269,6 @@ const CertificationManagment = () => {
   useEffect(() => {
     getCertificationList();
     getAssessmentList();
-    getCertificatesTags();
     getCourseList();
   }, []);
 
@@ -280,8 +287,11 @@ const CertificationManagment = () => {
       );
       formData.set("signature_1", currentSelectedItem?.signature_1 as string);
       formData.set("signature_2", currentSelectedItem?.signature_2 as string);
+      formData.set("signature_3", currentSelectedItem?.signature_3 as string);
       formData.set("sig1_title", currentSelectedItem?.sign1_title as string);
       formData.set("sig2_title", currentSelectedItem?.sign2_title as string);
+      formData.set("sig3_title", currentSelectedItem?.sign3_title as string);
+      formData.set("text", currentSelectedItem?.text as string);
 
       fetch(`${BASE_URL}/master/certificate-preview/`, {
         method: "POST",
@@ -349,7 +359,8 @@ const CertificationManagment = () => {
       } else if (
         (key === "background_image" && typeof val === "string") ||
         (key === "signature_1" && typeof val === "string") ||
-        (key === "signature_2" && typeof val === "string")
+        (key === "signature_2" && typeof val === "string") ||
+        (key === "signature_3" && typeof val === "string")
       ) {
       } else {
         //@ts-ignore
@@ -877,6 +888,45 @@ const CertificationManagment = () => {
                                 </div>
                               ) : null}
                             </Form.Group>
+                            <Form.Group as={Col} sm={4}>
+                              <Form.Label>signature 3 image</Form.Label>
+                              <Form.Control
+                                name="signature_3"
+                                type="file"
+                                required
+                                placeholder="Upload signature 3 image"
+                                onChange={(e) => {
+                                  //@ts-ignore
+                                  let file = e.currentTarget.files[0];
+                                  creatFormik.setFieldValue(
+                                    "signature_3",
+                                    addUniqueName(file)
+                                  );
+                                }}
+                                // value={creatFormik.values.info_image}
+                              />
+                              {creatFormik.values.signature_3 instanceof
+                                File && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={URL.createObjectURL(
+                                    creatFormik.values.signature_3
+                                  )}
+                                />
+                              )}
+                              {creatFormik.touched.signature_3 &&
+                              creatFormik.errors.signature_3 ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.signature_3}
+                                </div>
+                              ) : null}
+                              {validateErrors?.signature_3 ? (
+                                <div className="text-danger">
+                                  {validateErrors.signature_3}
+                                </div>
+                              ) : null}
+                            </Form.Group>
                           </Row>
 
                           <Row className="mb-3">
@@ -921,6 +971,54 @@ const CertificationManagment = () => {
                               {validateErrors?.sig2_title ? (
                                 <div className="text-danger">
                                   {validateErrors.sig2_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+
+                            <Form.Group as={Col} className="mb-3">
+                              <Form.Label>signature 3 title</Form.Label>
+                              <Form.Control
+                                name="sig3_title"
+                                value={creatFormik.values.sig3_title}
+                                onChange={creatFormik.handleChange}
+                                type="text"
+                                required
+                                placeholder="Enter signature 3 title"
+                              />
+                              {creatFormik.touched.sig3_title &&
+                              creatFormik.errors.sig3_title ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.sig3_title}
+                                </div>
+                              ) : null}
+                              {validateErrors?.sig3_title ? (
+                                <div className="text-danger">
+                                  {validateErrors.sig3_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                          </Row>
+
+                          <Row>
+                            <Form.Group className="mb-3">
+                              <Form.Label>Description</Form.Label>
+                              <Form.Control
+                                as="textarea"
+                                name="text"
+                                value={creatFormik.values.text}
+                                onChange={creatFormik.handleChange}
+                                required
+                                placeholder="Enter certificate Description"
+                              />
+                              {creatFormik.touched.text &&
+                              creatFormik.errors.text ? (
+                                <div className="text-danger">
+                                  {creatFormik.errors.text}
+                                </div>
+                              ) : null}
+                              {validateErrors?.text ? (
+                                <div className="text-danger">
+                                  {validateErrors.text}
                                 </div>
                               ) : null}
                             </Form.Group>
@@ -1068,10 +1166,14 @@ const CertificationManagment = () => {
                               ? "Signature 1 title"
                               : k === "sign2_title"
                               ? "Signature 2 title"
+                              : k === "sign3_title"
+                              ? "Signature 3 title"
                               : k === "min_marks_to_qualify"
                               ? "Min Marks "
                               : k === "max_marks"
                               ? "Max marks "
+                              : k === "text"
+                              ? "description"
                               : k}
                           </div>
 
@@ -1378,6 +1480,53 @@ const CertificationManagment = () => {
                                 </div>
                               ) : null}
                             </Form.Group>
+                            <Form.Group as={Col}>
+                              <Form.Label>signature 3 image</Form.Label>
+                              <Form.Control
+                                name="signature_3"
+                                type="file"
+                                required
+                                placeholder="Upload signature 3 image"
+                                onChange={(e) => {
+                                  //@ts-ignore
+                                  let file = e.currentTarget.files[0];
+                                  updateFormik.setFieldValue(
+                                    "signature_3",
+                                    addUniqueName(file)
+                                  );
+                                }}
+                                // value={updateFormik.values.info_image}
+                              />
+                              {typeof updateFormik.values.signature_3 ===
+                                "string" && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={`https://${HOST}${updateFormik.values.signature_3}`}
+                                />
+                              )}
+                              {updateFormik.values.signature_3 instanceof
+                                File && (
+                                <img
+                                  className="mt-3"
+                                  style={{ width: "8rem" }}
+                                  src={URL.createObjectURL(
+                                    updateFormik.values.signature_3
+                                  )}
+                                />
+                              )}
+                              {updateFormik.touched.signature_3 &&
+                              updateFormik.errors.signature_3 ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.signature_3}
+                                </div>
+                              ) : null}
+                              {validateErrors?.signature_3 ? (
+                                <div className="text-danger">
+                                  {validateErrors.signature_3}
+                                </div>
+                              ) : null}
+                            </Form.Group>
                           </Row>
 
                           <Row className="mb-3">
@@ -1422,6 +1571,53 @@ const CertificationManagment = () => {
                               {validateErrors?.sig2_title ? (
                                 <div className="text-danger">
                                   {validateErrors.sig2_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                            <Form.Group as={Col} className="mb-3">
+                              <Form.Label>signature 3 title</Form.Label>
+                              <Form.Control
+                                name="sign3_title"
+                                value={updateFormik.values.sign3_title}
+                                onChange={updateFormik.handleChange}
+                                type="text"
+                                required
+                                placeholder="Enter signature 3 title"
+                              />
+                              {updateFormik.touched.sign3_title &&
+                              updateFormik.errors.sign3_title ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.sign3_title}
+                                </div>
+                              ) : null}
+                              {validateErrors?.sig3_title ? (
+                                <div className="text-danger">
+                                  {validateErrors.sig3_title}
+                                </div>
+                              ) : null}
+                            </Form.Group>
+                          </Row>
+
+                          <Row className="mb-3">
+                            <Form.Group className="mb-3">
+                              <Form.Label>Description</Form.Label>
+                              <Form.Control
+                                name="text"
+                                value={updateFormik.values.text}
+                                onChange={updateFormik.handleChange}
+                                as="textarea"
+                                required
+                                placeholder="Enter certificate description"
+                              />
+                              {updateFormik.touched.text &&
+                              updateFormik.errors.text ? (
+                                <div className="text-danger">
+                                  {updateFormik.errors.text}
+                                </div>
+                              ) : null}
+                              {validateErrors?.text ? (
+                                <div className="text-danger">
+                                  {validateErrors.text}
                                 </div>
                               ) : null}
                             </Form.Group>

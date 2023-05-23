@@ -37,6 +37,7 @@ const Certification = () => {
   const [error, setError] = useState("");
   const [showCertificate, setShowCertificate] = useState(false);
   const [pdf, setPdf] = useState();
+  const [pdfBlob, setPdfBLob] = useState<BlobPart>();
   const [loading, setLoading] = useState(false);
 
   const getCertificationList = useCallback(() => {
@@ -79,6 +80,7 @@ const Certification = () => {
       })
         .then((res) => res.blob())
         .then((blob) => {
+          setPdfBLob(blob);
           const reader = new FileReader();
           let base64Data;
           reader.readAsDataURL(blob);
@@ -97,6 +99,16 @@ const Certification = () => {
           }
         });
     }
+  };
+
+  const downloadPDF = () => {
+    const url = window.URL.createObjectURL(
+      new Blob([pdfBlob!], { type: "application/pdf" })
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "certificate.pdf";
+    link.click();
   };
 
   useEffect(() => {
@@ -157,11 +169,29 @@ const Certification = () => {
             background: "white",
             overflowY: "hidden",
             zoom: "130%",
+            height: "33rem",
           }}
         >
           <Document file={pdf} onLoadSuccess={onDocumentLoadSuccess}>
             <Page pageNumber={pageNumber} />
           </Document>
+        </div>
+        <div style={{ background: "white", top: "5rem" }}>
+          <button
+            className="bg-primary"
+            style={{
+              marginTop: "1rem",
+              zIndex: 100,
+              padding: "1rem 2rem",
+              border: "none",
+              borderRadius: "2rem",
+              color: "white",
+              boxShadow: "0px 0px 30px 5px rgba(0,0,0,0.2)",
+            }}
+            onClick={downloadPDF}
+          >
+            Download Certificate
+          </button>
         </div>
       </div>
     );

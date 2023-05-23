@@ -341,7 +341,7 @@ const CourseMangement = () => {
             {searchTxt.length > 0
               ? (result || []).map(({ item }, idx) => {
                   return (
-                    <div>
+                    <div key={idx}>
                       <ListItem
                         item={item}
                         title={item.name}
@@ -361,7 +361,7 @@ const CourseMangement = () => {
                 })
               : courses.map((item, idx) => {
                   return (
-                    <div>
+                    <div id={idx}>
                       <ListItem
                         item={item}
                         title={item.name}
