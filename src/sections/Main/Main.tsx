@@ -159,8 +159,8 @@ const Main = () => {
           progress[courseObj.courseId].topics.length;
       }
     }
-    console.log("completedTopics: ", completedTopics);
-    console.log("totalTopics: ", totalTopics);
+    // console.log("completedTopics: ", completedTopics);
+    // console.log("totalTopics: ", totalTopics);
     if (totalTopics !== 0) {
       setPerformance(completedTopics / totalTopics);
     }

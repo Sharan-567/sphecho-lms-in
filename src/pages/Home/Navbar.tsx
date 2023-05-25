@@ -33,7 +33,7 @@ const NavBarTop = () => {
     }
   };
 
-  console.log(isSmallScreen);
+  // console.log(isSmallScreen);
 
   return isSmallScreen ? (
     <SmallNavBar isDark={isDark} />

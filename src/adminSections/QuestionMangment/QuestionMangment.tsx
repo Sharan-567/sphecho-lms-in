@@ -193,7 +193,7 @@ const QuestionMangement = () => {
       })
       .then((res) => {
         setTopics(res.data.topics);
-        console.log(res.data.topics);
+        // console.log(res.data.topics);
       })
       .catch((err) => {
         setError(err.message);
@@ -234,7 +234,7 @@ const QuestionMangement = () => {
 
   // update
   const updateQuestion = (data) => {
-    console.log(data);
+    // console.log(data);
     let token = localStorage.getItem("token");
     const formData = new FormData();
     Object.entries(data || {}).forEach(([key, val]) => {
@@ -257,7 +257,7 @@ const QuestionMangement = () => {
           setShowSpinner("none");
           setSuccess("Question updated successfully.");
           getQuestions();
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((err) => {
           setShowSpinner("none");
@@ -274,7 +274,7 @@ const QuestionMangement = () => {
   };
   // create question
   const createQuestion = (data, resetForm) => {
-    console.log(data);
+    // console.log(data);
     setShowSpinner("create");
     const formData = new FormData();
     Object.entries(data).map(([key, val]) => {

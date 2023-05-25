@@ -37,7 +37,7 @@ const AllUser = ({ multipleUsersSelect, setMultipleUserSelect }: Props) => {
     getAllUsers();
   }, []);
 
-  console.log(multipleUsersSelect);
+  // console.log(multipleUsersSelect);
 
   return (
     <div>

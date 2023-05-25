@@ -128,7 +128,7 @@ const BadgeMangement = () => {
     validationSchema: createSchema,
     onSubmit: (data) => {
       updateBadge(data);
-      console.log(data);
+      // console.log(data);
     },
   });
 
@@ -238,7 +238,7 @@ const BadgeMangement = () => {
       })
       .then((res) => {
         setTopics(res.data.topics);
-        console.log(res.data.topics);
+        // console.log(res.data.topics);
       })
       .catch((err) => {
         setError(err.message);
@@ -260,7 +260,7 @@ const BadgeMangement = () => {
       })
       .then((res) => {
         setCourses(res.data.courses);
-        console.log(res.data.topics);
+        // console.log(res.data.topics);
       })
       .catch((err) => {
         setError(err.message);
@@ -373,7 +373,7 @@ const BadgeMangement = () => {
   };
   // create badge
   const createBadge = (data, resetForm) => {
-    console.log(data);
+    // console.log(data);
     setShowSpinner("create");
     const formData = new FormData();
     const token = localStorage.getItem("token");

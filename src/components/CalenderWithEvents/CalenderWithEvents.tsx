@@ -84,7 +84,7 @@ const CalenderWithEvents = () => {
     });
   };
 
-  console.log(getEventsByDate(date));
+  // console.log(getEventsByDate(date));
 
   return (
     <Row className="bg-primary p-2 br-2">

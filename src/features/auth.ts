@@ -54,8 +54,8 @@ export const login = createAsyncThunk<
     }
 
     if (data.user) {
-      console.log("role: ====>", data.user.role);
-      console.log("lsmauthtype: ====>", reqData.lmsAuthorizeType);
+      // console.log("role: ====>", data.user.role);
+      // console.log("lsmauthtype: ====>", reqData.lmsAuthorizeType);
 
       localStorage.setItem("email", data.user.email);
       localStorage.setItem("is_superuser", data.user.is_superuser);

@@ -29,7 +29,7 @@ const CourseDetail = () => {
   useEffect(() => {
     if (courses) {
       let selected = courses.filter((c) => c.id == location.state.id)[0];
-      console.log(selected);
+      // console.log(selected);
       if (selected) {
         setCourse(selected);
       }

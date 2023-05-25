@@ -58,7 +58,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
           setPatientList(patients);
         } catch (err) {
           setError(err);
-          console.log(err);
+          // console.log(err);
         }
       }
     };
@@ -79,7 +79,7 @@ const PatientLogin = ({ setLoginType }: Props) => {
         }
       } catch (err) {
         setError(err);
-        console.log(err);
+        // console.log(err);
       }
     };
     verifyPatient();

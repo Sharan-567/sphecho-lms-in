@@ -31,9 +31,9 @@ const Webinars = () => {
         const str = res.data.response;
         let jsonStr = str.replace(/\/"/g, "");
         let obj = JSON.parse(jsonStr);
-        console.log(obj);
+        // console.log(obj);
         setRoomHash(btoa(`${obj.room.room_id}-635be752406823329574a808`));
-        console.log(obj);
+        // console.log(obj);
         setRoomId(obj.room.room_id);
         setWebLoading(false);
         setShowVideo(true);
@@ -41,7 +41,7 @@ const Webinars = () => {
       .catch((err) => {
         setWebLoading(false);
         setShowVideo(false);
-        console.log(err);
+        // console.log(err);
       });
   };
 

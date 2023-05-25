@@ -56,7 +56,7 @@ const UpdateUser = ({ setState, currentSelectedUser }) => {
   const inputChangeHandler = (e) => {
     setData((p) => ({ ...p, [e.target.name]: e.target.value }));
   };
-  console.log(data);
+  // console.log(data);
 
   return (
     <div className="container w-50 py-5 px-2">

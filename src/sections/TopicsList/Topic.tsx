@@ -62,7 +62,7 @@ const Topic = ({ topic, courseId, isCompleted }: TopicProp) => {
       dispatch(updateProgress({ course: courseId, topic: topic?.id }))
         .unwrap()
         .then((data) => {
-          console.log(data);
+          // console.log(data);
           getAllProgress();
           setCompleted(true);
         });

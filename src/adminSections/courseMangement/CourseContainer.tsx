@@ -118,7 +118,7 @@ const CourseContainer = ({}) => {
           >(orderTopics);
           // const normalizedTopics = normalizeTopics(orderTopicsWithCustomIds);
           setTopics(orderTopicsWithCustomIds);
-          console.log(orderTopicsWithCustomIds);
+          // console.log(orderTopicsWithCustomIds);
         })
         .catch((err) => {
           dispatch(
@@ -165,7 +165,7 @@ const CourseContainer = ({}) => {
           );
         })
         .catch((error) => {
-          console.log(error);
+          // console.log(error);
           dispatch(
             showToast({
               type: "danger",
