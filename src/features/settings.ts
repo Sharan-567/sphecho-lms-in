@@ -1,4 +1,4 @@
-export const HOST = "learn-api.sphecho.tz";
+export const HOST = "learn-api.sphecho.in";
 export const LOCAL = "localhost:8000";
 // change this on production
 export const BASE_URL = `https://${HOST}/lms_api_v1`;
